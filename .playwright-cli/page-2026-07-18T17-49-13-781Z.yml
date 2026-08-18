@@ -1,0 +1,111 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e13]:
+            - paragraph [ref=e14]: EclessGO
+            - paragraph [ref=e15]: Mapa público de comunidades e presença digital
+        - navigation [ref=e16]:
+          - link "Comunidades" [ref=e17] [cursor=pointer]:
+            - /url: /comunidades
+          - link "Como funciona" [ref=e18] [cursor=pointer]:
+            - /url: /#como-funciona
+          - link "Para comunidades" [ref=e19] [cursor=pointer]:
+            - /url: /#para-comunidades
+          - link "Cadastro" [ref=e20] [cursor=pointer]:
+            - /url: /cadastro-comunidade
+        - generic [ref=e21]:
+          - button "Mudar idioma" [ref=e22]: PT
+          - link "App" [ref=e27] [cursor=pointer]:
+            - /url: /
+          - link "Entrar no painel" [ref=e30] [cursor=pointer]:
+            - /url: http://localhost:3000
+    - main [ref=e36]:
+      - link "Voltar ao mapa de comunidades" [ref=e37] [cursor=pointer]:
+        - /url: /comunidades
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - generic [ref=e42]: Página pública
+          - heading "Webhook concurrency church" [level=1] [ref=e44]
+          - paragraph [ref=e45]: BAPTIST
+          - paragraph [ref=e46]: Esta comunidade já está publicada no diretório do EclessGO.
+          - generic [ref=e47]:
+            - link "Abrir no app" [ref=e48] [cursor=pointer]:
+              - /url: /
+            - link "Cadastrar outra comunidade" [ref=e51] [cursor=pointer]:
+              - /url: /cadastro-comunidade
+            - link "Compartilhar" [ref=e52] [cursor=pointer]:
+              - /url: https://wa.me/?text=Conheca%20Webhook%20concurrency%20church%20no%20mapa%20publico%20do%20EclessGO%3A%20http%3A%2F%2Flocalhost%3A3001%2Fcomunidades%2Fwebhook-224f8b95-c850-4ae2-9fef-9072e3769f34
+          - paragraph [ref=e53]: "Link público: http://localhost:3001/comunidades/webhook-224f8b95-c850-4ae2-9fef-9072e3769f34"
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - paragraph [ref=e60]: Plano
+              - paragraph [ref=e61]: FREE
+            - generic [ref=e62]:
+              - paragraph [ref=e65]: Membros
+              - paragraph [ref=e66]: "0"
+            - generic [ref=e67]:
+              - paragraph [ref=e71]: Doações
+              - paragraph [ref=e72]: Disponíveis
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - paragraph [ref=e75]: Endereço
+            - paragraph [ref=e81]: Endereço não informado
+            - paragraph [ref=e82]: Esta comunidade ainda não possui coordenadas públicas para o mapa.
+          - generic [ref=e83]:
+            - paragraph [ref=e84]: Contato publico
+            - paragraph [ref=e86]: Esta comunidade ainda nao publicou canais publicos de contato.
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - paragraph [ref=e89]: Programação
+          - paragraph [ref=e90]: A comunidade ainda não publicou uma programação visível no diretório público.
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - paragraph [ref=e93]: Mapa local
+            - paragraph [ref=e94]: O marker destaca a localização pública da comunidade na plataforma web.
+          - generic [ref=e95]: Sem latitude e longitude válidas, a comunidade não pode ser exibida no mapa web.
+    - contentinfo [ref=e96]:
+      - generic [ref=e97]:
+        - generic [ref=e98]:
+          - generic [ref=e106]:
+            - paragraph [ref=e107]: EclessGO
+            - paragraph [ref=e108]: Presença digital, mapa público e comunidade em um só ecossistema.
+          - paragraph [ref=e109]: Descubra comunidades, apresente seu espaço no mapa e conecte o público ao app e ao painel administrativo.
+        - generic [ref=e110]:
+          - paragraph [ref=e111]: Explorar
+          - link "Início" [ref=e112] [cursor=pointer]:
+            - /url: /
+          - link "Mapa de comunidades" [ref=e113] [cursor=pointer]:
+            - /url: /comunidades
+          - link "Cadastrar comunidade" [ref=e114] [cursor=pointer]:
+            - /url: /cadastro-comunidade
+        - generic [ref=e115]:
+          - paragraph [ref=e116]: Operação
+          - link "Painel administrativo" [ref=e117] [cursor=pointer]:
+            - /url: http://localhost:3000
+          - link "Como funciona" [ref=e118] [cursor=pointer]:
+            - /url: /#como-funciona
+          - link "App EclessGO" [ref=e119] [cursor=pointer]:
+            - /url: /#app
+          - link "Termos de Uso" [ref=e120] [cursor=pointer]:
+            - /url: /termos
+          - link "Política de Privacidade" [ref=e121] [cursor=pointer]:
+            - /url: /privacidade
+      - generic [ref=e123]:
+        - paragraph [ref=e124]: © 2026 EclessGO. Plataforma pública para descoberta e presença digital de comunidades.
+        - paragraph [ref=e125]: Leaflet + OpenStreetMap para o mapa web público
+  - dialog [ref=e130]:
+    - generic [ref=e131]:
+      - generic [ref=e132]:
+        - paragraph [ref=e133]: Voce aceita o uso de cookies de medicao?
+        - paragraph [ref=e134]:
+          - text: Usamos sinais anonimos (sem identificacao pessoal) para entender como as comunidades sao encontradas e melhorar o produto. Voce pode mudar de ideia depois nas
+          - link "configuracoes de privacidade" [ref=e135] [cursor=pointer]:
+            - /url: /privacidade
+          - text: .
+      - generic [ref=e136]:
+        - button "Recusar" [ref=e137]
+        - button "Aceitar" [ref=e138]
+  - button "Open Next.js Dev Tools" [ref=e144] [cursor=pointer]

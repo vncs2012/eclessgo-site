@@ -1,0 +1,173 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e4]:
+      - generic [ref=f1e5]:
+        - link [ref=f1e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=f1e13]:
+            - paragraph [ref=f1e14]: EclessGO
+            - paragraph [ref=f1e15]: Mapa público de comunidades e presença digital
+        - navigation [ref=f1e16]:
+          - link "Comunidades" [ref=f1e17] [cursor=pointer]:
+            - /url: /comunidades
+          - link "Como funciona" [ref=f1e18] [cursor=pointer]:
+            - /url: /#como-funciona
+          - link "Para comunidades" [ref=f1e19] [cursor=pointer]:
+            - /url: /#para-comunidades
+          - link "Cadastro" [ref=f1e20] [cursor=pointer]:
+            - /url: /cadastro-comunidade
+        - generic [ref=f1e21]:
+          - button "Mudar idioma" [ref=f1e22]: PT
+          - link "App" [ref=f1e27] [cursor=pointer]:
+            - /url: /
+          - link "Entrar no painel" [ref=f1e30] [cursor=pointer]:
+            - /url: http://localhost:3000
+    - main [ref=f1e36]:
+      - generic [ref=f1e38]:
+        - generic [ref=f1e39]:
+          - generic [ref=f1e40]: Comunidades locais mais fáceis de encontrar
+          - heading "Presença digital para comunidades que querem ser encontradas." [level=1] [ref=f1e44]
+          - paragraph [ref=f1e45]: "O EclessGO transforma cadastro, localização e informações públicas em uma jornada simples: a comunidade organiza sua presença, e as pessoas entendem onde ir, quando visitar e como entrar em contato."
+          - generic [ref=f1e46]:
+            - link "Cadastrar minha comunidade" [ref=f1e47] [cursor=pointer]:
+              - /url: /cadastro-comunidade
+            - link "Conhecer comunidades" [ref=f1e50] [cursor=pointer]:
+              - /url: /comunidades
+            - link "Baixar o app" [ref=f1e51] [cursor=pointer]:
+              - /url: /
+          - generic [ref=f1e52]:
+            - generic [ref=f1e53]:
+              - paragraph [ref=f1e54]: Comunidades visíveis
+              - paragraph [ref=f1e55]: "0"
+              - paragraph [ref=f1e56]: Espaços publicados com informação suficiente para serem descobertos.
+            - generic [ref=f1e57]:
+              - paragraph [ref=f1e58]: Ao vivo
+              - paragraph [ref=f1e59]: "0"
+              - paragraph [ref=f1e60]: Comunidades com atividade destacada para quem procura algo acontecendo agora.
+            - generic [ref=f1e61]:
+              - paragraph [ref=f1e62]: Ecossistema
+              - paragraph [ref=f1e63]: 1 fluxo
+              - paragraph [ref=f1e64]: Uma base para cadastro, painel, descoberta pública e experiência mobile.
+        - generic [ref=f1e65]:
+          - generic [ref=f1e66]:
+            - generic [ref=f1e67]:
+              - paragraph [ref=f1e68]: Prévia do mapa
+              - paragraph [ref=f1e69]: Comunidades próximas, publicadas e prontas para receber pessoas
+            - generic [ref=f1e70]: Descoberta local
+          - generic [ref=f1e71]: Nenhuma comunidade com coordenadas válidas foi encontrada para a prévia. O site segue funcional e o cadastro público já está pronto para abastecer o mapa.
+      - generic [ref=f1e73]:
+        - generic [ref=f1e74]:
+          - heading "Comunidades encontráveis" [level=2] [ref=f1e80]
+          - paragraph [ref=f1e81]: Ajude pessoas a encontrarem espaços reais perto de casa, com endereço claro e página pública confiável.
+        - generic [ref=f1e82]:
+          - heading "Operação em um só lugar" [level=2] [ref=f1e89]
+          - paragraph [ref=f1e90]: Atualize dados públicos, agenda, membros e presença digital sem espalhar informações em várias ferramentas.
+        - generic [ref=f1e91]:
+          - heading "Continuidade no mobile" [level=2] [ref=f1e95]
+          - paragraph [ref=f1e96]: O mesmo cadastro prepara a comunidade para ser descoberta no site, no mapa e no app.
+      - generic [ref=f1e97]:
+        - generic [ref=f1e98]:
+          - paragraph [ref=f1e99]: Como funciona
+          - heading "Do cadastro à visita, sem perder o contexto da comunidade." [level=2] [ref=f1e100]
+          - paragraph [ref=f1e101]: "A plataforma organiza o que normalmente fica espalhado: endereço, agenda, contatos, página pública e operação interna. Assim, a comunidade fica apresentável para quem chega pela primeira vez e administrável para quem cuida dela todos os dias."
+          - link "Entrar no painel" [ref=f1e103] [cursor=pointer]:
+            - /url: http://localhost:3000
+        - generic [ref=f1e104]:
+          - generic [ref=f1e106]:
+            - generic [ref=f1e107]: "01"
+            - paragraph [ref=f1e108]: Cadastre a comunidade com nome, identidade, endereço, contatos e localização pública.
+          - generic [ref=f1e110]:
+            - generic [ref=f1e111]: "02"
+            - paragraph [ref=f1e112]: Complete as informações essenciais no painel para deixar a página pronta para visitantes.
+          - generic [ref=f1e114]:
+            - generic [ref=f1e115]: "03"
+            - paragraph [ref=f1e116]: Pessoas próximas descobrem a comunidade, entendem quando visitar e sabem como entrar em contato.
+      - generic [ref=f1e118]:
+        - generic [ref=f1e119]:
+          - paragraph [ref=f1e120]: Para comunidades
+          - heading "O que sua comunidade precisa ter para aparecer bem no mapa" [level=2] [ref=f1e121]
+          - paragraph [ref=f1e122]: O EclessGO pode atender igrejas, templos, centros e outros espaços de encontro. Para o produto funcionar com confiança, o cadastro precisa nascer claro e completo.
+          - generic [ref=f1e123]:
+            - generic [ref=f1e124]:
+              - paragraph [ref=f1e129]: Endereço legível
+              - paragraph [ref=f1e130]: Rua, cidade e estado precisam existir para a página pública fazer sentido.
+            - generic [ref=f1e131]:
+              - paragraph [ref=f1e136]: Latitude e longitude
+              - paragraph [ref=f1e137]: Sem coordenadas válidas, a comunidade não entra no mapa web nem na listagem pública.
+            - generic [ref=f1e138]:
+              - paragraph [ref=f1e143]: Identidade do espaço
+              - paragraph [ref=f1e144]: Nome, tradição, categoria ou descrição curta ajudam a conversão de visitantes.
+            - generic [ref=f1e145]:
+              - paragraph [ref=f1e149]: Contato público
+              - paragraph [ref=f1e150]: Telefone e e-mail não são obrigatórios, mas tornam a página muito mais útil.
+        - generic [ref=f1e151]:
+          - paragraph [ref=f1e152]: Para pessoas
+          - heading "Descoberta pública hoje, jornada completa no app." [level=2] [ref=f1e153]
+          - paragraph [ref=f1e154]: O site é a vitrine. O app é a continuidade. A pessoa encontra a comunidade no mapa, abre a página pública e segue para a experiência móvel quando quiser se aprofundar.
+          - generic [ref=f1e155]:
+            - generic [ref=f1e156]:
+              - paragraph [ref=f1e157]: Mapa web leve para descoberta
+              - paragraph [ref=f1e158]: A pessoa encontra comunidades próximas, compara informações essenciais e segue para a página pública sem atrito.
+            - generic [ref=f1e159]:
+              - paragraph [ref=f1e160]: Página pública por comunidade
+              - paragraph [ref=f1e161]: Cada espaço ganha uma rota própria pensada para compartilhamento e SEO.
+            - generic [ref=f1e162]:
+              - paragraph [ref=f1e163]: CTA direto para o app
+              - paragraph [ref=f1e164]: Quando a pessoa quiser ir além do site, a transição para o app já está prevista.
+          - generic [ref=f1e165]:
+            - link "Baixar o app" [ref=f1e166] [cursor=pointer]:
+              - /url: /
+            - link "Ver mapa público" [ref=f1e167] [cursor=pointer]:
+              - /url: /comunidades
+      - generic [ref=f1e169]:
+        - paragraph [ref=f1e170]: Próximo passo
+        - heading "Site público, painel e mobile falando a mesma língua." [level=2] [ref=f1e171]
+        - paragraph [ref=f1e172]: "A plataforma já nasce com uma base coerente: cadastro público de comunidade, listagem real, rota pública por slug e descoberta baseada somente em espaços publicados no EclessGO."
+        - generic [ref=f1e173]:
+          - link "Cadastrar minha comunidade" [ref=f1e174] [cursor=pointer]:
+            - /url: /cadastro-comunidade
+          - link "Explorar diretório" [ref=f1e175] [cursor=pointer]:
+            - /url: /comunidades
+    - contentinfo [ref=f1e176]:
+      - generic [ref=f1e177]:
+        - generic [ref=f1e178]:
+          - generic [ref=f1e186]:
+            - paragraph [ref=f1e187]: EclessGO
+            - paragraph [ref=f1e188]: Presença digital, mapa público e comunidade em um só ecossistema.
+          - paragraph [ref=f1e189]: Descubra comunidades, apresente seu espaço no mapa e conecte o público ao app e ao painel administrativo.
+        - generic [ref=f1e190]:
+          - paragraph [ref=f1e191]: Explorar
+          - link "Início" [ref=f1e192] [cursor=pointer]:
+            - /url: /
+          - link "Mapa de comunidades" [ref=f1e193] [cursor=pointer]:
+            - /url: /comunidades
+          - link "Cadastrar comunidade" [ref=f1e194] [cursor=pointer]:
+            - /url: /cadastro-comunidade
+        - generic [ref=f1e195]:
+          - paragraph [ref=f1e196]: Operação
+          - link "Painel administrativo" [ref=f1e197] [cursor=pointer]:
+            - /url: http://localhost:3000
+          - link "Como funciona" [ref=f1e198] [cursor=pointer]:
+            - /url: /#como-funciona
+          - link "App EclessGO" [ref=f1e199] [cursor=pointer]:
+            - /url: /#app
+          - link "Termos de Uso" [ref=f1e200] [cursor=pointer]:
+            - /url: /termos
+          - link "Política de Privacidade" [ref=f1e201] [cursor=pointer]:
+            - /url: /privacidade
+      - generic [ref=f1e203]:
+        - paragraph [ref=f1e204]: © 2026 EclessGO. Plataforma pública para descoberta e presença digital de comunidades.
+        - paragraph [ref=f1e205]: Leaflet + OpenStreetMap para o mapa web público
+  - dialog [ref=f1e210]:
+    - generic [ref=f1e211]:
+      - generic [ref=f1e212]:
+        - paragraph [ref=f1e213]: Voce aceita o uso de cookies de medicao?
+        - paragraph [ref=f1e214]:
+          - text: Usamos sinais anonimos (sem identificacao pessoal) para entender como as comunidades sao encontradas e melhorar o produto. Voce pode mudar de ideia depois nas
+          - link "configuracoes de privacidade" [ref=f1e215] [cursor=pointer]:
+            - /url: /privacidade
+          - text: .
+      - generic [ref=f1e216]:
+        - button "Recusar" [ref=f1e217]
+        - button "Aceitar" [ref=f1e218]
+  - button "Open Next.js Dev Tools" [ref=f1e224] [cursor=pointer]

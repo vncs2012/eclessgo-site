@@ -1,0 +1,388 @@
+{
+  "finder": {
+    "search": {
+      "aria": "Buscar comunidades",
+      "placeholder": "Buscar por nome, cidade, bairro ou comunidade conhecida"
+    },
+    "filters": {
+      "cityAria": "Filtrar por cidade",
+      "allCities": "Todas as cidades",
+      "neighborhoodAria": "Filtrar por bairro",
+      "allNeighborhoods": "Todos os bairros",
+      "denominationAria": "Filtrar por denominação",
+      "allDenominations": "Todas as denominações",
+      "live": "Ao vivo"
+    },
+    "update": "Atualizar",
+    "updating": "Buscando...",
+    "myLocation": "Minha localização",
+    "map": {
+      "eyebrow": "Mapa web",
+      "subtitle": "Descoberta pública de comunidades próximas",
+      "visibleCount": "{count} comunidades visíveis"
+    },
+    "directoryRealtime": "Diretório público em tempo real",
+    "empty": {
+      "title": "Nenhuma comunidade encontrada",
+      "withFilters": "Os filtros atuais não retornaram comunidades publicadas. Tente ampliar a busca ou limpar os filtros.",
+      "noFilters": "Ainda não há comunidades publicadas com coordenadas válidas para esta área.",
+      "clearing": "Limpando...",
+      "clearFilters": "Limpar filtros",
+      "register": "Cadastrar comunidade"
+    },
+    "card": {
+      "live": "Ao vivo",
+      "plan": "Plano {plan}",
+      "members": "{count} membros",
+      "km": "{km} km",
+      "viewPublic": "Ver página pública",
+      "hint": "Clique no card ou no marker para destacar no mapa."
+    },
+    "highlighted": {
+      "eyebrow": "Comunidade destacada",
+      "openFull": "Abrir página completa"
+    },
+    "status": {
+      "initialShowing": "Exibindo comunidades públicas do EclessGO a partir da referência de Goiânia.",
+      "initialEmpty": "Nenhuma comunidade com coordenadas válidas foi encontrada nesta área.",
+      "filtersClearedShowing": "Filtros limpos. Exibindo comunidades publicadas próximas da referência atual.",
+      "filtersClearedEmpty": "Filtros limpos, mas ainda não há comunidades com coordenadas válidas nesta referência.",
+      "clearFailed": "Não foi possível limpar os filtros agora.",
+      "searchUpdated": "Diretório público atualizado com base na sua busca.",
+      "searchEmpty": "Nenhuma comunidade encontrada para os filtros informados.",
+      "filterFailed": "Não foi possível aplicar os filtros agora.",
+      "geoUnavailable": "Geolocalização indisponível neste navegador.",
+      "recalculated": "Diretório recalculado com a sua localização atual.",
+      "locationFailed": "Não foi possível usar sua localização agora.",
+      "permissionDenied": "A permissão de localização foi negada."
+    }
+  },
+  "fileUpload": {
+    "invalidType": "Envie uma imagem PNG, JPG ou WebP.",
+    "tooLarge": "A imagem precisa ter até {max} MB.",
+    "previewAlt": "Prévia de {label}",
+    "prompt": "Clique ou arraste uma imagem",
+    "hint": "PNG, JPG ou WebP até {max} MB",
+    "empty": "Nenhuma imagem selecionada.",
+    "remove": "Remover"
+  },
+  "header": {
+    "tagline": "Mapa público de comunidades e presença digital",
+    "nav": {
+      "communities": "Comunidades",
+      "howItWorks": "Como funciona",
+      "forCommunities": "Para comunidades",
+      "register": "Cadastro"
+    },
+    "appCta": "App",
+    "panelCta": "Entrar no painel",
+    "toggleLanguage": "Mudar idioma",
+    "languageShort": "PT"
+  },
+  "footer": {
+    "tagline": "Presença digital, mapa público e comunidade em um só ecossistema.",
+    "description": "Descubra comunidades, apresente seu espaço no mapa e conecte o público ao app e ao painel administrativo.",
+    "explore": {
+      "title": "Explorar",
+      "home": "Início",
+      "map": "Mapa de comunidades",
+      "register": "Cadastrar comunidade"
+    },
+    "operation": {
+      "title": "Operação",
+      "panel": "Painel administrativo",
+      "howItWorks": "Como funciona",
+      "app": "App EclessGO"
+    },
+    "copyright": "© 2026 EclessGO. Plataforma pública para descoberta e presença digital de comunidades.",
+    "mapCredit": "Leaflet + OpenStreetMap para o mapa web público"
+  },
+  "register": {
+    "page": {
+      "eyebrow": "Cadastro público",
+      "title": "Coloque sua comunidade no mapa do EclessGO",
+      "intro": "Este fluxo foi pensado para ser direto: menos etapas, dados claros e nenhum desvio para o painel antes do cadastro inicial. Depois de concluir, o responsável já pode seguir para a operação da comunidade.",
+      "requirements": {
+        "responsible": "Responsável com nome, e-mail e senha para acesso inicial.",
+        "identity": "Nome da comunidade e tradição, linha ou denominação para a página pública e o app.",
+        "address": "Endereço legível com rua, cidade e estado.",
+        "coordinates": "Latitude e longitude válidas para entrar no mapa."
+      },
+      "usableEyebrow": "Como a proposta fica usável",
+      "mapCoherent": {
+        "title": "Mapa coerente",
+        "description": "O site só mostra comunidades com latitude e longitude válidas, evitando markers inventados e reforçando confiança no produto."
+      },
+      "panelEntry": {
+        "title": "Entrada no painel",
+        "description": "Depois do cadastro, a comunidade entra no fluxo operacional do painel para ajustes, agenda e gestão."
+      },
+      "moreChannels": {
+        "title": "Mesmo dado, mais canais",
+        "description": "O mesmo cadastro abastece a página pública da comunidade, o diretório web e o app."
+      },
+      "seePublished": "Ver comunidades já publicadas"
+    },
+    "intro": {
+      "eyebrow": "Onboarding público",
+      "title": "Cadastre sua comunidade",
+      "description": "Nome da comunidade, endereço legível e latitude/longitude são obrigatórios para o seu espaço aparecer corretamente no mapa."
+    },
+    "footer": {
+      "note": "Depois do cadastro, sua comunidade já entra no fluxo do painel e pode aparecer no mapa público e no app.",
+      "publicMap": "Ver mapa público",
+      "back": "Voltar",
+      "submitting": "Cadastrando...",
+      "submit": "Cadastrar minha comunidade",
+      "continue": "Continuar"
+    },
+    "legal": {
+      "legend": "Aceite dos documentos legais",
+      "prefix": "Li e aceito os",
+      "terms": "Termos de Uso",
+      "connector": "e a",
+      "privacy": "Política de Privacidade"
+    },
+    "stepper": {
+      "stepOf": "Etapa {current} de {total}",
+      "percent": "{percent}% completo",
+      "review": "Revisar",
+      "inProgress": "Em preenchimento",
+      "locked": "Bloqueada",
+      "ariaSteps": "Etapas do cadastro"
+    },
+    "steps": {
+      "responsible": {
+        "label": "Responsável",
+        "title": "Responsável pela comunidade",
+        "description": "Crie o acesso de quem vai acompanhar o cadastro e administrar a comunidade depois."
+      },
+      "community": {
+        "label": "Comunidade",
+        "title": "Dados públicos da comunidade",
+        "description": "Essas informações aparecem no diretório público, no mapa e nos cartões de descoberta."
+      },
+      "location": {
+        "label": "Localização",
+        "title": "Endereço e mapa",
+        "description": "Confirme o ponto no mapa e revise o endereço para evitar comunidades difíceis de encontrar."
+      },
+      "media": {
+        "label": "Mídia",
+        "title": "Logo e foto-capa",
+        "description": "Adicione as imagens que ajudam visitantes a reconhecer a comunidade nos cartões públicos."
+      },
+      "contact": {
+        "label": "Contato",
+        "title": "Contato público",
+        "description": "Informe os canais que visitantes podem usar para falar diretamente com a comunidade."
+      }
+    },
+    "fields": {
+      "userName": "Nome do responsável",
+      "userEmail": "E-mail do responsável",
+      "userPassword": "Senha de acesso",
+      "userPhone": "Telefone do responsável",
+      "churchName": "Nome da comunidade",
+      "churchDenomination": "Tradição, linha ou denominação",
+      "churchDescription": "Descrição",
+      "street": "Rua",
+      "number": "Número",
+      "neighborhood": "Bairro",
+      "city": "Cidade",
+      "state": "Estado",
+      "zipCode": "CEP",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "contactEmail": "E-mail da comunidade",
+      "contactPhone": "Telefone da comunidade"
+    },
+    "location": {
+      "publicTitle": "Localização pública",
+      "publicHint": "Selecione o ponto exato no mapa ou use a localização atual.",
+      "useCurrent": "Usar localização atual",
+      "editableHint": "O endereço continua editável abaixo para correção manual quando o mapa não identificar todos os campos.",
+      "resolving": "Consultando Nominatim..."
+    },
+    "media": {
+      "banner": "As imagens serão enviadas ao storage antes do cadastro final. Se o storage MinIO/S3 não estiver configurado, vamos mostrar uma mensagem clara para tentar novamente sem perder os dados preenchidos.",
+      "logoLabel": "Logo da comunidade",
+      "logoDescription": "Ideal para avatar, cards e identificação visual rápida.",
+      "logoSize": "Quadrado, 512x512",
+      "coverLabel": "Foto-capa",
+      "coverDescription": "Imagem horizontal para o topo do perfil público.",
+      "coverSize": "16:9, 1600x900"
+    },
+    "validation": {
+      "userNameMin": "Informe o nome do responsável.",
+      "userEmail": "Informe um e-mail válido.",
+      "userPasswordMin": "A senha precisa ter pelo menos 8 caracteres.",
+      "churchNameMin": "Informe o nome da comunidade.",
+      "churchDenominationMin": "Informe a tradição, linha ou denominação.",
+      "streetMin": "Informe a rua.",
+      "cityMin": "Informe a cidade.",
+      "stateMin": "Informe o estado.",
+      "latitudeInvalid": "Latitude inválida.",
+      "longitudeInvalid": "Longitude inválida.",
+      "contactEmail": "E-mail da comunidade inválido.",
+      "acceptTerms": "Leia e aceite os Termos de Uso e a Política de Privacidade."
+    },
+    "status": {
+      "geocoding": "Buscando endereço a partir do ponto selecionado...",
+      "addressFound": "Endereço encontrado: {address}",
+      "coordsSavedReview": "Coordenadas salvas. Revise o endereço antes de enviar.",
+      "coordsSavedNoAddress": "Coordenadas salvas. Não foi possível buscar o endereço automaticamente.",
+      "noGeolocation": "Seu navegador não disponibiliza localização automática.",
+      "requestingLocation": "Solicitando sua localização atual...",
+      "locationDenied": "Não foi possível acessar sua localização. Selecione o ponto no mapa.",
+      "uploadingLogo": "Enviando logo da comunidade...",
+      "uploadingCover": "Enviando foto-capa da comunidade...",
+      "finalizing": "Finalizando cadastro da comunidade..."
+    },
+    "errors": {
+      "uploadFailed": "Nao foi possivel enviar a imagem. Verifique a configuracao de storage e tente novamente.",
+      "storageNoData": "O storage nao retornou os dados da imagem enviada.",
+      "submitFailed": "Não foi possível concluir o cadastro da comunidade."
+    }
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Esta página não foi encontrada",
+    "description": "A comunidade ou rota pública que você tentou abrir não existe mais ou ainda não foi publicada no EclessGO.",
+    "home": "Voltar para a home",
+    "explore": "Explorar comunidades"
+  },
+  "errorPage": {
+    "eyebrow": "Erro temporário",
+    "title": "Não foi possível carregar esta experiência agora.",
+    "description": "A página pública continua disponível, mas esta rota encontrou uma falha inesperada. Tente novamente ou volte para o diretório de comunidades.",
+    "supportCode": "Código de suporte: {digest}",
+    "retry": "Tentar novamente",
+    "explore": "Explorar comunidades"
+  },
+  "registerSuccess": {
+    "eyebrow": "Cadastro concluído",
+    "churchFallback": "Sua comunidade",
+    "emailFallback": "o e-mail informado",
+    "title": "{name} entrou no fluxo do EclessGO",
+    "description": "O responsável vinculado a <email></email> já pode seguir para o painel e completar a operação da comunidade. Se as coordenadas estiverem corretas, a comunidade também poderá aparecer no mapa público e no app.",
+    "panelStepTitle": "Próximo passo no painel",
+    "panelStepDesc": "Revise descrição, contatos, agenda e demais informações administrativas.",
+    "mapStepTitle": "Próximo passo no mapa",
+    "mapStepDesc": "Confirmar latitude e longitude mantém a presença pública coerente e pesquisável.",
+    "panelCta": "Entrar no painel",
+    "mapCta": "Ver mapa público"
+  },
+  "consent": {
+    "title": "Voce aceita o uso de cookies de medicao?",
+    "description": "Usamos sinais anonimos (sem identificacao pessoal) para entender como as comunidades sao encontradas e melhorar o produto. Voce pode mudar de ideia depois nas <link>configuracoes de privacidade</link>.",
+    "decline": "Recusar",
+    "accept": "Aceitar"
+  },
+  "home": {
+    "hero": {
+      "badge": "Comunidades locais mais fáceis de encontrar",
+      "title": "Presença digital para comunidades que querem ser encontradas.",
+      "description": "O EclessGO transforma cadastro, localização e informações públicas em uma jornada simples: a comunidade organiza sua presença, e as pessoas entendem onde ir, quando visitar e como entrar em contato.",
+      "registerCta": "Cadastrar minha comunidade",
+      "exploreCta": "Conhecer comunidades",
+      "appCta": "Baixar o app"
+    },
+    "stats": {
+      "visible": {
+        "label": "Comunidades visíveis",
+        "description": "Espaços publicados com informação suficiente para serem descobertos."
+      },
+      "live": {
+        "label": "Ao vivo",
+        "description": "Comunidades com atividade destacada para quem procura algo acontecendo agora."
+      },
+      "ecosystem": {
+        "label": "Ecossistema",
+        "value": "1 fluxo",
+        "description": "Uma base para cadastro, painel, descoberta pública e experiência mobile."
+      }
+    },
+    "mapPreview": {
+      "eyebrow": "Prévia do mapa",
+      "description": "Comunidades próximas, publicadas e prontas para receber pessoas",
+      "badge": "Descoberta local",
+      "apiError": "A API pública do EclessGO não respondeu agora. A prévia do mapa volta a carregar assim que o backend estiver ativo.",
+      "empty": "Nenhuma comunidade com coordenadas válidas foi encontrada para a prévia. O site segue funcional e o cadastro público já está pronto para abastecer o mapa."
+    },
+    "pillars": {
+      "findable": {
+        "title": "Comunidades encontráveis",
+        "description": "Ajude pessoas a encontrarem espaços reais perto de casa, com endereço claro e página pública confiável."
+      },
+      "operation": {
+        "title": "Operação em um só lugar",
+        "description": "Atualize dados públicos, agenda, membros e presença digital sem espalhar informações em várias ferramentas."
+      },
+      "mobile": {
+        "title": "Continuidade no mobile",
+        "description": "O mesmo cadastro prepara a comunidade para ser descoberta no site, no mapa e no app."
+      }
+    },
+    "howItWorks": {
+      "eyebrow": "Como funciona",
+      "title": "Do cadastro à visita, sem perder o contexto da comunidade.",
+      "description": "A plataforma organiza o que normalmente fica espalhado: endereço, agenda, contatos, página pública e operação interna. Assim, a comunidade fica apresentável para quem chega pela primeira vez e administrável para quem cuida dela todos os dias.",
+      "panelCta": "Entrar no painel"
+    },
+    "steps": {
+      "first": "Cadastre a comunidade com nome, identidade, endereço, contatos e localização pública.",
+      "second": "Complete as informações essenciais no painel para deixar a página pronta para visitantes.",
+      "third": "Pessoas próximas descobrem a comunidade, entendem quando visitar e sabem como entrar em contato."
+    },
+    "forCommunities": {
+      "eyebrow": "Para comunidades",
+      "title": "O que sua comunidade precisa ter para aparecer bem no mapa",
+      "description": "O EclessGO pode atender igrejas, templos, centros e outros espaços de encontro. Para o produto funcionar com confiança, o cadastro precisa nascer claro e completo."
+    },
+    "requirements": {
+      "address": {
+        "title": "Endereço legível",
+        "description": "Rua, cidade e estado precisam existir para a página pública fazer sentido."
+      },
+      "coordinates": {
+        "title": "Latitude e longitude",
+        "description": "Sem coordenadas válidas, a comunidade não entra no mapa web nem na listagem pública."
+      },
+      "identity": {
+        "title": "Identidade do espaço",
+        "description": "Nome, tradição, categoria ou descrição curta ajudam a conversão de visitantes."
+      },
+      "contact": {
+        "title": "Contato público",
+        "description": "Telefone e e-mail não são obrigatórios, mas tornam a página muito mais útil."
+      }
+    },
+    "forPeople": {
+      "eyebrow": "Para pessoas",
+      "title": "Descoberta pública hoje, jornada completa no app.",
+      "description": "O site é a vitrine. O app é a continuidade. A pessoa encontra a comunidade no mapa, abre a página pública e segue para a experiência móvel quando quiser se aprofundar.",
+      "mapCta": "Ver mapa público"
+    },
+    "appJourney": {
+      "map": {
+        "title": "Mapa web leve para descoberta",
+        "description": "A pessoa encontra comunidades próximas, compara informações essenciais e segue para a página pública sem atrito."
+      },
+      "publicPage": {
+        "title": "Página pública por comunidade",
+        "description": "Cada espaço ganha uma rota própria pensada para compartilhamento e SEO."
+      },
+      "appCta": {
+        "title": "CTA direto para o app",
+        "description": "Quando a pessoa quiser ir além do site, a transição para o app já está prevista."
+      }
+    },
+    "finalCta": {
+      "eyebrow": "Próximo passo",
+      "title": "Site público, painel e mobile falando a mesma língua.",
+      "description": "A plataforma já nasce com uma base coerente: cadastro público de comunidade, listagem real, rota pública por slug e descoberta baseada somente em espaços publicados no EclessGO.",
+      "exploreCta": "Explorar diretório"
+    }
+  }
+}

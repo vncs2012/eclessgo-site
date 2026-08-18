@@ -1,0 +1,103 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e4]:
+      - generic [ref=f1e5]:
+        - link [ref=f1e6] [cursor=pointer]:
+          - /url: /
+          - paragraph [ref=f1e14]: EclessGO
+        - generic [ref=f1e15]:
+          - button "Mudar idioma" [ref=f1e16]: PT
+          - link "Entrar no painel" [ref=f1e21] [cursor=pointer]:
+            - /url: http://localhost:3000
+    - main [ref=f1e27]:
+      - generic [ref=f1e28]:
+        - generic [ref=f1e29]:
+          - generic [ref=f1e30]: Página pública
+          - heading "Igreja Esperança" [level=1] [ref=f1e32]
+          - paragraph [ref=f1e33]: PENTECOSTAL
+          - paragraph [ref=f1e34]: Segunda igreja para validar troca de contexto
+          - generic [ref=f1e35]:
+            - link "Abrir no app" [ref=f1e36] [cursor=pointer]:
+              - /url: /
+            - link "Cadastrar outra comunidade" [ref=f1e39] [cursor=pointer]:
+              - /url: /cadastro-comunidade
+            - link "Compartilhar" [ref=f1e40] [cursor=pointer]:
+              - /url: https://wa.me/?text=Conheca%20Igreja%20Esperan%C3%A7a%20no%20mapa%20publico%20do%20EclessGO%3A%20http%3A%2F%2Flocalhost%3A3001%2Fcomunidades%2Figreja-esperanca
+          - paragraph [ref=f1e41]: "Link público: http://localhost:3001/comunidades/igreja-esperanca"
+          - generic [ref=f1e42]:
+            - generic [ref=f1e43]:
+              - paragraph [ref=f1e48]: Plano
+              - paragraph [ref=f1e49]: BASIC
+            - generic [ref=f1e50]:
+              - paragraph [ref=f1e53]: Membros
+              - paragraph [ref=f1e54]: "0"
+            - generic [ref=f1e55]:
+              - paragraph [ref=f1e59]: Doações
+              - paragraph [ref=f1e60]: Disponíveis
+        - generic [ref=f1e61]:
+          - generic [ref=f1e62]:
+            - paragraph [ref=f1e63]: Endereço
+            - paragraph [ref=f1e69]: Av. Esperança, 45, Campinas, SP
+            - paragraph [ref=f1e70]: "Coordenadas: -17.398561, -50.377983"
+          - generic [ref=f1e71]:
+            - paragraph [ref=f1e72]: Contato publico
+            - generic [ref=f1e73]:
+              - link "contato@esperanca.dev" [ref=f1e74] [cursor=pointer]:
+                - /url: mailto:contato@esperanca.dev
+              - link "+5519988888888" [ref=f1e78] [cursor=pointer]:
+                - /url: tel:+5519988888888
+              - paragraph [ref=f1e81]: Chave Pix configurada no painel. O site nao processa pagamento, mas ja expoe que a comunidade aceita contribuicoes.
+      - generic [ref=f1e82]:
+        - generic [ref=f1e83]:
+          - paragraph [ref=f1e84]: Programação
+          - generic [ref=f1e86]:
+            - paragraph [ref=f1e87]: Programação 1
+            - paragraph [ref=f1e88]: SATURDAY • 19:30
+        - generic [ref=f1e89]:
+          - generic [ref=f1e90]:
+            - paragraph [ref=f1e91]: Mapa local
+            - paragraph [ref=f1e92]: O marker destaca a localização pública da comunidade na plataforma web.
+          - generic [ref=f1e93]: Carregando mapa...
+    - contentinfo [ref=f1e94]:
+      - generic [ref=f1e95]:
+        - generic [ref=f1e96]:
+          - generic [ref=f1e104]:
+            - paragraph [ref=f1e105]: EclessGO
+            - paragraph [ref=f1e106]: Presença digital, mapa público e comunidade em um só ecossistema.
+          - paragraph [ref=f1e107]: Descubra comunidades, apresente seu espaço no mapa e conecte o público ao app e ao painel administrativo.
+        - generic [ref=f1e108]:
+          - paragraph [ref=f1e109]: Explorar
+          - link "Início" [ref=f1e110] [cursor=pointer]:
+            - /url: /
+          - link "Mapa de comunidades" [ref=f1e111] [cursor=pointer]:
+            - /url: /comunidades
+          - link "Cadastrar comunidade" [ref=f1e112] [cursor=pointer]:
+            - /url: /cadastro-comunidade
+        - generic [ref=f1e113]:
+          - paragraph [ref=f1e114]: Operação
+          - link "Painel administrativo" [ref=f1e115] [cursor=pointer]:
+            - /url: http://localhost:3000
+          - link "Como funciona" [ref=f1e116] [cursor=pointer]:
+            - /url: /#como-funciona
+          - link "App EclessGO" [ref=f1e117] [cursor=pointer]:
+            - /url: /#app
+          - link "Termos de Uso" [ref=f1e118] [cursor=pointer]:
+            - /url: /termos
+          - link "Política de Privacidade" [ref=f1e119] [cursor=pointer]:
+            - /url: /privacidade
+      - generic [ref=f1e121]:
+        - paragraph [ref=f1e122]: © 2026 EclessGO. Plataforma pública para descoberta e presença digital de comunidades.
+        - paragraph [ref=f1e123]: Leaflet + OpenStreetMap para o mapa web público
+  - dialog [ref=f1e128]:
+    - generic [ref=f1e129]:
+      - generic [ref=f1e130]:
+        - paragraph [ref=f1e131]: Voce aceita o uso de cookies de medicao?
+        - paragraph [ref=f1e132]:
+          - text: Usamos sinais anonimos (sem identificacao pessoal) para entender como as comunidades sao encontradas e melhorar o produto. Voce pode mudar de ideia depois nas
+          - link "configuracoes de privacidade" [ref=f1e133] [cursor=pointer]:
+            - /url: /privacidade
+          - text: .
+      - generic [ref=f1e134]:
+        - button "Recusar" [ref=f1e135]
+        - button "Aceitar" [ref=f1e136]
+  - button "Open Next.js Dev Tools" [ref=f1e142] [cursor=pointer]

@@ -1,0 +1,331 @@
+/*
+ * EclessGO Design Tokens
+ *
+ * Public web copy of the canonical panel tokens. Keep the --eg-* prefix
+ * portable so these values can later be synced across panel, web and mobile.
+ * The public web app keeps its current dark default and CSS-color aliases
+ * because Tailwind v4 reads these variables directly through @theme.
+ */
+
+:root {
+  /* Layer 1: primitive tokens */
+  --eg-color-white: #ffffff;
+  --eg-color-black: #050607;
+
+  --eg-color-emerald-50: #ecfdf5;
+  --eg-color-emerald-100: #d1fae5;
+  --eg-color-emerald-200: #a7f3d0;
+  --eg-color-emerald-300: #6ee7b7;
+  --eg-color-emerald-400: #34d399;
+  --eg-color-emerald-500: #10b981;
+  --eg-color-emerald-600: #059669;
+  --eg-color-emerald-700: #047857;
+  --eg-color-emerald-800: #065f46;
+  --eg-color-emerald-900: #064e3b;
+  --eg-color-emerald-950: #022c22;
+
+  --eg-color-teal-500: #14b8a6;
+  --eg-color-teal-600: #0d9488;
+  --eg-color-teal-700: #0f766e;
+
+  --eg-color-amber-50: #fffbeb;
+  --eg-color-amber-100: #fef3c7;
+  --eg-color-amber-500: #f59e0b;
+  --eg-color-amber-600: #d97706;
+  --eg-color-amber-700: #b45309;
+
+  --eg-color-red-50: #fef2f2;
+  --eg-color-red-100: #fee2e2;
+  --eg-color-red-500: #ef4444;
+  --eg-color-red-600: #dc2626;
+  --eg-color-red-700: #b91c1c;
+
+  --eg-color-blue-50: #eff6ff;
+  --eg-color-blue-500: #3b82f6;
+  --eg-color-blue-600: #2563eb;
+
+  --eg-color-zinc-50: #fafafa;
+  --eg-color-zinc-100: #f4f4f5;
+  --eg-color-zinc-200: #e4e4e7;
+  --eg-color-zinc-300: #d4d4d8;
+  --eg-color-zinc-400: #a1a1aa;
+  --eg-color-zinc-500: #71717a;
+  --eg-color-zinc-600: #52525b;
+  --eg-color-zinc-700: #3f3f46;
+  --eg-color-zinc-800: #27272a;
+  --eg-color-zinc-900: #18181b;
+  --eg-color-zinc-950: #09090b;
+
+  --eg-color-slate-100: #f1f5f9;
+  --eg-color-slate-200: #e2e8f0;
+  --eg-color-slate-500: #64748b;
+  --eg-color-slate-900: #0f172a;
+
+  --eg-font-sans: var(--font-geist-sans), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --eg-font-display: var(--font-display), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --eg-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --eg-text-xs: 0.75rem;
+  --eg-text-sm: 0.875rem;
+  --eg-text-md: 1rem;
+  --eg-text-lg: 1.125rem;
+  --eg-text-xl: 1.25rem;
+  --eg-text-2xl: 1.5rem;
+  --eg-text-3xl: 1.875rem;
+  --eg-text-4xl: 2.25rem;
+
+  --eg-leading-tight: 1.2;
+  --eg-leading-normal: 1.5;
+  --eg-leading-relaxed: 1.65;
+
+  --eg-space-0: 0;
+  --eg-space-1: 0.25rem;
+  --eg-space-2: 0.5rem;
+  --eg-space-3: 0.75rem;
+  --eg-space-4: 1rem;
+  --eg-space-5: 1.25rem;
+  --eg-space-6: 1.5rem;
+  --eg-space-8: 2rem;
+  --eg-space-10: 2.5rem;
+  --eg-space-12: 3rem;
+  --eg-space-16: 4rem;
+
+  --eg-radius-xs: 0.25rem;
+  --eg-radius-sm: 0.375rem;
+  --eg-radius-md: 0.5rem;
+  --eg-radius-lg: 0.75rem;
+  --eg-radius-xl: 1rem;
+  --eg-radius-2xl: 1.5rem;
+  --eg-radius-full: 999px;
+
+  --eg-shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --eg-shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.1);
+  --eg-shadow-md: 0 8px 24px rgba(16, 24, 40, 0.1);
+  --eg-shadow-lg: 0 16px 40px rgba(16, 24, 40, 0.14);
+  --eg-shadow-focus: 0 0 0 3px rgba(4, 120, 87, 0.22);
+  --eg-shadow-web: 0 20px 50px rgba(0, 0, 0, 0.28);
+
+  --eg-duration-fast: 150ms;
+  --eg-duration-base: 200ms;
+  --eg-duration-slow: 300ms;
+
+  --eg-z-base: 0;
+  --eg-z-sticky: 20;
+  --eg-z-header: 40;
+  --eg-z-overlay: 60;
+  --eg-z-modal: 80;
+  --eg-z-toast: 100;
+
+  /* Layer 2: semantic tokens - dark public web default */
+  color-scheme: dark;
+  --eg-bg-app: var(--eg-color-black);
+  --eg-bg-surface: #0d1110;
+  --eg-bg-surface-subtle: #141a18;
+  --eg-bg-elevated: #171f1c;
+  --eg-bg-inverse: var(--eg-color-white);
+
+  --eg-text-strong: #f6f7f6;
+  --eg-text-default: #d7ded9;
+  --eg-text-muted: #9aa6a0;
+  --eg-text-subtle: #7f8d86;
+  --eg-text-inverse: #06130e;
+
+  --eg-border-subtle: #1b2420;
+  --eg-border-default: #25302b;
+  --eg-border-strong: #3a4942;
+
+  --eg-action-primary: var(--eg-color-emerald-400);
+  --eg-action-primary-hover: var(--eg-color-emerald-300);
+  --eg-action-primary-active: var(--eg-color-emerald-200);
+  --eg-action-primary-soft: #06251a;
+  --eg-action-secondary: var(--eg-color-teal-500);
+  --eg-action-focus: var(--eg-color-emerald-300);
+
+  --eg-feedback-success: #4ade80;
+  --eg-feedback-success-soft: #072416;
+  --eg-feedback-warning: var(--eg-color-amber-500);
+  --eg-feedback-warning-soft: #271906;
+  --eg-feedback-danger: #f87171;
+  --eg-feedback-danger-soft: #2b0b0b;
+  --eg-feedback-info: #60a5fa;
+  --eg-feedback-info-soft: #061527;
+
+  /* Layer 3: component tokens */
+  --eg-shell-bg: var(--eg-bg-app);
+  --eg-shell-sidebar-bg: var(--eg-bg-surface);
+  --eg-shell-header-bg: rgba(13, 17, 16, 0.74);
+  --eg-shell-border: var(--eg-border-default);
+
+  --eg-card-bg: var(--eg-bg-surface);
+  --eg-card-border: var(--eg-border-default);
+  --eg-card-radius: var(--eg-radius-lg);
+  --eg-card-shadow: var(--eg-shadow-xs);
+
+  --eg-button-primary-bg: var(--eg-action-primary);
+  --eg-button-primary-bg-hover: var(--eg-action-primary-hover);
+  --eg-button-primary-text: var(--eg-text-inverse);
+  --eg-button-radius: var(--eg-radius-md);
+  --eg-button-height-sm: 2.25rem;
+  --eg-button-height-md: 2.75rem;
+  --eg-button-height-lg: 3rem;
+
+  --eg-input-bg: var(--eg-bg-surface);
+  --eg-input-border: var(--eg-border-default);
+  --eg-input-border-focus: var(--eg-action-focus);
+  --eg-input-text: var(--eg-text-default);
+  --eg-input-placeholder: var(--eg-text-subtle);
+  --eg-input-radius: var(--eg-radius-md);
+
+  --eg-badge-radius: var(--eg-radius-full);
+  --eg-toast-bg: var(--eg-bg-elevated);
+  --eg-toast-border: var(--eg-border-default);
+  --eg-focus-ring: var(--eg-shadow-focus);
+
+  /* Compatibility aliases consumed by Tailwind v4 and existing public UI */
+  --background: var(--eg-color-zinc-950);
+  --foreground: var(--eg-color-zinc-100);
+  --card: rgba(24, 24, 27, 0.88);
+  --card-foreground: var(--eg-color-zinc-100);
+  --popover: var(--eg-color-zinc-900);
+  --popover-foreground: var(--eg-color-zinc-100);
+  --primary: var(--eg-color-emerald-500);
+  --primary-strong: var(--eg-color-emerald-600);
+  --primary-foreground: var(--eg-color-emerald-950);
+  --secondary: var(--eg-color-zinc-800);
+  --secondary-foreground: var(--eg-color-zinc-100);
+  --muted: var(--eg-color-zinc-900);
+  --muted-foreground: var(--eg-color-zinc-400);
+  --accent: var(--eg-color-emerald-400);
+  --accent-foreground: var(--eg-color-emerald-950);
+  --destructive: var(--eg-color-red-600);
+  --destructive-foreground: var(--eg-color-white);
+  --border: rgba(63, 63, 70, 0.75);
+  --input: rgba(63, 63, 70, 0.85);
+  --ring: rgba(16, 185, 129, 0.45);
+  --radius: var(--eg-radius-xl);
+  --shadow: var(--eg-shadow-web);
+}
+
+.light,
+[data-theme="light"] {
+  color-scheme: light;
+  --eg-bg-app: #f7f8f6;
+  --eg-bg-surface: var(--eg-color-white);
+  --eg-bg-surface-subtle: #f1f5f2;
+  --eg-bg-elevated: var(--eg-color-white);
+  --eg-bg-inverse: var(--eg-color-zinc-950);
+
+  --eg-text-strong: #111827;
+  --eg-text-default: #1f2937;
+  --eg-text-muted: #667085;
+  --eg-text-subtle: #8a948e;
+  --eg-text-inverse: var(--eg-color-white);
+
+  --eg-border-subtle: #edf1ee;
+  --eg-border-default: #d9e1dc;
+  --eg-border-strong: #aebbb3;
+
+  --eg-action-primary: var(--eg-color-emerald-700);
+  --eg-action-primary-hover: var(--eg-color-emerald-800);
+  --eg-action-primary-active: var(--eg-color-emerald-900);
+  --eg-action-primary-soft: #dff5ea;
+  --eg-action-secondary: var(--eg-color-teal-700);
+  --eg-action-focus: var(--eg-color-emerald-700);
+
+  --eg-feedback-success: #16803c;
+  --eg-feedback-success-soft: #e8f7ee;
+  --eg-feedback-warning: var(--eg-color-amber-700);
+  --eg-feedback-warning-soft: var(--eg-color-amber-50);
+  --eg-feedback-danger: var(--eg-color-red-600);
+  --eg-feedback-danger-soft: var(--eg-color-red-50);
+  --eg-feedback-info: var(--eg-color-blue-600);
+  --eg-feedback-info-soft: var(--eg-color-blue-50);
+
+  --eg-shell-header-bg: rgba(250, 250, 250, 0.72);
+  --eg-card-shadow: var(--eg-shadow-sm);
+
+  --background: var(--eg-bg-app);
+  --foreground: var(--eg-text-default);
+  --card: var(--eg-bg-surface);
+  --card-foreground: var(--eg-text-default);
+  --popover: var(--eg-bg-elevated);
+  --popover-foreground: var(--eg-text-default);
+  --primary: var(--eg-action-primary);
+  --primary-strong: var(--eg-action-primary-hover);
+  --primary-foreground: var(--eg-text-inverse);
+  --secondary: var(--eg-color-slate-500);
+  --secondary-foreground: var(--eg-text-inverse);
+  --muted: var(--eg-bg-surface-subtle);
+  --muted-foreground: var(--eg-text-muted);
+  --accent: var(--eg-bg-surface-subtle);
+  --accent-foreground: var(--eg-text-strong);
+  --destructive: var(--eg-feedback-danger);
+  --destructive-foreground: var(--eg-text-inverse);
+  --border: var(--eg-border-default);
+  --input: var(--eg-border-default);
+  --ring: var(--eg-action-focus);
+  --radius: var(--eg-radius-xl);
+  --shadow: var(--eg-shadow-sm);
+}
+
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --eg-bg-app: var(--eg-color-black);
+  --eg-bg-surface: #0d1110;
+  --eg-bg-surface-subtle: #141a18;
+  --eg-bg-elevated: #171f1c;
+  --eg-bg-inverse: var(--eg-color-white);
+
+  --eg-text-strong: #f6f7f6;
+  --eg-text-default: #d7ded9;
+  --eg-text-muted: #9aa6a0;
+  --eg-text-subtle: #7f8d86;
+  --eg-text-inverse: #06130e;
+
+  --eg-border-subtle: #1b2420;
+  --eg-border-default: #25302b;
+  --eg-border-strong: #3a4942;
+
+  --eg-action-primary: var(--eg-color-emerald-400);
+  --eg-action-primary-hover: var(--eg-color-emerald-300);
+  --eg-action-primary-active: var(--eg-color-emerald-200);
+  --eg-action-primary-soft: #06251a;
+  --eg-action-secondary: var(--eg-color-teal-500);
+  --eg-action-focus: var(--eg-color-emerald-300);
+
+  --eg-feedback-success: #4ade80;
+  --eg-feedback-success-soft: #072416;
+  --eg-feedback-warning: var(--eg-color-amber-500);
+  --eg-feedback-warning-soft: #271906;
+  --eg-feedback-danger: #f87171;
+  --eg-feedback-danger-soft: #2b0b0b;
+  --eg-feedback-info: #60a5fa;
+  --eg-feedback-info-soft: #061527;
+
+  --eg-shell-header-bg: rgba(13, 17, 16, 0.74);
+  --eg-card-shadow: var(--eg-shadow-xs);
+
+  --background: var(--eg-color-zinc-950);
+  --foreground: var(--eg-color-zinc-100);
+  --card: rgba(24, 24, 27, 0.88);
+  --card-foreground: var(--eg-color-zinc-100);
+  --popover: var(--eg-color-zinc-900);
+  --popover-foreground: var(--eg-color-zinc-100);
+  --primary: var(--eg-color-emerald-500);
+  --primary-strong: var(--eg-color-emerald-600);
+  --primary-foreground: var(--eg-color-emerald-950);
+  --secondary: var(--eg-color-zinc-800);
+  --secondary-foreground: var(--eg-color-zinc-100);
+  --muted: var(--eg-color-zinc-900);
+  --muted-foreground: var(--eg-color-zinc-400);
+  --accent: var(--eg-color-emerald-400);
+  --accent-foreground: var(--eg-color-emerald-950);
+  --destructive: var(--eg-color-red-600);
+  --destructive-foreground: var(--eg-color-white);
+  --border: rgba(63, 63, 70, 0.75);
+  --input: rgba(63, 63, 70, 0.85);
+  --ring: rgba(16, 185, 129, 0.45);
+  --radius: var(--eg-radius-xl);
+  --shadow: var(--eg-shadow-web);
+}

@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "budgets": [
+    {
+      "path": "public/illustrations",
+      "extensions": [".png", ".jpg", ".jpeg", ".webp", ".avif"],
+      "maxBytes": 400000
+    }
+  ]
+}

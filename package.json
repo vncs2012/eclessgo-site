@@ -1,0 +1,56 @@
+{
+  "name": "eclessgo-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "dev:turbopack": "next dev",
+    "build": "next build --webpack",
+    "build:webpack": "next build --webpack",
+    "build:turbopack": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test:e2e": "playwright test",
+    "test:e2e:build": "npm run build:webpack && npm run test:e2e",
+    "test:e2e:safe": "PLAYWRIGHT_CHANNEL=chromium PLAYWRIGHT_DISABLE_GPU=1 playwright test --workers=1",
+    "test:e2e:church-finder": "PLAYWRIGHT_CHANNEL=${PLAYWRIGHT_CHANNEL:-chrome} PLAYWRIGHT_DISABLE_GPU=1 playwright test --workers=1 e2e/church-finder-concurrency.spec.ts e2e/church-finder-states.spec.ts",
+    "test:e2e:healthy-detail": "E2E_HEALTHY_API=1 PLAYWRIGHT_CHANNEL=${PLAYWRIGHT_CHANNEL:-chrome} PLAYWRIGHT_DISABLE_GPU=1 playwright test --workers=1 e2e/church-detail-healthy.spec.ts",
+    "test:e2e:build:safe": "npm run build:webpack && npm run test:e2e:safe",
+    "test:a11y": "playwright test e2e/accessibility.spec.ts --output=/tmp/eclessgo-web-a11y-results",
+    "check:assets": "node scripts/check-asset-budgets.mjs",
+    "lighthouse": "CHROME_PATH=$(node -e \"console.log(require('playwright').chromium.executablePath())\") lhci autorun --config=./lighthouserc.cjs"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "clsx": "^2.1.1",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^1.7.0",
+    "next": "16.2.6",
+    "next-intl": "^4.12.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-hook-form": "^7.72.1",
+    "react-leaflet": "^5.0.0",
+    "tailwind-merge": "^3.5.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.54.2",
+    "@tailwindcss/postcss": "^4",
+    "@types/leaflet": "^1.9.21",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "overrides": {
+    "tmp": "0.2.5",
+    "postcss": "8.5.14"
+  }
+}

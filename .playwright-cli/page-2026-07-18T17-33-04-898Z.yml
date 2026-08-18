@@ -1,0 +1,144 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e13]:
+            - paragraph [ref=e14]: EclessGO
+            - paragraph [ref=e15]: Mapa público de comunidades e presença digital
+        - navigation [ref=e16]:
+          - link "Comunidades" [ref=e17] [cursor=pointer]:
+            - /url: /comunidades
+          - link "Como funciona" [ref=e18] [cursor=pointer]:
+            - /url: /#como-funciona
+          - link "Para comunidades" [ref=e19] [cursor=pointer]:
+            - /url: /#para-comunidades
+          - link "Cadastro" [ref=e20] [cursor=pointer]:
+            - /url: /cadastro-comunidade
+        - generic [ref=e21]:
+          - button "Mudar idioma" [ref=e22]: PT
+          - link "App" [ref=e27] [cursor=pointer]:
+            - /url: /
+          - link "Entrar no painel" [ref=e30] [cursor=pointer]:
+            - /url: http://localhost:3000
+    - main [ref=e36]:
+      - generic [ref=e37]:
+        - paragraph [ref=e38]: Mapa público
+        - heading "Descubra comunidades cadastradas no EclessGO" [level=1] [ref=e39]
+        - paragraph [ref=e40]: Este diretório mostra apenas comunidades com latitude e longitude válidas. A pessoa pode buscar por nome, filtrar por tradição, usar a própria localização e abrir a página pública de cada espaço.
+      - generic [ref=e42]:
+        - generic [ref=e44]:
+          - textbox "Buscar comunidades" [ref=e46]:
+            - /placeholder: Buscar por nome, cidade, bairro ou comunidade conhecida
+          - combobox "Filtrar por cidade" [ref=e47]:
+            - option "Todas as cidades" [selected]
+            - option "Campinas"
+            - option "São Paulo"
+          - combobox "Filtrar por bairro" [ref=e48]:
+            - option "Todos os bairros" [selected]
+          - combobox "Filtrar por denominação" [ref=e49]:
+            - option "Todas as denominações" [selected]
+            - option "BATISTA"
+            - option "PENTECOSTAL"
+          - generic [ref=e50]:
+            - checkbox "Ao vivo" [ref=e51]
+            - text: Ao vivo
+          - button "Atualizar" [ref=e52]
+          - button "Minha localização" [ref=e53]
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - generic [ref=e60]:
+                - paragraph [ref=e61]: Mapa web
+                - paragraph [ref=e62]: Descoberta pública de comunidades próximas
+              - generic [ref=e63]: 2 comunidades visíveis
+            - generic [ref=e173]:
+              - generic:
+                - generic:
+                  - button [ref=e174] [cursor=pointer]
+                  - button [ref=e176] [cursor=pointer]
+              - generic:
+                - generic [ref=e178]:
+                  - button "Zoom in" [ref=e179] [cursor=pointer]: +
+                  - button "Zoom out" [ref=e180] [cursor=pointer]: −
+                - generic [ref=e181]:
+                  - link "Leaflet" [ref=e182] [cursor=pointer]:
+                    - /url: https://leafletjs.com
+                  - text: "| ©"
+                  - link "OpenStreetMap" [ref=e187] [cursor=pointer]:
+                    - /url: https://www.openstreetmap.org/copyright
+          - generic [ref=e65]:
+            - generic [ref=e71]:
+              - paragraph [ref=e72]: Diretório público em tempo real
+              - paragraph [ref=e73]: Exibindo comunidades públicas do EclessGO a partir da referência de Goiânia.
+            - article [ref=e74]:
+              - button "Igreja Esperança PENTECOSTAL Campinas Av. Esperança, 45, Campinas, SP 142.4 km Plano BASIC 0 membros" [pressed] [ref=e75]:
+                - generic [ref=e77]:
+                  - heading "Igreja Esperança" [level=3] [ref=e79]
+                  - paragraph [ref=e80]: PENTECOSTAL
+                  - paragraph [ref=e81]: Campinas
+                  - paragraph [ref=e82]: Av. Esperança, 45, Campinas, SP
+                  - generic [ref=e83]:
+                    - generic [ref=e84]: 142.4 km
+                    - generic [ref=e85]: Plano BASIC
+                    - generic [ref=e86]: 0 membros
+              - generic [ref=e91]:
+                - link "Ver página pública" [ref=e92] [cursor=pointer]:
+                  - /url: /comunidades/igreja-esperanca
+                - generic [ref=e93]: Clique no card ou no marker para destacar no mapa.
+            - article [ref=e94]:
+              - button "Igreja Central BATISTA São Paulo Rua das Flores 811.1 km Plano PREMIUM 0 membros" [ref=e95]:
+                - generic [ref=e97]:
+                  - heading "Igreja Central" [level=3] [ref=e99]
+                  - paragraph [ref=e100]: BATISTA
+                  - paragraph [ref=e101]: São Paulo
+                  - paragraph [ref=e102]: Rua das Flores
+                  - generic [ref=e103]:
+                    - generic [ref=e104]: 811.1 km
+                    - generic [ref=e105]: Plano PREMIUM
+                    - generic [ref=e106]: 0 membros
+              - generic [ref=e111]:
+                - link "Ver página pública" [ref=e112] [cursor=pointer]:
+                  - /url: /comunidades/igreja-central
+                - generic [ref=e113]: Clique no card ou no marker para destacar no mapa.
+            - generic [ref=e114]:
+              - paragraph [ref=e115]: Comunidade destacada
+              - generic [ref=e116]:
+                - generic [ref=e117]:
+                  - heading "Igreja Esperança" [level=3] [ref=e118]
+                  - paragraph [ref=e119]: Av. Esperança, 45, Campinas, SP
+                - link "Abrir página completa" [ref=e120] [cursor=pointer]:
+                  - /url: /comunidades/igreja-esperanca
+    - contentinfo [ref=e121]:
+      - generic [ref=e122]:
+        - generic [ref=e123]:
+          - generic [ref=e131]:
+            - paragraph [ref=e132]: EclessGO
+            - paragraph [ref=e133]: Presença digital, mapa público e comunidade em um só ecossistema.
+          - paragraph [ref=e134]: Descubra comunidades, apresente seu espaço no mapa e conecte o público ao app e ao painel administrativo.
+        - generic [ref=e135]:
+          - paragraph [ref=e136]: Explorar
+          - link "Início" [ref=e137] [cursor=pointer]:
+            - /url: /
+          - link "Mapa de comunidades" [ref=e138] [cursor=pointer]:
+            - /url: /comunidades
+          - link "Cadastrar comunidade" [ref=e139] [cursor=pointer]:
+            - /url: /cadastro-comunidade
+        - generic [ref=e140]:
+          - paragraph [ref=e141]: Operação
+          - link "Painel administrativo" [ref=e142] [cursor=pointer]:
+            - /url: http://localhost:3000
+          - link "Como funciona" [ref=e143] [cursor=pointer]:
+            - /url: /#como-funciona
+          - link "App EclessGO" [ref=e144] [cursor=pointer]:
+            - /url: /#app
+          - link "Termos de Uso" [ref=e145] [cursor=pointer]:
+            - /url: /termos
+          - link "Política de Privacidade" [ref=e146] [cursor=pointer]:
+            - /url: /privacidade
+      - generic [ref=e148]:
+        - paragraph [ref=e149]: © 2026 EclessGO. Plataforma pública para descoberta e presença digital de comunidades.
+        - paragraph [ref=e150]: Leaflet + OpenStreetMap para o mapa web público
+  - button "Open Next.js Dev Tools" [ref=e169] [cursor=pointer]
+  - alert [ref=e188]

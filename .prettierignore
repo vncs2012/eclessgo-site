@@ -1,0 +1,13 @@
+node_modules
+dist
+build
+storybook-static
+coverage
+playwright-report
+test-results
+.next
+.expo
+*.lock
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

@@ -1,0 +1,98 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e176]:
+    - banner [ref=e178]:
+      - generic [ref=e179]:
+        - link [ref=e180] [cursor=pointer]:
+          - /url: /
+          - paragraph [ref=e188]: EclessGO
+        - generic [ref=e189]:
+          - button "Mudar idioma" [ref=e190]: PT
+          - link "Entrar no painel" [ref=e195] [cursor=pointer]:
+            - /url: http://localhost:3000
+    - main [ref=e201]:
+      - generic [ref=e202]:
+        - paragraph [ref=e203]: Mapa público
+        - heading "Descubra comunidades cadastradas no EclessGO" [level=1] [ref=e204]
+        - paragraph [ref=e205]: Este diretório mostra apenas comunidades com latitude e longitude válidas. A pessoa pode buscar por nome, filtrar por tradição, usar a própria localização e abrir a página pública de cada espaço.
+      - generic [ref=e207]:
+        - generic [ref=e209]:
+          - textbox "Buscar comunidades" [ref=e211]:
+            - /placeholder: Buscar por nome, cidade, bairro ou comunidade conhecida
+          - combobox "Filtrar por cidade" [ref=e212]:
+            - option "Todas as cidades" [selected]
+          - combobox "Filtrar por bairro" [ref=e213]:
+            - option "Todos os bairros" [selected]
+          - combobox "Filtrar por denominação" [ref=e214]:
+            - option "Todas as denominações" [selected]
+          - generic [ref=e215]:
+            - checkbox "Ao vivo" [ref=e216]
+            - text: Ao vivo
+          - button "Atualizar" [ref=e217]
+          - button "Minha localização" [ref=e218]
+        - generic [ref=e222]:
+          - generic [ref=e223]:
+            - generic [ref=e224]:
+              - generic [ref=e225]:
+                - paragraph [ref=e226]: Mapa web
+                - paragraph [ref=e227]: Descoberta pública de comunidades próximas
+              - generic [ref=e228]: 0 comunidades visíveis
+            - generic [ref=e229]: Carregando mapa...
+          - generic [ref=e230]:
+            - generic [ref=e236]:
+              - paragraph [ref=e237]: Diretório público em tempo real
+              - paragraph [ref=e238]: Nenhuma comunidade com coordenadas válidas foi encontrada nesta área.
+            - generic [ref=e239]:
+              - paragraph [ref=e241]: Nenhuma comunidade encontrada
+              - paragraph [ref=e242]: Ainda não há comunidades publicadas com coordenadas válidas para esta área.
+              - link "Cadastrar comunidade" [ref=e244] [cursor=pointer]:
+                - /url: /cadastro-comunidade
+    - contentinfo [ref=e245]:
+      - generic [ref=e246]:
+        - generic [ref=e247]:
+          - generic [ref=e255]:
+            - paragraph [ref=e256]: EclessGO
+            - paragraph [ref=e257]: Presença digital, mapa público e comunidade em um só ecossistema.
+          - paragraph [ref=e258]: Descubra comunidades, apresente seu espaço no mapa e conecte o público ao app e ao painel administrativo.
+        - generic [ref=e259]:
+          - paragraph [ref=e260]: Explorar
+          - link "Início" [ref=e261] [cursor=pointer]:
+            - /url: /
+          - link "Mapa de comunidades" [ref=e262] [cursor=pointer]:
+            - /url: /comunidades
+          - link "Cadastrar comunidade" [ref=e263] [cursor=pointer]:
+            - /url: /cadastro-comunidade
+        - generic [ref=e264]:
+          - paragraph [ref=e265]: Operação
+          - link "Painel administrativo" [ref=e266] [cursor=pointer]:
+            - /url: http://localhost:3000
+          - link "Como funciona" [ref=e267] [cursor=pointer]:
+            - /url: /#como-funciona
+          - link "App EclessGO" [ref=e268] [cursor=pointer]:
+            - /url: /#app
+          - link "Termos de Uso" [ref=e269] [cursor=pointer]:
+            - /url: /termos
+          - link "Política de Privacidade" [ref=e270] [cursor=pointer]:
+            - /url: /privacidade
+      - generic [ref=e272]:
+        - paragraph [ref=e273]: © 2026 EclessGO. Plataforma pública para descoberta e presença digital de comunidades.
+        - paragraph [ref=e274]: Leaflet + OpenStreetMap para o mapa web público
+  - dialog [ref=e130]:
+    - generic [ref=e131]:
+      - generic [ref=e132]:
+        - paragraph [ref=e133]: Voce aceita o uso de cookies de medicao?
+        - paragraph [ref=e134]:
+          - text: Usamos sinais anonimos (sem identificacao pessoal) para entender como as comunidades sao encontradas e melhorar o produto. Voce pode mudar de ideia depois nas
+          - link "configuracoes de privacidade" [ref=e135] [cursor=pointer]:
+            - /url: /privacidade
+          - text: .
+      - generic [ref=e136]:
+        - button "Recusar" [ref=e137]
+        - button "Aceitar" [ref=e138]
+  - button "Open Next.js Dev Tools" [ref=e149] [cursor=pointer]:
+    - generic [ref=e280]:
+      - text: Compiling
+      - generic [ref=e281]:
+        - generic [ref=e282]: .
+        - generic [ref=e283]: .
+        - generic [ref=e284]: .
+  - alert [ref=e157]: Comunidades | EclessGO

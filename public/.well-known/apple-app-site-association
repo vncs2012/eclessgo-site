@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["TEAMID.com.eclessgo.app"],
+        "components": [
+          {
+            "/": "/comunidades/*",
+            "comment": "Abrir EclessGO ao acessar pagina publica de comunidade"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["TEAMID.com.eclessgo.app"]
+  }
+}

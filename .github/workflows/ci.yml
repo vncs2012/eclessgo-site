@@ -1,0 +1,57 @@
+name: web-ci
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint (eslint)
+        run: npm run lint
+
+      - name: Asset budgets
+        run: npm run check:assets
+
+      - name: Typecheck (route types + tsc)
+        run: npm run typecheck
+
+      # next start (usado pelo Playwright/Lighthouse) exige o build no
+      # checkout limpo; não executar a11y antes de gerar .next.
+      - name: Build
+        run: npm run build:webpack
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E and accessibility tests
+        run: npm run test:e2e
+
+      - name: Church finder regression (single worker)
+        env:
+          PLAYWRIGHT_CHANNEL: chromium
+        run: npm run test:e2e:church-finder
+
+      - name: Upload Playwright artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-playwright-${{ github.run_id }}
+          path: test-results
+          if-no-files-found: ignore
+
+      - name: Lighthouse CI (budgets)
+        run: npm run lighthouse
