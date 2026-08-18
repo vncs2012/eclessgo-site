@@ -3,6 +3,7 @@ import { ImageResponse } from "next/og";
 import { PUBLIC_CACHE_TTL_SECONDS } from "@/lib/public-cache";
 import { ApiRequestError, getPublicChurchBySlug } from "@/lib/public-api";
 
+export const runtime = "nodejs";
 export const alt = "Comunidade no diretório EclessGO";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
