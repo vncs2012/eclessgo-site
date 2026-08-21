@@ -32,6 +32,11 @@ export interface AnnouncementRequest {
   attachments?: unknown[];
 }
 
+export interface AssignmentResponseRequest {
+  response: "CONFIRMED" | "DECLINED";
+  response_note?: string | null;
+}
+
 export interface AuditLogResponse {
   id: string;
   actor_user_id?: string | null;
@@ -373,6 +378,21 @@ export interface DataResponse_ResetPasswordResponse_ {
   message?: string | null;
 }
 
+export interface DataResponse_ServiceScheduleResponse_ {
+  data: ServiceScheduleResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_TeamMemberResponse_ {
+  data: TeamMemberResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_TeamResponse_ {
+  data: TeamResponse;
+  message?: string | null;
+}
+
 export interface DataResponse_TestPushResponse_ {
   data: TestPushResponse;
   message?: string | null;
@@ -383,13 +403,43 @@ export interface DataResponse_TokenPairResponse_ {
   message?: string | null;
 }
 
+export interface DataResponse_dict_ {
+  data: Record<string, unknown>;
+  message?: string | null;
+}
+
 export interface DataResponse_dict_str__list_PeaceFeelingResponse___ {
   data: Record<string, PeaceFeelingResponse[]>;
   message?: string | null;
 }
 
+export interface DataResponse_list_MyAssignmentResponse__ {
+  data: MyAssignmentResponse[];
+  message?: string | null;
+}
+
 export interface DataResponse_list_PeaceMomentResponse__ {
   data: PeaceMomentResponse[];
+  message?: string | null;
+}
+
+export interface DataResponse_list_ServiceScheduleResponse__ {
+  data: ServiceScheduleResponse[];
+  message?: string | null;
+}
+
+export interface DataResponse_list_TeamMemberCandidateResponse__ {
+  data: TeamMemberCandidateResponse[];
+  message?: string | null;
+}
+
+export interface DataResponse_list_TeamMemberResponse__ {
+  data: TeamMemberResponse[];
+  message?: string | null;
+}
+
+export interface DataResponse_list_TeamResponse__ {
+  data: TeamResponse[];
   message?: string | null;
 }
 
@@ -624,6 +674,13 @@ export interface ManualDonationRequest {
 }
 
 export type MembershipStatus = "PENDING" | "ACTIVE" | "INACTIVE";
+
+export interface MyAssignmentResponse {
+  assignment: ScheduleAssignmentResponse;
+  slot: Record<string, unknown>;
+  schedule: Record<string, unknown>;
+  team: Record<string, unknown>;
+}
 
 export interface NotificationReadResponse {
   id: string;
@@ -998,9 +1055,144 @@ export interface ResetPasswordResponse {
   reset: boolean;
 }
 
+export interface ScheduleAssignmentResponse {
+  id: string;
+  team_member_id: string;
+  response: "PENDING" | "CONFIRMED" | "DECLINED";
+  response_note: string | null;
+  responded_at: string | null;
+  member_name: string;
+  member_avatar: string | null;
+}
+
+export interface ScheduleCreateRequest {
+  event_id?: string | null;
+  title: string;
+  starts_at: string;
+  ends_at: string;
+  location?: string | null;
+  notes?: string | null;
+  slots?: ScheduleSlotWrite[];
+}
+
+export interface ScheduleSlotResponse {
+  id: string;
+  label: string;
+  position: number;
+  capacity: number;
+  assignments: ScheduleAssignmentResponse[];
+}
+
+export interface ScheduleSlotWrite {
+  label: string;
+  position: number;
+  capacity?: number;
+  team_member_ids?: string[];
+}
+
+export interface ScheduleUpdateRequest {
+  event_id?: string | null;
+  title: string;
+  starts_at: string;
+  ends_at: string;
+  location?: string | null;
+  notes?: string | null;
+  slots?: ScheduleSlotWrite[];
+  version: number;
+}
+
 export interface SendTestPushRequest {
   title?: string;
   body?: string;
+}
+
+export interface ServiceScheduleResponse {
+  id: string;
+  church_id: string;
+  team_id: string;
+  event_id: string | null;
+  title: string;
+  starts_at: string;
+  ends_at: string;
+  location: string | null;
+  notes: string | null;
+  status: "DRAFT" | "PUBLISHED" | "CANCELLED";
+  published_at: string | null;
+  created_by: string;
+  version: number;
+  created_at: string;
+  slots: ScheduleSlotResponse[];
+}
+
+export type ServiceScheduleStatus = "DRAFT" | "PUBLISHED" | "CANCELLED";
+
+export interface TeamCreateRequest {
+  name: string;
+  type?: string;
+  color?: string;
+}
+
+export interface TeamMemberCandidateResponse {
+  church_member_id: string;
+  user_id: string;
+  name: string;
+  avatar: string | null;
+  email: string | null;
+}
+
+export interface TeamMemberCreateRequest {
+  church_member_id: string;
+  role?: "LEADER" | "MEMBER";
+  status?: "INVITED" | "ACTIVE" | "INACTIVE";
+}
+
+export interface TeamMemberPerson {
+  id: string;
+  name: string;
+  avatar: string | null;
+  email: string | null;
+}
+
+export interface TeamMemberResponse {
+  id: string;
+  team_id: string;
+  church_member_id: string;
+  user_id: string;
+  role: "LEADER" | "MEMBER";
+  status: "INVITED" | "ACTIVE" | "INACTIVE";
+  user: TeamMemberPerson;
+  created_at: string;
+}
+
+export interface TeamMemberUpdateRequest {
+  role?: "LEADER" | "MEMBER" | null;
+  status?: "INVITED" | "ACTIVE" | "INACTIVE" | null;
+}
+
+export interface TeamMembershipSummary {
+  id: string;
+  role: "LEADER" | "MEMBER";
+  status: "INVITED" | "ACTIVE" | "INACTIVE";
+}
+
+export interface TeamResponse {
+  id: string;
+  church_id: string;
+  name: string;
+  type: string;
+  color: string;
+  status: "ACTIVE" | "ARCHIVED";
+  created_by: string;
+  created_at: string;
+  membership?: TeamMembershipSummary | null;
+  member_count?: number;
+}
+
+export interface TeamUpdateRequest {
+  name?: string | null;
+  type?: string | null;
+  color?: string | null;
+  status?: "ACTIVE" | "ARCHIVED" | null;
 }
 
 export interface TestPushResponse {
@@ -1066,6 +1258,7 @@ export interface UserChurchResponse {
   role: ChurchRole;
   status: MembershipStatus;
   church: Record<string, unknown>;
+  has_team_access?: boolean;
 }
 
 export interface UserResponse {
