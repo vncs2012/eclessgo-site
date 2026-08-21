@@ -20,6 +20,13 @@ export interface ApiErrorResponse {
   details?: unknown;
 }
 
+export interface AccountDeletionResponse {
+  deleted: boolean;
+  deleted_at: string;
+  retained_categories: string[];
+  message: string;
+}
+
 export interface AddComplianceNoteRequest {
   note: string;
   visibility?: ComplianceNoteVisibility;
@@ -226,6 +233,11 @@ export interface DashboardResponse {
   finances: Record<string, unknown>;
   engagement: Record<string, unknown>;
   operational: Record<string, unknown>;
+}
+
+export interface DataResponse_AccountDeletionResponse_ {
+  data: AccountDeletionResponse;
+  message?: string | null;
 }
 
 export interface DataResponse_AuthResponse_ {
@@ -448,6 +460,11 @@ export interface DataResponse_list_UserChurchResponse__ {
   message?: string | null;
 }
 
+export interface DeleteAccountRequest {
+  confirmation: string;
+  current_password: string;
+}
+
 export interface DonationCampaignPublicResponse {
   id: string;
   title: string;
@@ -642,6 +659,7 @@ export interface LegalDocumentResponse {
   title: string;
   url: string;
   effective_at: string;
+  status: "DRAFT" | "PENDING_APPROVAL" | "PUBLISHED";
 }
 
 export interface LegalDocumentsResponse {
