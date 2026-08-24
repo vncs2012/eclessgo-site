@@ -228,6 +228,9 @@
       "acceptTerms": "Read and accept the Terms of Use and Privacy Policy."
     },
     "status": {
+      "loadingLegal": "Confirming the current legal document versions...",
+      "retryLegal": "Try again",
+      "legalConfirmed": "Validity confirmed. Terms {terms} · Privacy {privacy}.",
       "geocoding": "Looking up address from the selected point...",
       "addressFound": "Address found: {address}",
       "coordsSavedReview": "Coordinates saved. Review the address before submitting.",
@@ -240,6 +243,9 @@
       "finalizing": "Finalizing community registration..."
     },
     "errors": {
+      "legalUnavailable": "Could not confirm the validity of the legal documents.",
+      "legalNotPublished": "Registration is unavailable until both Terms and Privacy are published.",
+      "legalUpdated": "The legal documents were updated. Review and accept the new version before submitting again.",
       "uploadFailed": "Could not upload the image. Check the storage configuration and try again.",
       "storageNoData": "Storage did not return the uploaded image data.",
       "submitFailed": "Could not complete the community registration."
@@ -277,7 +283,13 @@
     "title": "Do you accept measurement cookies?",
     "description": "We use anonymous signals (no personal identification) to understand how communities are found and to improve the product. You can change your mind later in the <link>privacy settings</link>.",
     "decline": "Decline",
-    "accept": "Accept"
+    "accept": "Accept",
+    "manage": "Privacy preferences",
+    "dialogTitle": "Analytics preferences",
+    "statusUnknown": "You have not chosen whether to allow analytics yet.",
+    "statusGranted": "Analytics is enabled. You can revoke it at any time.",
+    "statusDenied": "Analytics is disabled. No session identifier will be used.",
+    "close": "Close preferences"
   },
   "home": {
     "hero": {

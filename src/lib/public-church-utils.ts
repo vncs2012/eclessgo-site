@@ -101,7 +101,7 @@ export function mapPublicChurchDetails(church: RawChurch): PublicChurchDetails {
     schedule: Array.isArray(church.schedule) ? church.schedule : [],
     memberCount: Number(church.member_count || 0),
     plan: church.plan || "FREE",
-    pixKey: church.pix_key ?? null,
+    pixKey: normalizeOptionalText(church.pix_key),
     isLive: Boolean(church.is_live),
     donationsEnabled: Boolean(church.donations_enabled),
     thumbnail: church.thumbnail ?? null,

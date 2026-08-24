@@ -228,6 +228,9 @@
       "acceptTerms": "Leia e aceite os Termos de Uso e a Política de Privacidade."
     },
     "status": {
+      "loadingLegal": "Confirmando a versão atual dos documentos legais...",
+      "retryLegal": "Tentar novamente",
+      "legalConfirmed": "Vigência confirmada. Termos {terms} · Privacidade {privacy}.",
       "geocoding": "Buscando endereço a partir do ponto selecionado...",
       "addressFound": "Endereço encontrado: {address}",
       "coordsSavedReview": "Coordenadas salvas. Revise o endereço antes de enviar.",
@@ -240,6 +243,9 @@
       "finalizing": "Finalizando cadastro da comunidade..."
     },
     "errors": {
+      "legalUnavailable": "Não foi possível confirmar a vigência dos documentos legais.",
+      "legalNotPublished": "O cadastro fica indisponível até que Termos e Privacidade estejam publicados.",
+      "legalUpdated": "Os documentos legais foram atualizados. Confira e aceite a nova versão antes de enviar novamente.",
       "uploadFailed": "Nao foi possivel enviar a imagem. Verifique a configuracao de storage e tente novamente.",
       "storageNoData": "O storage nao retornou os dados da imagem enviada.",
       "submitFailed": "Não foi possível concluir o cadastro da comunidade."
@@ -277,7 +283,13 @@
     "title": "Voce aceita o uso de cookies de medicao?",
     "description": "Usamos sinais anonimos (sem identificacao pessoal) para entender como as comunidades sao encontradas e melhorar o produto. Voce pode mudar de ideia depois nas <link>configuracoes de privacidade</link>.",
     "decline": "Recusar",
-    "accept": "Aceitar"
+    "accept": "Aceitar",
+    "manage": "Preferências de privacidade",
+    "dialogTitle": "Preferências de analytics",
+    "statusUnknown": "Você ainda não escolheu se permite analytics.",
+    "statusGranted": "Analytics permitido. Você pode revogar a qualquer momento.",
+    "statusDenied": "Analytics desativado. Nenhum identificador de sessão será usado.",
+    "close": "Fechar preferências"
   },
   "home": {
     "hero": {

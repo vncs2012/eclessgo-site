@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { APP_CTA_URL } from "@/lib/site-config";
+import { SITE_URL } from "@/lib/site-config";
 import { trackPublicEvent } from "@/lib/public-analytics";
+import { buildCommunityUniversalPath, buildCommunityUniversalUrl } from "@/lib/release-paths";
 
 type ChurchDetailActionsProps = {
   churchId: string;
@@ -22,12 +23,13 @@ export function ChurchDetailActions({
   const whatsappShareUrl = `https://wa.me/?text=${encodeURIComponent(
     `Conheca ${churchName} no mapa publico do EclessGO: ${publicUrl}`,
   )}`;
-  const path = `/comunidades/${slug}`;
+  const path = buildCommunityUniversalPath(slug);
+  const appUrl = buildCommunityUniversalUrl(slug, SITE_URL);
 
   return (
     <div className="mt-8 flex flex-wrap gap-3">
       <a
-        href={APP_CTA_URL}
+        href={appUrl}
         onClick={() =>
           void trackPublicEvent({
             churchId,

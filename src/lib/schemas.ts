@@ -96,18 +96,6 @@ export const signupSchema = z
     path: ["confirmPassword"],
   });
 
-export const donationSchema = z.object({
-  amount: z.coerce
-    .number({ message: "Valor invalido" })
-    .positive("Informe um valor maior que zero"),
-  donorName: z.string().trim().max(120, "Nome muito longo").optional().or(z.literal("")),
-  donorEmail: z.union([emailSchema, z.literal("")]).optional(),
-  paymentMethod: z.string().trim().min(1, "Informe a forma de pagamento"),
-  message: z.string().trim().max(500, "Mensagem deve ter no maximo 500 caracteres").optional().or(z.literal("")),
-  anonymous: z.boolean().optional(),
-});
-
 export type ChurchInviteFormData = z.infer<typeof churchInviteSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
-export type DonationFormData = z.infer<typeof donationSchema>;

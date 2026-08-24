@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
+import { assertReleaseConfig, isStrictReleaseMode } from "./src/lib/release-config";
+
+// Production processes opt into a fail-closed startup/build gate. Local
+// development keeps its documented localhost defaults when strict mode is off.
+if (isStrictReleaseMode()) {
+  assertReleaseConfig();
+}
+
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 function getConfiguredMediaOrigin(value: string | undefined) {
@@ -47,20 +55,6 @@ const nextConfig: NextConfig = {
       {
         source: "/:path*",
         headers: securityHeaders,
-      },
-      {
-        source: "/.well-known/apple-app-site-association",
-        headers: [
-          { key: "Content-Type", value: "application/json" },
-          { key: "Cache-Control", value: "public, max-age=3600" },
-        ],
-      },
-      {
-        source: "/.well-known/assetlinks.json",
-        headers: [
-          { key: "Content-Type", value: "application/json" },
-          { key: "Cache-Control", value: "public, max-age=3600" },
-        ],
       },
     ];
   },

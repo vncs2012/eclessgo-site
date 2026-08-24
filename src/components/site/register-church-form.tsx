@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -14,6 +14,7 @@ import { RegisterChurchStepper } from "@/components/site/register-church-stepper
 import {
   buildRegisterChurchPayload,
   buildRegistrationSuccessQuery,
+  fetchPublicLegalDocuments,
   fetchReverseGeocode,
   getSelectedLocation,
   type RegisterChurchUploadedMedia,
@@ -24,7 +25,8 @@ import type {
   RegisterChurchMediaPurpose,
   RegisterChurchMediaUploadResponse,
 } from "@/types/public";
-import { LEGAL_PRIVACY_PATH, LEGAL_TERMS_PATH } from "@/lib/legal";
+import type { LegalDocumentsResponse } from "@/lib/generated-api";
+import { areLegalDocumentsPublished, LEGAL_PRIVACY_PATH, LEGAL_TERMS_PATH, LEGAL_VERSION_CONFLICT_CODES } from "@/lib/legal";
 import { fetchWithClientTrace } from "@/lib/client-fetch";
 
 type UploadApiResult = {
@@ -71,6 +73,9 @@ export function RegisterChurchForm() {
   const [locationStatus, setLocationStatus] = useState<string | null>(null);
   const [isResolvingAddress, setIsResolvingAddress] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+  const [legalDocuments, setLegalDocuments] = useState<LegalDocumentsResponse | null>(null);
+  const [legalLoading, setLegalLoading] = useState(true);
+  const [legalError, setLegalError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
@@ -97,6 +102,32 @@ export function RegisterChurchForm() {
   const mapCenter = selectedLocation ?? GOIANIA_CENTER;
   const activeStep = FORM_STEPS[currentStep];
   const isLastStep = currentStep === LAST_STEP_INDEX;
+  const legalReady = areLegalDocumentsPublished(legalDocuments);
+  const legalStatusText = legalDocuments
+    ? `${legalDocuments.terms.status} / ${legalDocuments.privacy.status}`
+    : "";
+  const legalVersionText = legalDocuments
+    ? { terms: legalDocuments.terms.version, privacy: legalDocuments.privacy.version }
+    : null;
+
+  const loadLegalDocuments = useCallback(async () => {
+    setLegalLoading(true);
+    setLegalError(null);
+
+    try {
+      const documents = await fetchPublicLegalDocuments();
+      setLegalDocuments(documents);
+    } catch (error) {
+      setLegalDocuments(null);
+      setLegalError(error instanceof Error ? error.message : t("errors.legalUnavailable"));
+    } finally {
+      setLegalLoading(false);
+    }
+  }, [t]);
+
+  useEffect(() => {
+    void loadLegalDocuments();
+  }, [loadLegalDocuments]);
 
   async function reverseGeocode(location: Coordinates) {
     setIsResolvingAddress(true);
@@ -192,6 +223,12 @@ export function RegisterChurchForm() {
   async function onSubmit(values: SubmitValues) {
     setServerError(null);
     setUploadStatus(null);
+
+    if (!legalDocuments || !legalReady) {
+      setServerError(legalError || t("errors.legalNotPublished"));
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -203,11 +240,17 @@ export function RegisterChurchForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(buildRegisterChurchPayload(values, uploadedMedia)),
+        body: JSON.stringify(buildRegisterChurchPayload(values, uploadedMedia, legalDocuments)),
       });
 
-      const result = (await response.json()) as { message?: string };
+      const result = (await response.json()) as { message?: string; code?: string };
       if (!response.ok) {
+        if (response.status === 409 && result.code && LEGAL_VERSION_CONFLICT_CODES.has(result.code)) {
+          setValue("acceptTerms", false, { shouldDirty: true, shouldValidate: true });
+          await loadLegalDocuments();
+          setServerError(t("errors.legalUpdated"));
+          return;
+        }
         throw new Error(result.message || t("errors.submitFailed"));
       }
 
@@ -262,6 +305,7 @@ export function RegisterChurchForm() {
           <input
             type="checkbox"
             {...register("acceptTerms")}
+            disabled={!legalReady || legalLoading}
             className="mt-1 h-4 w-4 rounded border-white/20 bg-zinc-950 text-emerald-500 focus:ring-emerald-400"
           />
           <span>
@@ -278,6 +322,29 @@ export function RegisterChurchForm() {
         {errors.acceptTerms?.message ? (
           <p className="mt-2 text-xs text-red-300">{t(errors.acceptTerms.message)}</p>
         ) : null}
+        <div className="mt-3 rounded-xl border border-white/8 bg-zinc-950/50 px-3 py-2 text-xs leading-5 text-zinc-400" aria-live="polite">
+          {legalLoading ? <p>{t("status.loadingLegal")}</p> : null}
+          {!legalLoading && legalError ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="flex-1 text-red-200">{legalError}</p>
+              <button
+                type="button"
+                onClick={() => void loadLegalDocuments()}
+                className="rounded-full border border-white/15 px-3 py-1.5 font-semibold text-zinc-100 transition hover:border-emerald-400/40 hover:text-white"
+              >
+                {t("status.retryLegal")}
+              </button>
+            </div>
+          ) : null}
+          {!legalLoading && !legalError && legalDocuments && !legalReady ? (
+            <p className="text-amber-200">
+              {t("errors.legalNotPublished")} ({legalStatusText})
+            </p>
+          ) : null}
+          {!legalLoading && !legalError && legalReady && legalVersionText ? (
+            <p>{t("status.legalConfirmed", legalVersionText)}</p>
+          ) : null}
+        </div>
       </fieldset>
 
       {serverError ? (
@@ -296,6 +363,7 @@ export function RegisterChurchForm() {
         currentStep={currentStep}
         isLastStep={isLastStep}
         isSubmitting={isSubmitting}
+        isSubmitDisabled={!legalReady || legalLoading}
         onPrevious={handlePreviousStep}
         onNext={handleNextStep}
       />

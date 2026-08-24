@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { LegalDocument } from "@/components/site/legal-document";
-import { formatLegalEffectiveDate, LEGAL_TERMS_VERSION } from "@/lib/legal";
 import { SITE_URL } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -15,8 +14,7 @@ export default function TermsPage() {
   return (
     <LegalDocument
       title="Termos de Uso"
-      version={LEGAL_TERMS_VERSION}
-      effectiveAt={formatLegalEffectiveDate(LEGAL_TERMS_VERSION)}
+      documentKey="terms"
       intro="Estes termos explicam as regras para usar o EclessGO, cadastrar uma comunidade e participar das experiências públicas e autenticadas da plataforma."
       sections={[
         {

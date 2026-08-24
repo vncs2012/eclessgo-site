@@ -1,5 +1,7 @@
 import { DEFAULT_API_BASE_URL } from "@/lib/site-config";
 import type { AuthResponse, ChurchResponse, PublicChurchResponse } from "@/lib/generated-api";
+import type { LegalDocumentsResponse } from "@/lib/generated-api";
+import { parseLegalDocuments } from "@/lib/legal";
 import { fetchPublicUpstream } from "@/lib/public-bff";
 import type { TraceHeaders } from "@/lib/trace-context";
 import { mapPublicChurchDetails, mapPublicChurchListItem } from "@/lib/public-church-utils";
@@ -214,6 +216,17 @@ export async function getPublicChurchBySlug(
 ) {
   const response = await fetchApi<ApiEnvelope<RawPublicChurch>>(`/churches/slug/${slug}`, options);
   return mapPublicChurchDetails(response.data) as PublicChurchDetails;
+}
+
+export async function getPublicLegalDocuments(
+  options: Pick<RequestOptions, "requestId" | "traceHeaders"> = {},
+): Promise<LegalDocumentsResponse> {
+  const response = await fetchApi<ApiEnvelope<unknown>>("/legal/documents", {
+    ...options,
+    cache: "no-store",
+  });
+
+  return parseLegalDocuments(response.data);
 }
 
 export async function registerChurch(

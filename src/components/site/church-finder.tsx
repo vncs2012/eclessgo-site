@@ -1,11 +1,12 @@
 "use client";
 
-import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 
 import { ChurchMap } from "@/components/site/church-map";
 import { ChurchFinderFilters } from "@/components/site/church-finder-filters";
 import { ChurchFinderResults } from "@/components/site/church-finder-results";
+import { getConsent, subscribeToConsent } from "@/lib/consent";
 import { trackPublicEvent } from "@/lib/public-analytics";
 import {
   useChurchFinderData,
@@ -27,6 +28,7 @@ export function ChurchFinder({
   initialLoadError = null,
 }: ChurchFinderProps) {
   const t = useTranslations("finder");
+  const consent = useSyncExternalStore(subscribeToConsent, getConsent, () => null);
   const trackedMapViewsRef = useRef<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [denomination, setDenomination] = useState("");
@@ -108,6 +110,9 @@ export function ChurchFinder({
     if (!selectedChurch) return;
 
     if (trackedMapViewsRef.current.has(selectedChurch.id)) return;
+    // Keep this view pending while consent is unknown/denied. The consent
+    // subscription reruns the effect after acceptance in the same load.
+    if (consent?.analytics !== "granted") return;
     trackedMapViewsRef.current.add(selectedChurch.id);
 
     void trackPublicEvent({
@@ -122,7 +127,7 @@ export function ChurchFinder({
         isLive: selectedChurch.isLive,
       },
     });
-  }, [selectedChurch]);
+  }, [consent, selectedChurch]);
 
   function handleSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

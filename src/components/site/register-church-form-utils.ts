@@ -1,7 +1,8 @@
 import type { FormValues, SubmitValues } from "@/components/site/register-church-form-schema";
+import type { LegalDocumentsResponse } from "@/lib/generated-api";
 import type { Coordinates, RegisterChurchMediaUploadResponse, RegisterChurchRequest } from "@/types/public";
-import { LEGAL_PRIVACY_VERSION, LEGAL_TERMS_VERSION } from "@/lib/legal";
 import { fetchWithClientTrace } from "@/lib/client-fetch";
+import { parseLegalDocuments } from "@/lib/legal";
 
 export type ReverseGeocodeAddress = {
   street?: string;
@@ -16,6 +17,12 @@ export type ReverseGeocodeAddress = {
 type ReverseGeocodeResult = {
   data?: ReverseGeocodeAddress;
   message?: string;
+};
+
+type LegalDocumentsResult = {
+  data?: unknown;
+  message?: string;
+  code?: string;
 };
 
 export type RegisterChurchUploadedMedia = {
@@ -52,9 +59,29 @@ export async function fetchReverseGeocode(location: Coordinates) {
   return result.data;
 }
 
+export async function fetchPublicLegalDocuments(): Promise<LegalDocumentsResponse> {
+  const response = await fetchWithClientTrace("/api/public/legal/documents", {
+    cache: "no-store",
+  });
+  const result = (await response.json()) as LegalDocumentsResult;
+
+  if (!response.ok) {
+    const error = new Error(result.message || "Não foi possível confirmar os documentos legais.") as Error & {
+      statusCode?: number;
+      code?: string;
+    };
+    error.statusCode = response.status;
+    error.code = result.code;
+    throw error;
+  }
+
+  return parseLegalDocuments(result.data);
+}
+
 export function buildRegisterChurchPayload(
   values: SubmitValues,
   media: RegisterChurchUploadedMedia = {},
+  legalDocuments: LegalDocumentsResponse,
 ): RegisterChurchRequest {
   return {
     user: {
@@ -89,8 +116,8 @@ export function buildRegisterChurchPayload(
       cover_key: media.cover?.key ?? null,
     },
     legal_acceptance: {
-      terms_version: LEGAL_TERMS_VERSION,
-      privacy_version: LEGAL_PRIVACY_VERSION,
+      terms_version: legalDocuments.terms.version,
+      privacy_version: legalDocuments.privacy.version,
     },
   };
 }

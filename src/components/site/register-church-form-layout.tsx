@@ -6,6 +6,7 @@ type RegisterChurchFooterProps = {
   currentStep: number;
   isLastStep: boolean;
   isSubmitting: boolean;
+  isSubmitDisabled?: boolean;
   onPrevious: () => void;
   onNext: () => void;
 };
@@ -32,6 +33,7 @@ export function RegisterChurchFooter({
   currentStep,
   isLastStep,
   isSubmitting,
+  isSubmitDisabled = false,
   onPrevious,
   onNext,
 }: RegisterChurchFooterProps) {
@@ -64,7 +66,7 @@ export function RegisterChurchFooter({
         {isLastStep ? (
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isSubmitDisabled}
             className="inline-flex rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isSubmitting ? t("submitting") : t("submit")}

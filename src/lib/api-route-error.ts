@@ -29,6 +29,7 @@ export function apiErrorResponse(
         statusCode,
         error: statusCode === 502 ? "BadGateway" : "PublicRequestRejected",
         message: statusCode === 502 ? fallbackMessage : error.message,
+        ...(statusCode !== 502 && error.code ? { code: error.code } : {}),
       },
       { status: statusCode, headers },
     );

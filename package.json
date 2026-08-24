@@ -18,7 +18,10 @@
     "test:e2e:healthy-detail": "E2E_HEALTHY_API=1 PLAYWRIGHT_CHANNEL=${PLAYWRIGHT_CHANNEL:-chrome} PLAYWRIGHT_DISABLE_GPU=1 playwright test --workers=1 e2e/church-detail-healthy.spec.ts",
     "test:e2e:build:safe": "npm run build:webpack && npm run test:e2e:safe",
     "test:a11y": "playwright test e2e/accessibility.spec.ts --output=/tmp/eclessgo-web-a11y-results",
+    "check:donations": "node scripts/check-pix-donation-contract.mjs",
     "check:assets": "node scripts/check-asset-budgets.mjs",
+    "check:release-config": "node --experimental-strip-types scripts/check-release-config.ts",
+    "test:release-config": "node --experimental-strip-types scripts/release-config.test.ts",
     "lighthouse": "CHROME_PATH=$(node -e \"console.log(require('playwright').chromium.executablePath())\") lhci autorun --config=./lighthouserc.cjs"
   },
   "dependencies": {
@@ -33,6 +36,7 @@
     "react-hook-form": "^7.72.1",
     "react-leaflet": "^5.0.0",
     "tailwind-merge": "^3.5.0",
+    "toqr": "0.1.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {

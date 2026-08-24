@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
+import { LegalDocumentStatus } from "@/components/site/legal-document-status";
 
 export type LegalSection = {
   title: string;
@@ -10,13 +11,12 @@ export type LegalSection = {
 
 type LegalDocumentProps = {
   title: string;
-  version: string;
-  effectiveAt: string;
+  documentKey: "terms" | "privacy";
   intro: string;
   sections: LegalSection[];
 };
 
-export function LegalDocument({ title, version, effectiveAt, intro, sections }: LegalDocumentProps) {
+export function LegalDocument({ title, documentKey, intro, sections }: LegalDocumentProps) {
   return (
     <div className="min-h-screen bg-black text-zinc-100">
       <SiteHeader />
@@ -25,12 +25,10 @@ export function LegalDocument({ title, version, effectiveAt, intro, sections }: 
           ← Voltar para EclessGO
         </Link>
         <header className="mt-8 border-b border-white/10 pb-8">
-          <p className="text-xs uppercase tracking-[0.24em] text-emerald-300">Documento vigente</p>
+          <p className="text-xs uppercase tracking-[0.24em] text-emerald-300">Documento legal</p>
           <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white">{title}</h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-300">{intro}</p>
-          <p className="mt-4 text-xs text-zinc-500">
-            Versão {version} · Vigente desde {effectiveAt}
-          </p>
+          <LegalDocumentStatus documentKey={documentKey} />
         </header>
 
         <div className="space-y-10 py-10">

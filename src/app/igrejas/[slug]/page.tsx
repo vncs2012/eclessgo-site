@@ -317,7 +317,7 @@ export default async function ChurchDetailPage({ params }: PageProps) {
                 <ShieldCheck className="h-5 w-5 text-emerald-300" />
                 <p className="mt-4 text-sm text-zinc-500">Doações</p>
                 <p className="mt-1 font-semibold text-zinc-50">
-                  {church.donationsEnabled ? "Disponíveis" : "Não configuradas"}
+                  {church.donationsEnabled && church.pixKey ? "Disponíveis" : "Não configuradas"}
                 </p>
               </div>
             </div>
@@ -343,10 +343,12 @@ export default async function ChurchDetailPage({ params }: PageProps) {
 
             <ChurchContactCard
               churchId={church.id}
+              churchName={church.name}
               slug={church.slug}
               email={email}
               phone={phone}
               pixKey={church.pixKey}
+              donationsEnabled={church.donationsEnabled}
             />
           </div>
         </section>

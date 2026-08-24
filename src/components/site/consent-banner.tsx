@@ -19,7 +19,7 @@ export function ConsentBanner() {
       aria-modal="false"
       aria-labelledby="consent-banner-title"
       aria-describedby="consent-banner-description"
-      className="fixed inset-x-0 bottom-0 z-50 px-3 pb-3 sm:px-6 sm:pb-6"
+      className="fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:px-6 sm:pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
     >
       <div className="glass-card mx-auto flex max-w-3xl flex-col gap-3 rounded-2xl border border-white/10 bg-zinc-900/90 p-4 text-sm text-zinc-100 shadow-2xl backdrop-blur-xl sm:flex-row sm:items-center sm:gap-6 sm:p-5">
         <div className="flex-1 space-y-1">

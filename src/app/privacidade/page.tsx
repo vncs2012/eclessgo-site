@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { LegalDocument } from "@/components/site/legal-document";
-import { formatLegalEffectiveDate, LEGAL_PRIVACY_VERSION } from "@/lib/legal";
 import { SITE_URL } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -15,8 +14,7 @@ export default function PrivacyPage() {
   return (
     <LegalDocument
       title="Política de Privacidade"
-      version={LEGAL_PRIVACY_VERSION}
-      effectiveAt={formatLegalEffectiveDate(LEGAL_PRIVACY_VERSION)}
+      documentKey="privacy"
       intro="Esta política explica quais dados o EclessGO utiliza, para quais finalidades, por quanto tempo e quais controles estão disponíveis para você."
       sections={[
         {

@@ -2,9 +2,9 @@ name: web-ci
 
 on:
   push:
-    branches: [main, develop]
+    branches: [master, main, develop]
   pull_request:
-    branches: [main, develop]
+    branches: [master, main, develop]
 
 jobs:
   ci:
@@ -26,6 +26,24 @@ jobs:
       - name: Asset budgets
         run: npm run check:assets
 
+      - name: Donation contract
+        run: npm run check:donations
+
+      - name: Release config unit checks
+        run: npm run test:release-config
+
+      - name: Release config strict fixture
+        env:
+          API_BASE_URL: https://api.example.test/api/v1
+          NEXT_PUBLIC_SITE_URL: https://www.example.test
+          NEXT_PUBLIC_PANEL_URL: https://panel.example.test
+          NEXT_PUBLIC_APP_CTA_URL: https://www.example.test/#app
+          APPLE_TEAM_ID: ABCDE12345
+          IOS_BUNDLE_ID: com.eclessgo.app
+          ANDROID_PACKAGE_NAME: com.eclessgo.app
+          ANDROID_SHA256_CERT_FINGERPRINT: AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA
+        run: npm run check:release-config
+
       - name: Typecheck (route types + tsc)
         run: npm run typecheck
 
@@ -39,6 +57,16 @@ jobs:
 
       - name: E2E and accessibility tests
         run: npm run test:e2e
+
+      - name: Configured deep-link payload E2E
+        env:
+          E2E_RELEASE_LINKS_CONFIGURED: "1"
+          NEXT_PUBLIC_SITE_URL: https://www.example.test
+          APPLE_TEAM_ID: ABCDE12345
+          IOS_BUNDLE_ID: com.eclessgo.app
+          ANDROID_PACKAGE_NAME: com.eclessgo.app
+          ANDROID_SHA256_CERT_FINGERPRINT: AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA
+        run: npm run test:e2e -- e2e/release-config.spec.ts
 
       - name: Church finder regression (single worker)
         env:
