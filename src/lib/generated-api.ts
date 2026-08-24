@@ -290,6 +290,11 @@ export interface DataResponse_DonationStatusResponse_ {
   message?: string | null;
 }
 
+export interface DataResponse_EventDetailResponse_ {
+  data: EventDetailResponse;
+  message?: string | null;
+}
+
 export interface DataResponse_ExpenseResponse_ {
   data: ExpenseResponse;
   message?: string | null;
@@ -302,6 +307,11 @@ export interface DataResponse_FinanceSummaryResponse_ {
 
 export interface DataResponse_ForgotPasswordResponse_ {
   data: ForgotPasswordResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_GroupDetailResponse_ {
+  data: GroupDetailResponse;
   message?: string | null;
 }
 
@@ -573,6 +583,20 @@ export interface ErrorResponse {
   details?: Record<string, unknown>[] | null;
 }
 
+export interface EventDetailResponse {
+  id: string;
+  church_id: string;
+  user_id: string;
+  title: string;
+  description: string | null;
+  start_at: string;
+  end_at: string | null;
+  location: Record<string, unknown>;
+  is_public: boolean;
+  created_at: string;
+  church_name: string;
+}
+
 export interface EventRequest {
   title: string;
   description?: string | null;
@@ -632,6 +656,18 @@ export interface ForgotPasswordResponse {
 }
 
 export type GlobalRole = "USER" | "ADMIN" | "SUPER_ADMIN";
+
+export interface GroupDetailResponse {
+  id: string;
+  church_id: string;
+  created_by: string;
+  name: string;
+  description: string | null;
+  is_public: boolean;
+  member_count: number;
+  created_at: string;
+  membership_role: string;
+}
 
 export interface GroupMessageRequest {
   content: string;
