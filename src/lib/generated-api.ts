@@ -230,7 +230,7 @@ export interface CurrentUserResponse {
 export interface DashboardResponse {
   church: Record<string, unknown>;
   stats: Record<string, unknown>;
-  finances: Record<string, unknown>;
+  finances?: Record<string, unknown> | null;
   engagement: Record<string, unknown>;
   operational: Record<string, unknown>;
 }
