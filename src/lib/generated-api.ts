@@ -646,6 +646,37 @@ export interface FinanceSummaryResponse {
   period_end?: string | null;
 }
 
+export interface FinancialMovementResponse {
+  kind: "income" | "expense";
+  id: string;
+  movement_at: string;
+  date_basis: "created_at" | "occurred_at";
+  amount: number;
+  status: string;
+  payment_method?: string | null;
+  label?: string | null;
+  description?: string | null;
+  church_amount?: number | null;
+  platform_fee?: number | null;
+  confirmed_at?: string | null;
+  campaign_id?: string | null;
+}
+
+export interface FinancialMovementsMeta {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+  period_start?: string | null;
+  period_end?: string | null;
+  summary: FinanceSummaryResponse;
+}
+
+export interface FinancialMovementsPage {
+  data: FinancialMovementResponse[];
+  meta: FinancialMovementsMeta;
+}
+
 export interface ForgotPasswordRequest {
   email: string;
 }
