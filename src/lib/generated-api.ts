@@ -654,6 +654,7 @@ export interface FinancialMovementResponse {
   amount: number;
   status: string;
   payment_method?: string | null;
+  gateway_provider?: string | null;
   label?: string | null;
   description?: string | null;
   church_amount?: number | null;
