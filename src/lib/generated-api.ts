@@ -195,6 +195,13 @@ export interface ChurchResponse {
 
 export type ChurchRole = "MEMBER" | "CHURCH_MODERATOR" | "CHURCH_FINANCE" | "CHURCH_ADMIN";
 
+export interface ChurchScheduleEntryRequest {
+  title: string;
+  day: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+  time: string;
+  description?: string | null;
+}
+
 export type ComplianceCategory = "HARASSMENT" | "ABUSE" | "DISCRIMINATION" | "FINANCIAL_IRREGULARITY" | "SPIRITUAL_ABUSE" | "DATA_PRIVACY" | "OTHER";
 
 export type ComplianceNoteVisibility = "INTERNAL" | "PUBLIC_REPORTER";
@@ -1315,7 +1322,7 @@ export interface UpdateChurchRequest {
   address?: ChurchAddressUpdateRequest | null;
   location?: ChurchLocationUpdateRequest | null;
   contact?: ChurchContactUpdateRequest | null;
-  schedule?: unknown[] | null;
+  schedule?: ChurchScheduleEntryRequest[] | null;
   pix_key?: string | null;
   donations_enabled?: boolean | null;
 }
