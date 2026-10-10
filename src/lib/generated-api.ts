@@ -139,11 +139,20 @@ export interface ChurchAddressUpdateRequest {
 export interface ChurchContactUpdateRequest {
   email?: string | null;
   phone?: string | null;
+  website?: string | null;
+  instagram?: string | null;
+  facebook?: string | null;
+  youtube?: string | null;
 }
 
 export interface ChurchLocationUpdateRequest {
   lat: number;
   lng: number;
+}
+
+export interface ChurchPhotoRequest {
+  type: "logo" | "cover" | "gallery";
+  url: string;
 }
 
 export interface ChurchPublicationReviewResponse {
@@ -165,6 +174,7 @@ export interface ChurchPublicationReviewResponse {
   donations_enabled: boolean;
   thumbnail?: string | null;
   photos?: unknown[];
+  features?: string[];
   publication_status: string;
   publication_reviewed_at?: string | null;
   publication_review_reason?: string | null;
@@ -191,6 +201,7 @@ export interface ChurchResponse {
   donations_enabled: boolean;
   thumbnail?: string | null;
   photos?: unknown[];
+  features?: string[];
 }
 
 export type ChurchRole = "MEMBER" | "CHURCH_MODERATOR" | "CHURCH_FINANCE" | "CHURCH_ADMIN";
@@ -1325,6 +1336,9 @@ export interface UpdateChurchRequest {
   schedule?: ChurchScheduleEntryRequest[] | null;
   pix_key?: string | null;
   donations_enabled?: boolean | null;
+  features?: string[] | null;
+  thumbnail?: string | null;
+  photos?: ChurchPhotoRequest[] | null;
 }
 
 export interface UpdateComplianceStatusRequest {
