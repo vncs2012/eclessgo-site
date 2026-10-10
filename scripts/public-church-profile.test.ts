@@ -182,6 +182,56 @@ for (const value of WEBSITE_REJECTED) {
   });
 }
 
+test("rede: URL de instagram com 500 caracteres e aceita", () => {
+  assert.equal(isValidNetworkUrl("instagram", "https://instagram.com/" + "a".repeat(478)), true);
+});
+
+test("rede: URL de instagram com 501 caracteres e rejeitada", () => {
+  assert.equal(isValidNetworkUrl("instagram", "https://instagram.com/" + "a".repeat(479)), false);
+});
+
+test("rede: URL de instagram com 500 code points fora do BMP e aceita", () => {
+  assert.equal(isValidNetworkUrl("instagram", "https://instagram.com/" + "😀".repeat(478)), true);
+});
+
+test("rede: URL de instagram com 501 code points fora do BMP e rejeitada", () => {
+  assert.equal(isValidNetworkUrl("instagram", "https://instagram.com/" + "😀".repeat(479)), false);
+});
+
+test("rede: rotulo de host com 63 caracteres e aceito", () => {
+  assert.equal(isValidNetworkUrl("website", `https://${"a".repeat(63)}.igreja.example.test`), true);
+});
+
+test("rede: rotulo de host com 64 caracteres e rejeitado", () => {
+  assert.equal(
+    isValidNetworkUrl("website", `https://${"a".repeat(64)}.igreja.example.test`),
+    false,
+  );
+});
+
+test("rede: caractere DEL no caminho e rejeitado", () => {
+  assert.equal(isValidNetworkUrl("instagram", "https://instagram.com/a\x7f"), false);
+});
+
+const HOST_END_ACCEPTED = ["https://instagram.com?x=1", "https://instagram.com#frag"];
+
+for (const value of HOST_END_ACCEPTED) {
+  test(`rede: ? ou # logo depois do host e aceito: ${value}`, () => {
+    assert.equal(isValidNetworkUrl("instagram", value), true);
+  });
+}
+
+const HOST_END_REJECTED = [
+  "https://evil.dev?.instagram.com/x",
+  "https://evil.dev#.instagram.com/x",
+];
+
+for (const value of HOST_END_REJECTED) {
+  test(`rede: host evil.dev com .instagram.com depois de ? ou # e rejeitado: ${value}`, () => {
+    assert.equal(isValidNetworkUrl("instagram", value), false);
+  });
+}
+
 test("links: omite valores invalidos e mantem o valido", () => {
   assert.deepEqual(
     build({
@@ -323,6 +373,77 @@ test("fotos nao array: logo so do thumbnail, cover null e galeria vazia", () => 
       photos: { type: "cover", url: "https://media.example.test/c.jpg" },
     }),
     { features: [], links: [], logo: MEDIA_ALLOWED, cover: null, gallery: [] },
+  );
+});
+
+test("cover: com duas capas permitidas vale a primeira", () => {
+  assert.equal(
+    build({
+      photos: [
+        { type: "cover", url: "https://media.example.test/c1.jpg" },
+        { type: "cover", url: "https://media.example.test/c2.jpg" },
+      ],
+    }).cover,
+    "https://media.example.test/c1.jpg",
+  );
+});
+
+const MIX_LOGO = "https://media.example.test/logo.jpg";
+const MIX_COVER = "https://media.example.test/capa.jpg";
+const MIX_GALLERY_1 = "https://media.example.test/g1.jpg";
+const MIX_GALLERY_2 = "https://media.example.test/g2.jpg";
+
+const MIXED_PHOTOS = [
+  { type: "gallery", url: MIX_GALLERY_1 },
+  { type: "cover", url: MIX_COVER },
+  { type: "logo", url: MIX_LOGO },
+  { type: "gallery", url: MIX_GALLERY_2 },
+];
+
+test("fotos misturadas: logo vem so do tipo logo", () => {
+  assert.equal(build({ photos: MIXED_PHOTOS }).logo, MIX_LOGO);
+});
+
+test("fotos misturadas: capa vem so do tipo cover", () => {
+  assert.equal(build({ photos: MIXED_PHOTOS }).cover, MIX_COVER);
+});
+
+test("fotos misturadas: galeria so com as gallery, na ordem", () => {
+  assert.deepEqual(build({ photos: MIXED_PHOTOS }).gallery, [MIX_GALLERY_1, MIX_GALLERY_2]);
+});
+
+test("fotos misturadas: galeria nao contem a capa", () => {
+  assert.equal(build({ photos: MIXED_PHOTOS }).gallery.includes(MIX_COVER), false);
+});
+
+test("fotos misturadas: galeria nao contem o logo", () => {
+  assert.equal(build({ photos: MIXED_PHOTOS }).gallery.includes(MIX_LOGO), false);
+});
+
+test("logo: sem thumbnail usa a foto logo permitida", () => {
+  assert.equal(
+    build({
+      thumbnail: null,
+      photos: [
+        { type: "gallery", url: MIX_GALLERY_1 },
+        { type: "logo", url: MIX_LOGO },
+      ],
+    }).logo,
+    MIX_LOGO,
+  );
+});
+
+test("logo: sem thumbnail a galeria segue so com as gallery", () => {
+  assert.deepEqual(
+    build({
+      thumbnail: null,
+      photos: [
+        { type: "gallery", url: MIX_GALLERY_1 },
+        { type: "logo", url: MIX_LOGO },
+        { type: "gallery", url: MIX_GALLERY_2 },
+      ],
+    }).gallery,
+    [MIX_GALLERY_1, MIX_GALLERY_2],
   );
 });
 
