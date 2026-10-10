@@ -116,6 +116,7 @@ const ACCEPTED: Array<[NetworkKey, string]> = [
   ["youtube", "https://m.youtube.com/c"],
   ["website", "https://igreja.example.test"],
   ["website", "https://igreja.example.test.br"],
+  ["website", "https://a.b1"],
 ];
 
 for (const [key, value] of ACCEPTED) {
@@ -174,6 +175,7 @@ const WEBSITE_REJECTED = [
   "https://semponto",
   "https://x_y.dev/a",
   "https://[::1]",
+  "https://a.b.123",
 ];
 
 for (const value of WEBSITE_REJECTED) {
@@ -444,6 +446,31 @@ test("logo: sem thumbnail a galeria segue so com as gallery", () => {
       ],
     }).gallery,
     [MIX_GALLERY_1, MIX_GALLERY_2],
+  );
+});
+
+const PORT_ORIGIN = "https://cdn.example.test:8443";
+const PORT_PHOTO = `${PORT_ORIGIN}/a.jpg`;
+
+test("midia com porta: foto com porta nao e permitida na origem com porta", () => {
+  assert.equal(isAllowedMediaUrl(PORT_PHOTO, PORT_ORIGIN), false);
+});
+
+test("midia com porta: thumbnail nessa origem nao vira logo", () => {
+  assert.equal(build({ thumbnail: PORT_PHOTO, mediaOrigin: PORT_ORIGIN }).logo, null);
+});
+
+test("midia com porta: capa nessa origem devolve null", () => {
+  assert.equal(
+    build({ mediaOrigin: PORT_ORIGIN, photos: [{ type: "cover", url: PORT_PHOTO }] }).cover,
+    null,
+  );
+});
+
+test("midia com porta: galeria nessa origem fica vazia", () => {
+  assert.deepEqual(
+    build({ mediaOrigin: PORT_ORIGIN, photos: [{ type: "gallery", url: PORT_PHOTO }] }).gallery,
+    [],
   );
 });
 

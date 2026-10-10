@@ -333,3 +333,45 @@ describe("escape do nome da comunidade", () => {
     assert.equal(html.includes("&lt;script&gt;alert(1)&lt;/script&gt;"), true);
   });
 });
+
+describe("titulo de cada secao no HTML renderizado (pt-BR)", () => {
+  const ATTRIBUTES_TITLE = "O que a comunidade oferece";
+  const NETWORKS_TITLE = "Site e redes";
+  const GALLERY_TITLE = "Galeria";
+
+  test("atributos: o <h2> traz o titulo de atributos", () => {
+    assert.deepEqual(textsOf(renderAttributes(FEATURES), "h2"), [ATTRIBUTES_TITLE]);
+  });
+
+  test("atributos: nao traz o titulo das redes", () => {
+    assert.equal(renderAttributes(FEATURES).includes(NETWORKS_TITLE), false);
+  });
+
+  test("atributos: nao traz o titulo da galeria", () => {
+    assert.equal(renderAttributes(FEATURES).includes(GALLERY_TITLE), false);
+  });
+
+  test("redes: o <h2> traz o titulo das redes", () => {
+    assert.deepEqual(textsOf(renderLinks(LINKS), "h2"), [NETWORKS_TITLE]);
+  });
+
+  test("redes: nao traz o titulo de atributos", () => {
+    assert.equal(renderLinks(LINKS).includes(ATTRIBUTES_TITLE), false);
+  });
+
+  test("redes: nao traz o titulo da galeria", () => {
+    assert.equal(renderLinks(LINKS).includes(GALLERY_TITLE), false);
+  });
+
+  test("galeria: o <h2> traz o titulo da galeria", () => {
+    assert.deepEqual(textsOf(renderMedia(LOGO, COVER, GALLERY), "h2"), [GALLERY_TITLE]);
+  });
+
+  test("galeria: nao traz o titulo de atributos", () => {
+    assert.equal(renderMedia(LOGO, COVER, GALLERY).includes(ATTRIBUTES_TITLE), false);
+  });
+
+  test("galeria: nao traz o titulo das redes", () => {
+    assert.equal(renderMedia(LOGO, COVER, GALLERY).includes(NETWORKS_TITLE), false);
+  });
+});
