@@ -86,6 +86,20 @@ export interface Body_upload_register_church_media_api_v1_auth_register_church_u
   file: string;
 }
 
+export type BusinessAuditAction = "MEMBERSHIP_ROLE_CHANGED" | "CHURCH_PUBLICATION_REVIEWED" | "MINISTRY_TEAM_CREATED" | "MINISTRY_TEAM_UPDATED" | "MINISTRY_TEAM_MEMBER_ADDED" | "MINISTRY_TEAM_MEMBER_UPDATED" | "SERVICE_SCHEDULE_CREATED" | "SERVICE_SCHEDULE_UPDATED" | "SERVICE_SCHEDULE_PUBLISHED" | "SERVICE_SCHEDULE_CANCELLED" | "PAYMENT_WEBHOOK_PROCESSED" | "PAYMENT_RECONCILIATED";
+
+export interface BusinessAuditEventResponse {
+  id: string;
+  action: BusinessAuditAction;
+  family: "ORGANIZATION" | "FINANCE";
+  target_type: string;
+  target_id?: string | null;
+  outcome: string;
+  actor_user_id?: string | null;
+  occurred_at: string;
+  summary?: Record<string, unknown>;
+}
+
 export interface CampaignCreateRequest {
   title: string;
   description?: string | null;
@@ -810,6 +824,11 @@ export interface NotificationsReadAllResponse {
 
 export interface PaginatedResponse_AuditLogResponse_ {
   data: AuditLogResponse[];
+  meta: PaginationMeta;
+}
+
+export interface PaginatedResponse_BusinessAuditEventResponse_ {
+  data: BusinessAuditEventResponse[];
   meta: PaginationMeta;
 }
 
