@@ -106,6 +106,7 @@ export function mapPublicChurchDetails(church: RawChurch): PublicChurchDetails {
     donationsEnabled: Boolean(church.donations_enabled),
     thumbnail: church.thumbnail ?? null,
     photos: Array.isArray(church.photos) ? church.photos : [],
+    features: Array.isArray(church.features) ? church.features.filter((item): item is string => typeof item === "string") : [],
   };
 }
 

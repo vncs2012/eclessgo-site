@@ -42,6 +42,7 @@ export interface PublicChurchDetails {
   donationsEnabled: boolean;
   thumbnail: string | null;
   photos: unknown[];
+  features: string[];
 }
 
 export type RegisterChurchRequest = GeneratedRegisterChurchRequest;
