@@ -1,6 +1,13 @@
 import { useTranslations } from "next-intl";
 
-import type { NetworkKey } from "@/lib/public-church-profile";
+import {
+  EXTERNAL_LINK_REL,
+  EXTERNAL_LINK_TARGET,
+  PROFILE_IMAGE_DECODING,
+  PROFILE_IMAGE_LOADING,
+  PROFILE_IMAGE_REFERRER_POLICY,
+  type NetworkKey,
+} from "@/lib/public-church-profile";
 
 type ChurchProfileAttributesProps = {
   features: string[];
@@ -57,8 +64,8 @@ export function ChurchProfileLinks({ links, churchName }: ChurchProfileLinksProp
             <li key={key}>
               <a
                 href={url}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
+                target={EXTERNAL_LINK_TARGET}
+                rel={EXTERNAL_LINK_REL}
                 aria-label={t("networks.openAria", { network, name: churchName })}
                 className="inline-flex rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
               >
@@ -94,9 +101,9 @@ export function ChurchProfileMedia({ name, logo, cover, gallery }: ChurchProfile
           <img
             src={cover}
             alt={t("media.coverAlt", { name })}
-            loading="lazy"
-            decoding="async"
-            referrerPolicy="no-referrer"
+            loading={PROFILE_IMAGE_LOADING}
+            decoding={PROFILE_IMAGE_DECODING}
+            referrerPolicy={PROFILE_IMAGE_REFERRER_POLICY}
             className="h-48 w-full rounded-2xl object-cover"
           />
         </>
@@ -107,9 +114,9 @@ export function ChurchProfileMedia({ name, logo, cover, gallery }: ChurchProfile
           <img
             src={logo}
             alt={t("media.logoAlt", { name })}
-            loading="lazy"
-            decoding="async"
-            referrerPolicy="no-referrer"
+            loading={PROFILE_IMAGE_LOADING}
+            decoding={PROFILE_IMAGE_DECODING}
+            referrerPolicy={PROFILE_IMAGE_REFERRER_POLICY}
             className="h-20 w-20 rounded-2xl object-cover"
           />
         </>
@@ -126,9 +133,9 @@ export function ChurchProfileMedia({ name, logo, cover, gallery }: ChurchProfile
                 <img
                   src={url}
                   alt={t("media.galleryAlt", { index: index + 1, name })}
-                  loading="lazy"
-                  decoding="async"
-                  referrerPolicy="no-referrer"
+                  loading={PROFILE_IMAGE_LOADING}
+                  decoding={PROFILE_IMAGE_DECODING}
+                  referrerPolicy={PROFILE_IMAGE_REFERRER_POLICY}
                   className="aspect-square w-full rounded-2xl object-cover"
                 />
               </li>

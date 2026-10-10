@@ -10,6 +10,13 @@ export const PUBLIC_GALLERY_MAX = 10;
 export const NETWORK_KEYS = ["website", "instagram", "facebook", "youtube"] as const;
 export type NetworkKey = (typeof NETWORK_KEYS)[number];
 
+/** Atributos de link e de imagem do perfil público; os componentes os usam e os testes os provam. */
+export const EXTERNAL_LINK_REL = "noopener noreferrer nofollow";
+export const EXTERNAL_LINK_TARGET = "_blank";
+export const PROFILE_IMAGE_LOADING = "lazy";
+export const PROFILE_IMAGE_DECODING = "async";
+export const PROFILE_IMAGE_REFERRER_POLICY = "no-referrer";
+
 export type PublicChurchProfile = {
   features: string[];
   links: Array<{ key: NetworkKey; url: string }>;
