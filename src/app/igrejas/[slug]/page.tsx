@@ -13,12 +13,18 @@ import {
 import { ChurchContactCard } from "@/components/site/church-contact-card";
 import { ChurchDetailActions } from "@/components/site/church-detail-actions";
 import { ChurchMap } from "@/components/site/church-map";
+import {
+  ChurchProfileAttributes,
+  ChurchProfileLinks,
+  ChurchProfileMedia,
+} from "@/components/site/church-profile-sections";
 import { PublicAnalyticsBeacon } from "@/components/site/public-analytics-beacon";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { PUBLIC_CACHE_TTL_SECONDS } from "@/lib/public-cache";
 import { PublicUpstreamTimeoutError } from "@/lib/public-bff";
 import { ApiRequestError, getPublicChurchBySlug, getPublicChurches } from "@/lib/public-api";
+import { buildPublicChurchProfile } from "@/lib/public-church-profile";
 import { SITE_URL } from "@/lib/site-config";
 import type { PublicChurchDetails, PublicChurchListItem } from "@/types/public";
 
@@ -240,6 +246,13 @@ export default async function ChurchDetailPage({ params }: PageProps) {
   const phone = pickRecordValue(church.contact, ["phone", "whatsapp", "contact_phone"]);
   const scheduleEntries = normalizeScheduleEntries(church.schedule);
   const mapChurches = toMapChurch(church);
+  const profile = buildPublicChurchProfile({
+    features: church.features,
+    contact: church.contact,
+    thumbnail: church.thumbnail,
+    photos: church.photos,
+    mediaOrigin: process.env.NEXT_PUBLIC_MEDIA_ORIGIN,
+  });
 
   return (
     <div className="site-shell min-h-screen bg-background text-foreground">
@@ -324,6 +337,14 @@ export default async function ChurchDetailPage({ params }: PageProps) {
           </div>
 
           <div className="space-y-5">
+            <ChurchProfileMedia
+              name={church.name}
+              logo={profile.logo}
+              cover={profile.cover}
+              gallery={profile.gallery}
+            />
+            <ChurchProfileAttributes features={profile.features} />
+            <ChurchProfileLinks links={profile.links} churchName={church.name} />
             <div className="glass-card rounded-[1.9rem] p-6">
               <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">Endereço</p>
               <div className="mt-4 flex items-start gap-3">
