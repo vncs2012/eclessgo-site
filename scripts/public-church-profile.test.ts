@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   buildPublicChurchProfile,
@@ -320,5 +323,98 @@ test("fotos nao array: logo so do thumbnail, cover null e galeria vazia", () => 
       photos: { type: "cover", url: "https://media.example.test/c.jpg" },
     }),
     { features: [], links: [], logo: MEDIA_ALLOWED, cover: null, gallery: [] },
+  );
+});
+
+type MessageTree = { [key: string]: string | MessageTree };
+type Locale = "pt-BR" | "en";
+
+const messagesDir = resolve(dirname(fileURLToPath(import.meta.url)), "..", "src", "messages");
+
+function readMessages(locale: Locale): { publicChurchProfile: MessageTree } {
+  return JSON.parse(readFileSync(resolve(messagesDir, `${locale}.json`), "utf8"));
+}
+
+const MESSAGES: Record<Locale, { publicChurchProfile: MessageTree }> = {
+  "pt-BR": readMessages("pt-BR"),
+  en: readMessages("en"),
+};
+
+const LOCALES: Locale[] = ["pt-BR", "en"];
+
+const PROFILE_KEYS = [
+  "attributes.title",
+  "networks.title",
+  "networks.website",
+  "networks.instagram",
+  "networks.facebook",
+  "networks.youtube",
+  "networks.openAria",
+  "gallery.title",
+  "media.logoAlt",
+  "media.coverAlt",
+  "media.galleryAlt",
+];
+
+const PLACEHOLDERS: Array<[string, string[]]> = [
+  ["networks.openAria", ["{network}", "{name}"]],
+  ["media.logoAlt", ["{name}"]],
+  ["media.coverAlt", ["{name}"]],
+  ["media.galleryAlt", ["{index}", "{name}"]],
+];
+
+function messageAt(messages: MessageTree, dottedKey: string): unknown {
+  return dottedKey.split(".").reduce<unknown>(
+    (node, part) =>
+      typeof node === "object" && node !== null ? (node as MessageTree)[part] : undefined,
+    messages,
+  );
+}
+
+function leafKeys(node: MessageTree, prefix = ""): string[] {
+  return Object.entries(node).flatMap(([key, value]) =>
+    typeof value === "string" ? [`${prefix}${key}`] : leafKeys(value, `${prefix}${key}.`),
+  );
+}
+
+for (const locale of LOCALES) {
+  for (const key of PROFILE_KEYS) {
+    test(`i18n ${locale}: publicChurchProfile.${key} e texto nao vazio`, () => {
+      const value = messageAt(MESSAGES[locale].publicChurchProfile, key);
+
+      assert.equal(typeof value, "string");
+      assert.notEqual((value as string).trim(), "");
+    });
+  }
+
+  test(`i18n ${locale}: publicChurchProfile tem exatamente as chaves da lista`, () => {
+    assert.deepEqual(
+      leafKeys(MESSAGES[locale].publicChurchProfile).sort(),
+      [...PROFILE_KEYS].sort(),
+    );
+  });
+
+  for (const [key, placeholders] of PLACEHOLDERS) {
+    test(`i18n ${locale}: ${key} contem ${placeholders.join(" e ")}`, () => {
+      const value = messageAt(MESSAGES[locale].publicChurchProfile, key) as string;
+
+      for (const placeholder of placeholders) {
+        assert.ok(value.includes(placeholder), `${key} sem ${placeholder}: ${value}`);
+      }
+    });
+  }
+}
+
+test("i18n: pt-BR e en tem o mesmo conjunto de chaves sob publicChurchProfile", () => {
+  assert.deepEqual(
+    leafKeys(MESSAGES["pt-BR"].publicChurchProfile).sort(),
+    leafKeys(MESSAGES.en.publicChurchProfile).sort(),
+  );
+});
+
+test("i18n pt-BR: attributes.title e o literal O que a comunidade oferece", () => {
+  assert.equal(
+    messageAt(MESSAGES["pt-BR"].publicChurchProfile, "attributes.title"),
+    "O que a comunidade oferece",
   );
 });

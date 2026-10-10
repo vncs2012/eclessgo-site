@@ -1,4 +1,25 @@
 {
+  "publicChurchProfile": {
+    "attributes": {
+      "title": "O que a comunidade oferece"
+    },
+    "networks": {
+      "title": "Site e redes",
+      "website": "Site",
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "youtube": "YouTube",
+      "openAria": "Abrir {network} de {name} (abre em nova aba)"
+    },
+    "gallery": {
+      "title": "Galeria"
+    },
+    "media": {
+      "logoAlt": "Logo de {name}",
+      "coverAlt": "Capa de {name}",
+      "galleryAlt": "Foto {index} de {name}"
+    }
+  },
   "finder": {
     "search": {
       "aria": "Buscar comunidades",
