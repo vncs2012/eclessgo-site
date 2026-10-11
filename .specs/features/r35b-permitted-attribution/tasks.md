@@ -1,7 +1,7 @@
 # R35b Permitted Attribution Tasks
 
 **Design**: .specs/features/r35b-permitted-attribution/design.md
-**Status**: T1–T3 concluídas; pronta para T4
+**Status**: T1–T6 concluídas; P02/W04 fechados; aguardando Verifier iteração 2
 
 ## Execution Plan
 
@@ -83,15 +83,46 @@ Node offline /mnt/data/npm-cache/node-v24.18.0-linux-x64/bin, usar binários loc
 **Requirement**: R35B-05, R35B-06
 **Tools**: Node local / manifest/mobile_pack; executor Luna max.
 **Done when**:
-- [ ] Matriz 19 tipos/7 paz e transições literais verdes; Mobile Full/tsc/theme/a11y/assets; patch/manifestações próprios e preservação dos 3408 caminhos anteriores.
+- [x] Matriz 19 tipos/7 paz e transições literais verdes; Mobile Full/tsc/theme/a11y/assets; patch/manifestações próprios e preservação dos 3408 caminhos anteriores.
 **Tests**: unit comportamento
 **Gate**: Mobile Full + patch manifest
 **Commit**: test(analytics): prove mobile permission and peace boundaries
+
+## Phase 2: Close iteration 1 proof gaps
+
+### T5: Prove zero transient identifier generation in the panel
+
+**What**: Acrescentar observação de Math.random e crypto.randomUUID na matriz existente do teste novo de permissão, além das provas já presentes de API/storage. Não editar o noop de produto. Fechar P02 sem enfraquecer/remover assertions ou casos. Preparar sensor em cópia mínima para P02 idêntico e geração via UUID; principal executa e confirma falha por assertion, baseline verde e isolamento.
+**Where**: Painel src/lib/product-analytics.permission.test.ts
+**Depends on**: T4
+**Reuses**: Matriz de 11 flags, Storage.prototype spies e catálogo P02 do Verifier independente.
+**Requirement**: R35B-03
+**Tools**: executor Luna/max original, Node local; cópias isoladas mínimas e node_modules symlink.
+**Done when**:
+- [x] Todo valor da matriz e as três chamadas continuam resolvendo com zero POST/storage/geração de IDs; P02 e UUID mortos por assertions novas; Painel Full real e clean HEAD/tsc/contratos verdes, preservação exata.
+**Tests**: unit comportamento no teste novo da feature; sensor P02 + UUID em scratch.
+**Gate**: Painel Full + clean HEAD overlay + sensor
+**Commit**: test(analytics): prove zero panel identifier generation
+
+### T6: Prove absent church context fails closed on the web
+
+**What**: Acrescentar caso com churchId ausente/undefined em input runtime web, com grant válido persistido, distinto do caso vazio que permanece intacto. Assertar zero POST, zero geração/ID persistido e zero leitura/escrita de sessão. Não editar consent.ts/public-analytics.ts. Preparar W04 idêntico em cópia mínima; principal executa e confirma falha por assertion própria, sem erro de setup.
+**Where**: Web scripts/analytics-permission.test.mjs
+**Depends on**: T5
+**Reuses**: Harness real de consentimento/analytics, storage e gerador observados, transporte mockado; W04 do Verifier.
+**Requirement**: R35B-04
+**Tools**: executor Luna/max original, Node local --test-isolation=none; sem E2E/instalação.
+**Done when**:
+- [x] Novo caso runtime ausente falha fechado com consentimento válido; caso vazio e 11 existentes permanecem intactos; W04 morto; Web node Full/tsc/contratos e preservação verdes.
+**Tests**: unit comportamento, caso dedicado ausente; sensor W04 em scratch.
+**Gate**: Web node Full + tsc + sensor
+**Commit**: test(analytics): prove missing web church context is blocked
 
 ## Phase Execution Map
 
 ```
 Phase 1: T1 --> T2 --> T3 --> T4
+Phase 2: T4 --> T5 --> T6
 ```
 
 ## Task Granularity Check
@@ -102,6 +133,8 @@ Phase 1: T1 --> T2 --> T3 --> T4
 | T2 | 1 módulo + 1 teste | Granular |
 | T3 | 1 teste novo | Granular |
 | T4 | 1 teste novo + pacote documental | Granular |
+| T5 | 1 teste / prova geração | Granular |
+| T6 | 1 teste / contexto ausente | Granular |
 
 ## Diagram-Definition Cross-Check
 
@@ -111,6 +144,8 @@ Phase 1: T1 --> T2 --> T3 --> T4
 | T2 | T1 | T1 --> T2 | Match |
 | T3 | T2 | T2 --> T3 | Match |
 | T4 | T3 | T3 --> T4 | Match |
+| T5 | T4 | T4 --> T5 | Match |
+| T6 | T5 | T5 --> T6 | Match |
 
 ## Test Co-location Validation
 
@@ -120,3 +155,5 @@ Phase 1: T1 --> T2 --> T3 --> T4
 | T2 | Cliente | unit | unit | OK |
 | T3 | Cliente | unit | unit comportamento | OK |
 | T4 | Cliente | unit | unit comportamento | OK |
+| T5 | Cliente | unit + sensor | unit comportamento + sensor | OK |
+| T6 | Cliente | unit + sensor | unit comportamento + sensor | OK |

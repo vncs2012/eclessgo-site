@@ -333,4 +333,22 @@ describe("analytics público web: limite de opt-in", () => {
     assert.deepEqual(harness.storage.calls.setItem, []);
     assert.equal(harness.storage.values.has(SESSION_STORAGE_KEY), false);
   });
+
+  test("churchId ausente bloqueia antes de ler consentimento ou criar sessão", async () => {
+    const harness = createHarness({
+      initialEntries: { [CONSENT_STORAGE_KEY]: consentEntry("granted") },
+    });
+
+    await harness.analytics.trackPublicEvent({
+      ...EVENTS[0],
+      churchId: undefined,
+    });
+
+    assert.equal(harness.generatedSessionIds, 0, "churchId ausente não deve gerar ID de sessão");
+    assert.equal(harness.posts.length, 0, "churchId ausente não deve gerar POST");
+    assert.equal(harness.storage.values.has(SESSION_STORAGE_KEY), false);
+    assert.deepEqual(harness.storage.calls.getItem, [], "churchId ausente não deve ler storage");
+    assert.deepEqual(harness.storage.calls.setItem, [], "churchId ausente não deve gravar storage");
+    assert.deepEqual(harness.storage.calls.removeItem, [], "churchId ausente não deve remover storage");
+  });
 });
