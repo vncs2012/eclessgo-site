@@ -998,6 +998,70 @@ export interface PeaceVerseResponse {
   version: string;
 }
 
+export interface PersonCandidateResponse {
+  id: string;
+  name: string;
+  classification: PersonClassification;
+  matched_fields: ("name" | "email" | "phone")[];
+}
+
+export type PersonClassification = "PERSON" | "VISITOR";
+
+export interface PersonCreateRequest {
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  classification: PersonClassification;
+}
+
+export interface PersonDetailResponse {
+  data: PersonResponse;
+  message?: string | null;
+}
+
+export interface PersonDuplicateRequest {
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  exclude_id?: string | null;
+}
+
+export interface PersonDuplicatesResponse {
+  data: PersonCandidateResponse[];
+  message?: string | null;
+}
+
+export interface PersonListMeta {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+}
+
+export interface PersonListResponse {
+  data: PersonResponse[];
+  meta: PersonListMeta;
+}
+
+export interface PersonResponse {
+  id: string;
+  church_id: string;
+  name: string;
+  classification: PersonClassification;
+  email: string | null;
+  phone: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface PersonUpdateRequest {
+  name: string;
+  email: string | null;
+  phone: string | null;
+  classification: PersonClassification;
+}
+
 export interface PostCommentCreateRequest {
   content: string;
 }
