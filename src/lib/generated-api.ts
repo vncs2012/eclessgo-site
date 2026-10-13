@@ -937,6 +937,8 @@ export interface PeaceExportMomentResponse {
 export interface PeaceExportResponse {
   exportedAt: string;
   retentionDays: number;
+  retentionBasis: string;
+  retainedWhileAccountActive: boolean;
   moments: PeaceExportMomentResponse[];
 }
 
