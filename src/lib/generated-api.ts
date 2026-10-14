@@ -407,6 +407,31 @@ export interface DataResponse_PeaceMomentResponse_ {
   message?: string | null;
 }
 
+export interface DataResponse_PeopleImportBatchDetailResponse_ {
+  data: PeopleImportBatchDetailResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_PeopleImportConfirmationResponse_ {
+  data: PeopleImportConfirmationResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_PeopleImportPreviewResponse_ {
+  data: PeopleImportPreviewResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_PeopleImportReversalPreviewResponse_ {
+  data: PeopleImportReversalPreviewResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_PeopleImportReversalResponse_ {
+  data: PeopleImportReversalResponse;
+  message?: string | null;
+}
+
 export interface DataResponse_ProcessPushReceiptsResponse_ {
   data: ProcessPushReceiptsResponse;
   message?: string | null;
@@ -996,6 +1021,101 @@ export interface PeaceVerseResponse {
   reference: string;
   text: string;
   version: string;
+}
+
+export interface PeopleImportBatchDetailResponse {
+  batch_id: string;
+  status: string;
+  confirmed_at: string;
+  reversed_at: string | null;
+  counts: PeopleImportConfirmationCounts;
+  rows: PeopleImportBatchRowResponse[];
+}
+
+export interface PeopleImportBatchRowResponse {
+  line_number: number;
+  status: string;
+  person_id: string | null;
+  error_codes: string[];
+}
+
+export interface PeopleImportConfirmationCounts {
+  total_rows: number;
+  valid_rows: number;
+  invalid_rows: number;
+  duplicate_rows: number;
+  created_rows: number;
+  skipped_rows: number;
+}
+
+export interface PeopleImportConfirmationResponse {
+  batch_id: string;
+  status: string;
+  confirmed_at: string;
+  counts: PeopleImportConfirmationCounts;
+}
+
+export interface PeopleImportInternalDuplicateGroup {
+  group_id: number;
+  lines: number[];
+  matched_fields: ("name" | "email" | "phone")[];
+}
+
+export interface PeopleImportPreviewCounts {
+  total_rows: number;
+  valid_rows: number;
+  invalid_rows: number;
+  duplicate_rows: number;
+  empty_rows_ignored: number;
+}
+
+export interface PeopleImportPreviewFieldError {
+  field: string;
+  code: string;
+}
+
+export interface PeopleImportPreviewResponse {
+  preview_id: string;
+  token: string;
+  expires_at: string;
+  counts: PeopleImportPreviewCounts;
+  rows: PeopleImportPreviewRow[];
+  internal_duplicate_groups: PeopleImportInternalDuplicateGroup[];
+}
+
+export interface PeopleImportPreviewRow {
+  line_number: number;
+  normalized_values: PersonCreateRequest | null;
+  errors: PeopleImportPreviewFieldError[];
+  internal_duplicate_group_ids: number[];
+  candidates: PersonCandidateResponse[];
+}
+
+export interface PeopleImportReversalConflict {
+  line_number: number | null;
+  code: string;
+}
+
+export interface PeopleImportReversalPreviewResponse {
+  batch_id: string;
+  status: string;
+  imported_rows: number;
+  conflicted_rows: number;
+  eligible: boolean;
+  conflicts: PeopleImportReversalConflict[];
+  token: string | null;
+  expires_at: string | null;
+}
+
+export interface PeopleImportReversalRequest {
+  token: string;
+}
+
+export interface PeopleImportReversalResponse {
+  batch_id: string;
+  status: string;
+  reversed_at: string;
+  reversed_rows: number;
 }
 
 export interface PersonCandidateResponse {
