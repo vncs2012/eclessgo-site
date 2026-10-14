@@ -432,6 +432,16 @@ export interface DataResponse_PeopleImportReversalResponse_ {
   message?: string | null;
 }
 
+export interface DataResponse_PersonFollowUpTaskResponse_ {
+  data: PersonFollowUpTaskResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_PersonJourneyResponse_ {
+  data: PersonJourneyResponse;
+  message?: string | null;
+}
+
 export interface DataResponse_ProcessPushReceiptsResponse_ {
   data: ProcessPushReceiptsResponse;
   message?: string | null;
@@ -826,6 +836,11 @@ export interface MyAssignmentResponse {
   team: Record<string, unknown>;
 }
 
+export interface MyPersonFollowUpTasksResponse {
+  data: PersonFollowUpTaskResponse[];
+  meta: PaginationMeta;
+}
+
 export interface NotificationReadResponse {
   id: string;
   read: boolean;
@@ -1149,6 +1164,89 @@ export interface PersonDuplicateRequest {
 export interface PersonDuplicatesResponse {
   data: PersonCandidateResponse[];
   message?: string | null;
+}
+
+export interface PersonFollowUpAssigneeResponse {
+  id: string;
+  name: string;
+}
+
+export interface PersonFollowUpAssigneesResponse {
+  data: PersonFollowUpAssigneeResponse[];
+  meta: PaginationMeta;
+}
+
+export type PersonFollowUpHistoryAction = "person.journey.changed" | "person.task.created" | "person.task.completed" | "person.task.cancelled";
+
+export interface PersonFollowUpHistoryEventResponse {
+  id: string;
+  action: PersonFollowUpHistoryAction;
+  church_id: string;
+  person_id: string;
+  task_id?: string | null;
+  actor_user_id?: string | null;
+  created_at: string;
+  version: number;
+  from_stage?: PersonJourneyStage | null;
+  to_stage?: PersonJourneyStage | null;
+  from_status?: PersonFollowUpTaskStatus | null;
+  to_status?: PersonFollowUpTaskStatus | null;
+}
+
+export interface PersonFollowUpHistoryResponse {
+  data: PersonFollowUpHistoryEventResponse[];
+  meta: PaginationMeta;
+  person_active: boolean;
+}
+
+export interface PersonFollowUpTaskCreateRequest {
+  title: string;
+  assigned_to_user_id: string;
+  due_at?: string | null;
+  idempotency_key: string;
+}
+
+export interface PersonFollowUpTaskResponse {
+  id: string;
+  person_id: string;
+  title: string;
+  status: PersonFollowUpTaskStatus;
+  assigned_to_user_id?: string | null;
+  assignee_name?: string | null;
+  assignee_eligible: boolean;
+  due_at: string | null;
+  version: number;
+  created_at: string;
+  terminal_at: string | null;
+  person_active: boolean;
+}
+
+export type PersonFollowUpTaskStatus = "PENDING" | "COMPLETED" | "CANCELLED";
+
+export type PersonFollowUpTaskTerminalStatus = "COMPLETED" | "CANCELLED";
+
+export interface PersonFollowUpTaskTransitionRequest {
+  status: PersonFollowUpTaskTerminalStatus;
+  expected_version: number;
+}
+
+export interface PersonFollowUpTasksResponse {
+  data: PersonFollowUpTaskResponse[];
+  meta: PaginationMeta;
+  person_active: boolean;
+}
+
+export interface PersonJourneyResponse {
+  person_id: string;
+  stage: PersonJourneyStage;
+  version: number;
+}
+
+export type PersonJourneyStage = "NOT_STARTED" | "FOLLOW_UP" | "CLOSED";
+
+export interface PersonJourneyUpdateRequest {
+  stage: PersonJourneyStage;
+  expected_version: number;
 }
 
 export interface PersonListMeta {
