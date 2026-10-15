@@ -65,6 +65,12 @@ export interface AuthResponse {
   tokens: TokenPairResponse;
 }
 
+export interface AvailableEventAttendancePersonReference {
+  state: string;
+  id: string;
+  name: string;
+}
+
 export interface AvailablePersonReferenceResponse {
   state: string;
   id: string;
@@ -325,6 +331,16 @@ export interface DataResponse_DonationPublicStatusResponse_ {
 
 export interface DataResponse_DonationStatusResponse_ {
   data: DonationStatusResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_EventAttendanceOccurrenceResponse_ {
+  data: EventAttendanceOccurrenceResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_EventAttendancePersonResponse_ {
+  data: EventAttendancePersonResponse;
   message?: string | null;
 }
 
@@ -664,6 +680,65 @@ export interface ErrorResponse {
   message: string;
   timestamp: string;
   details?: Record<string, unknown>[] | null;
+}
+
+export interface EventAttendanceCloseRequest {
+  expected_version: number;
+}
+
+export interface EventAttendanceListResponse {
+  data: EventAttendanceOccurrenceResponse[];
+  meta: PaginationMeta;
+}
+
+export interface EventAttendanceOccurrenceResponse {
+  id: string;
+  church_id: string;
+  event_id: string;
+  event_available: boolean;
+  state: "OPEN" | "CLOSED";
+  version: number;
+  started_at: string;
+  ended_at: string | null;
+  opened_at: string;
+  opened_by_user_id?: string | null;
+  closed_at: string | null;
+  closed_by_user_id?: string | null;
+}
+
+export interface EventAttendanceOpenRequest {
+  idempotency_key: string;
+}
+
+export interface EventAttendancePeopleListResponse {
+  data: EventAttendancePersonResponse[];
+  meta: PaginationMeta;
+}
+
+export interface EventAttendancePersonCorrectionRequest {
+  state: "PRESENT" | "INVALIDATED";
+  expected_version: number;
+}
+
+export interface EventAttendancePersonMarkRequest {
+  expected_version?: number | null;
+}
+
+export interface EventAttendancePersonResponse {
+  id: string;
+  person: AvailableEventAttendancePersonReference | UnavailableEventAttendancePersonReference;
+  state: "PRESENT" | "INVALIDATED";
+  version: number;
+}
+
+export interface EventAttendancePersonSelectorItemResponse {
+  id: string;
+  name: string;
+}
+
+export interface EventAttendancePersonSelectorResponse {
+  data: EventAttendancePersonSelectorItemResponse[];
+  meta: PaginationMeta;
 }
 
 export interface EventDetailResponse {
@@ -1745,6 +1820,11 @@ export interface TrackAnalyticsEventRequest {
   sessionId?: string | null;
   path?: string | null;
   metadata?: Record<string, unknown> | null;
+}
+
+export interface UnavailableEventAttendancePersonReference {
+  state: string;
+  id: string;
 }
 
 export interface UnavailablePersonReferenceResponse {
