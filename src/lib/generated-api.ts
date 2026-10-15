@@ -65,6 +65,12 @@ export interface AuthResponse {
   tokens: TokenPairResponse;
 }
 
+export interface AvailablePersonReferenceResponse {
+  state: string;
+  id: string;
+  name: string;
+}
+
 export interface BibleFavoriteRequest {
   version?: string;
   book: string;
@@ -349,6 +355,11 @@ export interface DataResponse_GroupAdministrationResponse_ {
 
 export interface DataResponse_GroupDetailResponse_ {
   data: GroupDetailResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_GroupPersonParticipationResponse_ {
+  data: GroupPersonParticipationResponse;
   message?: string | null;
 }
 
@@ -850,6 +861,37 @@ export interface GroupDetailResponse {
 
 export interface GroupMessageRequest {
   content: string;
+}
+
+export interface GroupPersonJoinRequest {
+  person_id: string;
+  expected_version?: number | null;
+}
+
+export interface GroupPersonLeaveRequest {
+  expected_version: number;
+}
+
+export interface GroupPersonParticipationListResponse {
+  data: GroupPersonParticipationResponse[];
+  meta: PaginationMeta;
+}
+
+export interface GroupPersonParticipationResponse {
+  id: string;
+  person: AvailablePersonReferenceResponse | UnavailablePersonReferenceResponse;
+  status: "ACTIVE" | "LEFT";
+  version: number;
+}
+
+export interface GroupPersonSelectorItemResponse {
+  id: string;
+  name: string;
+}
+
+export interface GroupPersonSelectorResponse {
+  data: GroupPersonSelectorItemResponse[];
+  meta: PaginationMeta;
 }
 
 export interface GroupRequest {
@@ -1703,6 +1745,11 @@ export interface TrackAnalyticsEventRequest {
   sessionId?: string | null;
   path?: string | null;
   metadata?: Record<string, unknown> | null;
+}
+
+export interface UnavailablePersonReferenceResponse {
+  state: string;
+  id: string;
 }
 
 export interface UpdateAvatarRequest {
