@@ -342,6 +342,11 @@ export interface DataResponse_ForgotPasswordResponse_ {
   message?: string | null;
 }
 
+export interface DataResponse_GroupAdministrationResponse_ {
+  data: GroupAdministrationResponse;
+  message?: string | null;
+}
+
 export interface DataResponse_GroupDetailResponse_ {
   data: GroupDetailResponse;
   message?: string | null;
@@ -756,6 +761,80 @@ export interface ForgotPasswordResponse {
 }
 
 export type GlobalRole = "USER" | "ADMIN" | "SUPER_ADMIN";
+
+export interface GroupAdministrationAssigneeResponse {
+  id: string;
+  name: string;
+}
+
+export interface GroupAdministrationAssigneesResponse {
+  data: GroupAdministrationAssigneeResponse[];
+  meta: PaginationMeta;
+}
+
+export interface GroupAdministrationCloseRequest {
+  expected_version: number;
+}
+
+export interface GroupAdministrationCreateRequest {
+  name: string;
+  description?: string | null;
+  is_public?: boolean;
+  responsible_user_id?: string | null;
+  schedule?: GroupAdministrationScheduleRequest | null;
+  location?: string | null;
+  idempotency_key: string;
+}
+
+export interface GroupAdministrationListResponse {
+  data: GroupAdministrationResponse[];
+  meta: PaginationMeta;
+}
+
+export interface GroupAdministrationResponse {
+  id: string;
+  church_id: string;
+  name: string;
+  description: string | null;
+  is_public: boolean;
+  member_count: number;
+  status: "ACTIVE" | "CLOSED";
+  version: number;
+  responsible: GroupAdministrationResponsibleResponse | null;
+  responsibility_status: "ACTIVE" | "PENDING";
+  schedule: GroupAdministrationScheduleResponse | null;
+  location: string | null;
+  created_at: string;
+  closed_at: string | null;
+}
+
+export interface GroupAdministrationResponsibleResponse {
+  user_id: string;
+  display_name: string | null;
+  status: "ACTIVE" | "PENDING";
+}
+
+export interface GroupAdministrationScheduleRequest {
+  day: number;
+  time: string;
+  timezone: string;
+}
+
+export interface GroupAdministrationScheduleResponse {
+  day: number;
+  time: string;
+  timezone: string;
+}
+
+export interface GroupAdministrationUpdateRequest {
+  expected_version: number;
+  name: string;
+  description?: string | null;
+  is_public: boolean;
+  responsible_user_id: string;
+  schedule?: GroupAdministrationScheduleRequest | null;
+  location?: string | null;
+}
 
 export interface GroupDetailResponse {
   id: string;
