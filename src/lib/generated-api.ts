@@ -65,6 +65,12 @@ export interface AuthResponse {
   tokens: TokenPairResponse;
 }
 
+export interface AvailableCarePersonReference {
+  state: string;
+  id: string;
+  name: string;
+}
+
 export interface AvailableEventAttendancePersonReference {
   state: string;
   id: string;
@@ -145,6 +151,23 @@ export interface CampaignUpdateRequest {
   show_progress?: boolean | null;
   status?: string | null;
 }
+
+export interface CareRequestListResponse {
+  data: CareRequestResponse[];
+  meta: PaginationMeta;
+}
+
+export interface CareRequestResponse {
+  id: string;
+  person: AvailableCarePersonReference | UnavailableCarePersonReference;
+  responsible_user_id: string;
+  status: CareRequestStatus;
+  version: number;
+  created_at: string | null;
+  closed_at: string | null;
+}
+
+export type CareRequestStatus = "OPEN" | "CLOSED";
 
 export interface CheckinRequest {
   churchId: string;
@@ -239,6 +262,10 @@ export interface ChurchScheduleEntryRequest {
   description?: string | null;
 }
 
+export interface CloseCareRequestRequest {
+  expected_version: number;
+}
+
 export type ComplianceCategory = "HARASSMENT" | "ABUSE" | "DISCRIMINATION" | "FINANCIAL_IRREGULARITY" | "SPIRITUAL_ABUSE" | "DATA_PRIVACY" | "OTHER";
 
 export type ComplianceNoteVisibility = "INTERNAL" | "PUBLIC_REPORTER";
@@ -248,6 +275,11 @@ export type ComplianceSeverity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 export type ComplianceStatus = "RECEIVED" | "TRIAGED" | "IN_REVIEW" | "ACTION_TAKEN" | "DISMISSED" | "CLOSED" | "ESCALATED";
 
 export type ComplianceTargetType = "ANNOUNCEMENT" | "PRAYER" | "EVENT" | "GROUP" | "MEMBER" | "CHURCH" | "OTHER";
+
+export interface CreateCareRequestRequest {
+  person_id: string;
+  idempotency_key: string;
+}
 
 export interface CreateComplianceReportRequest {
   category: ComplianceCategory;
@@ -291,6 +323,11 @@ export interface DataResponse_AuthResponse_ {
 
 export interface DataResponse_CampaignResponse_ {
   data: CampaignResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_CareRequestResponse_ {
+  data: CareRequestResponse;
   message?: string | null;
 }
 
@@ -1820,6 +1857,11 @@ export interface TrackAnalyticsEventRequest {
   sessionId?: string | null;
   path?: string | null;
   metadata?: Record<string, unknown> | null;
+}
+
+export interface UnavailableCarePersonReference {
+  state: string;
+  id: string;
 }
 
 export interface UnavailableEventAttendancePersonReference {
