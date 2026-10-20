@@ -1,0 +1,8 @@
+e588ed11be8246c8e638d078bfe19ef29b91f2d1b88569f156af6416dc0372ce  tests/r24/harness.cjs
+a6dc9e358d9106f781d1226d2ced63f7e79924aa5a674c10fb70585546336c3d  tests/r24/core.test.cjs
+2f78734a62f45cfa7f89998f6737fb69af51cf37afc9d77efac30abd4a826967  tests/r24/route.test.cjs
+a680fb343fa70134d7b74770375dcf0ebabc4c3035fd936c3aae965bb2c40a3e  tests/r24/tsconfig.json
+d41a66e990344b18cf36ee7c06ce0eee0524440099b797e3bef13019f492ac36  tests/r24/public-api-types.d.ts
+cf17c2924aee888ed8831c07ad97dbc6f8db913d59f870c05d5752c17473fea5  src/lib/public-information-assistant.ts
+759f4ca625f21aae36eb7e5737478abcad22dc23559bbbcbd1677dee298350b6  src/lib/public-information-assistant-provider.ts
+ceebc362bcbaf4cb9b899a46897219f3160b2649d22d7758b969f501d6a3153e  src/app/api/public/churches/slug/[slug]/assistant/route.ts

@@ -57,7 +57,7 @@ T1 → T2 → T3
 **Requirement**: INFO-01, INFO-09, INFO-10
 **Tools**: terminal e apply_patch; skill tlc-spec-driven; teste da rota com leitor sintético no mesmo commit.
 **Done when**:
-- [ ] Leitura no-store sem headers de identidade, 404/503, padrão desativado e respostas no-store comprovados; Full verde.
+- [x] Leitura no-store sem headers de identidade, 404/503, padrão desativado e respostas no-store comprovados; Full 26 core + 5 rota PASS, tipos/sintaxe/pins exit 0.
 **Tests**: integration
 **Gate**: Full
 **Commit**: feat(assistant): wire public assistant endpoint

@@ -83,7 +83,7 @@ Visitantes precisam encontrar informações publicadas de uma comunidade por con
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| INFO-01 | Consulta pública | T2 | Pending |
+| INFO-01 | Consulta pública | T2 | Implementing |
 | INFO-02 | Consulta pública | T1 | Implementing |
 | INFO-03 | Consulta pública | T1 | Implementing |
 | INFO-04 | Consulta pública | T1 | Implementing |
@@ -91,8 +91,8 @@ Visitantes precisam encontrar informações publicadas de uma comunidade por con
 | INFO-06 | Consulta pública | T1 | Implementing |
 | INFO-07 | Consulta pública | T1 | Implementing |
 | INFO-08 | Consulta pública | T1 | Implementing |
-| INFO-09 | Consulta pública | T2 | Pending |
-| INFO-10 | Consulta pública | T2 | Pending |
+| INFO-09 | Consulta pública | T2 | Implementing |
+| INFO-10 | Consulta pública | T2 | Implementing |
 | INFO-11 | Conversa pública | T3 | Pending |
 | INFO-12 | Conversa pública | T3 | Pending |
 | INFO-13 | Conversa pública | T3 | Pending |

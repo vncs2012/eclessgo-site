@@ -7,7 +7,17 @@ const DEFAULT_SOURCE_ROOT = path.resolve(__dirname, "../..");
 const SOURCE_IMPORTS = Object.freeze({
   "src/lib/public-information-assistant.ts": Object.freeze([]),
   "src/lib/public-information-assistant-provider.ts": Object.freeze([]),
+  "src/app/api/public/churches/slug/[slug]/assistant/route.ts": Object.freeze([
+    "@/lib/public-api",
+    "@/lib/public-information-assistant",
+    "@/lib/public-information-assistant-provider",
+  ]),
 });
+
+const PUBLIC_API_IMPORT = "@/lib/public-api";
+const ASSISTANT_IMPORT = "@/lib/public-information-assistant";
+const PROVIDER_IMPORT = "@/lib/public-information-assistant-provider";
+const ROUTE_SOURCE = "src/app/api/public/churches/slug/[slug]/assistant/route.ts";
 
 function loadR24Source(relativeSource, options = {}) {
   const allowedImports = SOURCE_IMPORTS[relativeSource];
@@ -86,4 +96,50 @@ function loadT1Modules(options = {}) {
   };
 }
 
-module.exports = { loadR24Source, loadT1Modules };
+function loadT2Route(options = {}) {
+  const requestedMocks = options.mocks || Object.create(null);
+  const allowedMocks = new Set([PUBLIC_API_IMPORT, ASSISTANT_IMPORT, PROVIDER_IMPORT]);
+  for (const importName of Object.keys(requestedMocks)) {
+    if (!allowedMocks.has(importName)) {
+      throw new Error(`R24 route mock is not allowlisted: ${importName}`);
+    }
+  }
+  if (!Object.prototype.hasOwnProperty.call(requestedMocks, PUBLIC_API_IMPORT)) {
+    throw new Error("R24 route requires a public-api mock");
+  }
+  const publicApiMock = requestedMocks[PUBLIC_API_IMPORT];
+  if (
+    !publicApiMock ||
+    typeof publicApiMock.getPublicChurchBySlug !== "function" ||
+    typeof publicApiMock.ApiRequestError !== "function"
+  ) {
+    throw new Error("R24 route public-api mock has an invalid shape");
+  }
+
+  const sourceOptions = options.root ? { root: options.root } : {};
+  const ownModules = loadT1Modules(sourceOptions);
+  const assistantModule = Object.prototype.hasOwnProperty.call(requestedMocks, ASSISTANT_IMPORT)
+    ? requestedMocks[ASSISTANT_IMPORT]
+    : ownModules.assistant;
+  const providerModule = Object.prototype.hasOwnProperty.call(requestedMocks, PROVIDER_IMPORT)
+    ? requestedMocks[PROVIDER_IMPORT]
+    : ownModules.provider;
+  if (!assistantModule || typeof assistantModule.createPublicInformationAssistantHandler !== "function") {
+    throw new Error("R24 route assistant module has an invalid shape");
+  }
+  if (
+    !providerModule ||
+    !Object.prototype.hasOwnProperty.call(providerModule, "publicInformationAssistantProvider")
+  ) {
+    throw new Error("R24 route provider module has an invalid shape");
+  }
+
+  const mocks = Object.create(null);
+  mocks[PUBLIC_API_IMPORT] = publicApiMock;
+  mocks[ASSISTANT_IMPORT] = assistantModule;
+  mocks[PROVIDER_IMPORT] = providerModule;
+
+  return loadR24Source(ROUTE_SOURCE, { ...sourceOptions, mocks });
+}
+
+module.exports = { loadR24Source, loadT1Modules, loadT2Route };
