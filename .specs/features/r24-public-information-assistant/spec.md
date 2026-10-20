@@ -6,8 +6,8 @@ Visitantes precisam encontrar informações publicadas de uma comunidade por con
 
 ## Goals
 
-- [ ] Consultar perfil, endereço e horários/atividades publicados da comunidade atual com fontes.
-- [ ] Comprovar localmente o contrato do adaptador e as fronteiras de informação, com QA independente.
+- [x] Consultar perfil, endereço e horários/atividades publicados da comunidade atual com fontes.
+- [x] Comprovar localmente o contrato do adaptador e as fronteiras de informação, com QA independente.
 
 ## Out of Scope
 
@@ -83,26 +83,26 @@ Visitantes precisam encontrar informações publicadas de uma comunidade por con
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| INFO-01 | Consulta pública | T2 | Implementing |
-| INFO-02 | Consulta pública | T1 | Implementing |
-| INFO-03 | Consulta pública | T1 | Implementing |
-| INFO-04 | Consulta pública | T1 | Implementing |
-| INFO-05 | Consulta pública | T1 | Implementing |
-| INFO-06 | Consulta pública | T1 | Implementing |
-| INFO-07 | Consulta pública | T1 | Implementing |
-| INFO-08 | Consulta pública | T1 | Implementing |
-| INFO-09 | Consulta pública | T2 | Implementing |
-| INFO-10 | Consulta pública | T2 | Implementing |
-| INFO-11 | Conversa pública | T3 | Implementing |
-| INFO-12 | Conversa pública | T3 | Implementing |
-| INFO-13 | Conversa pública | T3 | Implementing |
-| INFO-14 | Conversa pública | T3 | Implementing |
-| INFO-15 | Conversa pública | T3 | Implementing |
+| INFO-01 | Consulta pública | T2 | Verified |
+| INFO-02 | Consulta pública | T1 | Verified |
+| INFO-03 | Consulta pública | T1 | Verified |
+| INFO-04 | Consulta pública | T1 | Verified |
+| INFO-05 | Consulta pública | T1 | Verified |
+| INFO-06 | Consulta pública | T1 | Verified |
+| INFO-07 | Consulta pública | T1 | Verified |
+| INFO-08 | Consulta pública | T1 | Verified |
+| INFO-09 | Consulta pública | T2 | Verified |
+| INFO-10 | Consulta pública | T2 | Verified |
+| INFO-11 | Conversa pública | T3 | Verified |
+| INFO-12 | Conversa pública | T3 | Verified |
+| INFO-13 | Conversa pública | T3 | Verified |
+| INFO-14 | Conversa pública | T3 | Verified |
+| INFO-15 | Conversa pública | T3 | Verified |
 
 **Coverage:** 15 total, 15 mapped to tasks, 0 unmapped.
 
 ## Success Criteria
 
-- [ ] Todos os critérios comprovados por assertions reais e gates locais.
-- [ ] QA independente PASS com ao menos cinco faults comportamentais válidos detectados, controles antes/depois e preservação delimitada.
-- [ ] Commits locais exatos por entrega; sem operação real/provedor configurado/UAT humano alegados.
+- [x] Todos os critérios comprovados por assertions reais e gates locais.
+- [x] QA independente PASS com ao menos cinco faults comportamentais válidos detectados, controles antes/depois e preservação delimitada.
+- [x] Commits locais exatos por entrega; sem operação real/provedor configurado/UAT humano alegados.

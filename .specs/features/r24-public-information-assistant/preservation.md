@@ -19,6 +19,10 @@ Primeira versão do candidato HEAD+OWN colocou o JSX na função de indisponibil
 
 Pack corrigido e WT passaram separadamente os mesmos 47 testes. Pins antes/depois de 15 arquivos WT e oito entradas do pack coincidiram. Isso comprova os fontes selecionados, não uma comparação de bytes da árvore inteira. Nenhuma restauração da árvore real foi feita.
 
-## Pending sensor comparison
+## Final sensor comparison
 
-Pins dos fontes próprios e snapshot nominal antes/depois dos sensores serão registrados após a fonte final. Scratch ativo ficará fora dos produtos; variantes e provas inertes serão arquivadas antes de seu descarte. Não há sensor ou resultado funcional neste registro inicial.
+Sensor-baseline é um snapshot pré-sensor separado, sem substituir o baseline inicial. Quinze fontes/testes/configs reais mantiveram os pins; 72 entradas originais de controle/variantes e oito de Q7b também coincidiram. Os status nominais filtrados dos três repos coincidiram antes/depois. A primeira comparação after sem filtro foi descartada e repetida com o mesmo filtro do baseline. Não se alega comparação de bytes da árvore inteira, nem imutabilidade do documento qa1-plan.md, que recebeu o adendo Q7b.
+
+Q1..Q6, Q8 e Q7b produziram oito falhas comportamentais válidas. Q7 ficou sem recibo UI utilizável após interrupção instrumental: não foi contada como kill ou survivor. Sem alterar testes, QA prescreveu Q7b em cópia limpa, com witness booleano ui.test.cjs:264. Controles de recuperação antes e depois passaram 26+5+16, zero skips; tipagem dirigida final exit 0. Os testes e produtos permaneceram iguais.
+
+Main arquivou as cópias, helpers, diffs, pins, baselines nominais e recibos filtrados em evidence/sensor-proof.tar.gz; gzip -t exit 0, inventário de 320 entradas e SHA registrados. Depois removeu somente scratch-active gerado, confirmado ausente. Os snapshots de revisão persistentes são inertes. Nenhum serviço foi iniciado; nenhum processo do teste interrompido sobreviveu à retomada. Isso encerra o scratch ativo, sem operação externa ou restauração da árvore real.

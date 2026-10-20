@@ -4,7 +4,7 @@
 
 Skill tlc-spec-driven local ativa. Main planeja/revisa/documenta/executa gates/commita. Único executor Luna/max/fork none escreve todo produto/testes/helpers/configs/variantes, sequencialmente sem testes/gates/Git. QA novo Sol6.1/medium/fork none após último commit fonte. Nenhuma instalação/rede/serviço. Reservas nominais owner antes de escrita e janela exata antes de cada commit.
 
-**Status:** In Progress
+**Status:** Done
 
 ## Test Coverage Matrix
 
@@ -94,4 +94,8 @@ T1 → T2 → T3
 
 ## Closure
 
-Após T3 commitado, QA independente rederiva 15 critérios, prescreve pelo menos cinco faults em cópias isoladas, executor materializa, Main revisa/pina/executa controles antes/depois e variantes. QA escreve validation.md; Main valida estado isolado e commita aceite documental após janela própria. Nenhuma UAT humana, provedor/produção/fullapp alegados.
+- [x] QA independente rederivou 15/15 critérios e reverso de 47 testes, sem gaps substantivos; validation.md PASS local.
+- [x] Oito faults comportamentais válidos detectados em cópias isoladas, controles antes/depois 47 PASS; Q7 incompleta excluída e Q7b documentada, sem alterar assertions.
+- [x] Preservação selecionada e descarte de scratch ativo concluídos; arquivo inerte e recibos persistentes. Tipagem dirigida final exit 0.
+
+Main executa gate documental isolado e commita aceite após janela própria. Nenhuma UAT humana, provedor/produção/fullapp alegados. Não há sinal novo de lesson ou fix task no PASS independente.

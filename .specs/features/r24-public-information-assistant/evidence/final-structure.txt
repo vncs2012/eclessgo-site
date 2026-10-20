@@ -1,0 +1,7 @@
+
+validate_spec: 0 error(s), 0 warning(s) in /mnt/data/coding/Particular/comunidade/eclessGO/eclessgo-web/.specs/features/r24-public-information-assistant/spec.md
+
+validate_tasks: 0 error(s), 0 warning(s) in /mnt/data/coding/Particular/comunidade/eclessGO/eclessgo-web/.specs/features/r24-public-information-assistant/tasks.md
+check_commit: OK
+
+validate_state: 0 error(s) across [r24-public-information-assistant]
