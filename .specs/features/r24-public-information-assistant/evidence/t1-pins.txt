@@ -1,0 +1,4 @@
+ffcc3ac2642052e103f9885d5c9e2ee94f161004ec03050b717bdb3488b72e37  tests/r24/harness.cjs
+a6dc9e358d9106f781d1226d2ced63f7e79924aa5a674c10fb70585546336c3d  tests/r24/core.test.cjs
+cf17c2924aee888ed8831c07ad97dbc6f8db913d59f870c05d5752c17473fea5  src/lib/public-information-assistant.ts
+759f4ca625f21aae36eb7e5737478abcad22dc23559bbbcbd1677dee298350b6  src/lib/public-information-assistant-provider.ts
