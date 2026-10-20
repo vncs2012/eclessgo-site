@@ -70,8 +70,8 @@ T1 → T2 → T3
 **Requirement**: INFO-11, INFO-12, INFO-13, INFO-14, INFO-15
 **Tools**: terminal e apply_patch; skill tlc-spec-driven; integração mínima na página e locales e testes próprios no mesmo commit.
 **Done when**:
-- [ ] Estados e limites INFO-11..15 exercitados no DOM sintético e traduções completas nos dois idiomas; Build dirigido verde.
-- [ ] Índice inclui somente HEAD+OWN dos três mistos; bytes herdados WT preservados por reversão verificada do delta próprio em cópias.
+- [x] Estados e limites INFO-11..15 exercitados no DOM sintético e traduções completas nos dois idiomas; Build dirigido 26 core + 5 rota + 16 UI PASS, tipos e sintaxe exit 0.
+- [x] Cópia HEAD+OWN dos três mistos passou a mesma seleção 47/47; reversos derivados do WT coincidiram com snapshots prévios, e deltas OWN HEAD/WT coincidiram. Stage final somente após janela.
 **Tests**: integration
 **Gate**: Build
 **Commit**: feat(assistant): add localized public conversation

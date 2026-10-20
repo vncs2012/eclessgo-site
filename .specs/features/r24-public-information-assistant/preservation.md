@@ -11,6 +11,14 @@ Snapshots prévios de conteúdo, por whitelist: web página de detalhe, pt-BR/en
 - Saídas agregadas de documentação sofreram truncamento. Referências necessárias são relidas individualmente para decisões e gates; truncamento não vale como leitura integral.
 - Testes, fixtures, helpers e evidências históricos não estão autorizados para execução/reuso. Nenhuma prova de fonte protegida ou preservação integral da árvore é inferida de status.
 
-## Pending final comparison
+## T3 selected comparison
+
+Main leu os deltas completos dos três mistos. Página contém somente import e JSX R24 adicionais; locales contêm somente o namespace top-level publicAssistant. As assinaturas de delta sem offsets, entre baseline WT e WT atual e entre baseline HEAD e candidato HEAD+OWN, coincidiram nos três caminhos. Os cinco fontes não mistos do pack coincidiram com seus correspondentes atuais.
+
+Primeira versão do candidato HEAD+OWN colocou o JSX na função de indisponibilidade da página; Main detectou por diff antes de execução/stage desse pack. Executor corrigiu para ChurchDetailPage e fortaleceu AST para exigir a função correta e negar a função de indisponibilidade. A versão anterior não foi aceita como prova. As primeiras preservation-candidates eram simples cópias dos snapshots e não foram aceitas como reversão; foram substituídas por cópias derivadas do WT removendo somente OWN. Main então executou cmp nos três reversos e nos três pares de assinaturas, todos exit 0.
+
+Pack corrigido e WT passaram separadamente os mesmos 47 testes. Pins antes/depois de 15 arquivos WT e oito entradas do pack coincidiram. Isso comprova os fontes selecionados, não uma comparação de bytes da árvore inteira. Nenhuma restauração da árvore real foi feita.
+
+## Pending sensor comparison
 
 Pins dos fontes próprios e snapshot nominal antes/depois dos sensores serão registrados após a fonte final. Scratch ativo ficará fora dos produtos; variantes e provas inertes serão arquivadas antes de seu descarte. Não há sensor ou resultado funcional neste registro inicial.

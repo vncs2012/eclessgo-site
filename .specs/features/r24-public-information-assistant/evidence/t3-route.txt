@@ -1,0 +1,13 @@
+✔ route default provider is disabled and returns the exact unavailable response (179.276289ms)
+✔ POST composes public reader and adapter with local anchored output only (48.219301ms)
+✔ invalid request reaches neither public API nor provider (43.017254ms)
+✔ public API 404 becomes a generic community-not-found response (60.620987ms)
+✔ other public API failures remain generic and do not call the provider (40.202246ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 404.755544

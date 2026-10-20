@@ -78,6 +78,25 @@
       "permissionDenied": "Location permission was denied."
     }
   },
+  "publicAssistant": {
+    "title": "Ask about this community",
+    "description": "Ask about this community’s published profile, address, and activities.",
+    "availability": "The assistant is unavailable at this time.",
+    "questionLabel": "Your question",
+    "questionPlaceholder": "Write a question about this community",
+    "characterCount": "{count} of {max} characters",
+    "privacyNotice": "Do not include personal or private information in your question.",
+    "submit": "Send question",
+    "pending": "Checking published information…",
+    "conversationLabel": "Conversation with the community",
+    "you": "You",
+    "answerHeading": "Published information",
+    "sourceLink": "View community source",
+    "noInformation": "I couldn’t find published information to answer this question.",
+    "notConfigured": "The assistant can’t answer yet. Please try again later.",
+    "unavailable": "We couldn’t answer right now. Please try again.",
+    "invalidResponse": "We couldn’t validate this response. Please try again."
+  },
   "fileUpload": {
     "invalidType": "Upload a PNG, JPG or WebP image.",
     "tooLarge": "The image must be at most {max} MB.",

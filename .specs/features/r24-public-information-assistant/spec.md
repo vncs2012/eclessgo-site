@@ -93,11 +93,11 @@ Visitantes precisam encontrar informações publicadas de uma comunidade por con
 | INFO-08 | Consulta pública | T1 | Implementing |
 | INFO-09 | Consulta pública | T2 | Implementing |
 | INFO-10 | Consulta pública | T2 | Implementing |
-| INFO-11 | Conversa pública | T3 | Pending |
-| INFO-12 | Conversa pública | T3 | Pending |
-| INFO-13 | Conversa pública | T3 | Pending |
-| INFO-14 | Conversa pública | T3 | Pending |
-| INFO-15 | Conversa pública | T3 | Pending |
+| INFO-11 | Conversa pública | T3 | Implementing |
+| INFO-12 | Conversa pública | T3 | Implementing |
+| INFO-13 | Conversa pública | T3 | Implementing |
+| INFO-14 | Conversa pública | T3 | Implementing |
+| INFO-15 | Conversa pública | T3 | Implementing |
 
 **Coverage:** 15 total, 15 mapped to tasks, 0 unmapped.
 

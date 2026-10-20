@@ -1,0 +1,34 @@
+✔ projection contains only bounded public profile, locality, and agenda facts (2.498136ms)
+✔ projection omits malformed or overlong text without truncating it (0.731918ms)
+✔ projection caps the public agenda at thirty entries (0.399957ms)
+✔ projection rejects a public record for a different slug (0.218058ms)
+✔ handler gives the adapter only the minimal projection and returns exact anchored facts (8.464942ms)
+✔ adapter cannot alter projected facts or replace the answer with injected text (2.022638ms)
+✔ handler returns no_information when the adapter selects no facts (2.901721ms)
+✔ handler accepts eight unique known fact IDs and builds one source per selected fact (1.932861ms)
+✔ handler rejects malformed selection shapes and extra prose or sources (4.596396ms)
+✔ handler rejects unknown, duplicate, and more than eight selected fact IDs (2.828553ms)
+✔ absent adapter returns ASSISTANT_NOT_CONFIGURED without reading the community (0.599179ms)
+✔ invalid input is rejected before checking whether an adapter is configured (0.631951ms)
+✔ adapter failure returns a generic unavailable code without exposing details (0.769658ms)
+✔ adapter timeout is 5000 ms and aborts its signal before returning 504 (0.936339ms)
+✔ invalid slugs return INVALID_REQUEST before reader or adapter calls (1.669609ms)
+✔ request body must contain exactly question and locale (0.58336ms)
+✔ malformed JSON returns INVALID_REQUEST before dependencies (0.651958ms)
+✔ only pt-BR and en locales are accepted (0.681483ms)
+✔ blank questions are rejected before dependencies (0.565937ms)
+✔ question length is measured in code points and accepts exactly 500 (0.980852ms)
+✔ questions over 500 code points are rejected before dependencies (0.654353ms)
+✔ request body accepts exactly 4096 bytes and rejects 4097 actual bytes (1.338761ms)
+✔ missing public community returns 404 without calling the adapter (0.577539ms)
+✔ reader 404 maps to COMMUNITY_NOT_FOUND and other reader errors stay generic (1.167481ms)
+✔ reader data for a different slug is rejected before the adapter (0.584391ms)
+✔ default provider is absent (0.148818ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 50.76144

@@ -1,0 +1,24 @@
+✔ both message namespaces contain the complete public assistant contract (3.152779ms)
+✔ initial form is accessible, translated, and does not fetch automatically (419.076144ms)
+✔ question limit counts Unicode code points and accepts exactly 500 (86.444885ms)
+✔ pending state blocks duplicate synchronous submits and sends only question and locale (60.007912ms)
+✔ answered content is rendered as text with only the canonical same-community citation (51.728576ms)
+✔ no_information is distinct and contains no citation (52.862064ms)
+✔ no-information and failure states use the selected English translations (52.716121ms)
+✔ configuration and service failures have separate translated messages and can be retried (50.340804ms)
+✔ malformed result shapes, mismatched slug, and noncanonical citations are rejected (217.021977ms)
+✔ only HTTP 200 can carry an answered result (17.656401ms)
+✔ network failures stay generic and allow retry (17.228582ms)
+✔ changing slug aborts pending work, clears the conversation, and discards late results (26.66058ms)
+✔ changing locale aborts pending work, clears prior turns, and uses the new locale (29.051937ms)
+✔ unmount aborts the active request (18.962431ms)
+✔ only the latest ten completed question and answer pairs remain in memory (97.167815ms)
+✔ canonical community page renders the assistant and the alias delegates to that page (8.41612ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1225.280514

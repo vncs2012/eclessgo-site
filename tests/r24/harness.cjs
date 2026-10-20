@@ -12,12 +12,55 @@ const SOURCE_IMPORTS = Object.freeze({
     "@/lib/public-information-assistant",
     "@/lib/public-information-assistant-provider",
   ]),
+  "src/components/site/public-information-assistant.tsx": Object.freeze([
+    "react",
+    "react/jsx-runtime",
+    "next-intl",
+  ]),
 });
 
 const PUBLIC_API_IMPORT = "@/lib/public-api";
 const ASSISTANT_IMPORT = "@/lib/public-information-assistant";
 const PROVIDER_IMPORT = "@/lib/public-information-assistant-provider";
 const ROUTE_SOURCE = "src/app/api/public/churches/slug/[slug]/assistant/route.ts";
+const COMPONENT_SOURCE = "src/components/site/public-information-assistant.tsx";
+const PAGE_SOURCE = "src/app/igrejas/[slug]/page.tsx";
+const ALIAS_PAGE_SOURCE = "src/app/comunidades/[slug]/page.tsx";
+const MESSAGE_SOURCES = Object.freeze({
+  "pt-BR": "src/messages/pt-BR.json",
+  en: "src/messages/en.json",
+});
+
+function readWhitelistedText(relativeSource, selectedRoot) {
+  const root = path.resolve(selectedRoot || DEFAULT_SOURCE_ROOT);
+  const sourcePath = path.resolve(root, relativeSource);
+  const relativePath = path.relative(root, sourcePath);
+  if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
+    throw new Error("R24 source escaped the selected root");
+  }
+  const realRoot = fs.realpathSync(root);
+  const realSourcePath = fs.realpathSync(sourcePath);
+  const realRelativePath = path.relative(realRoot, realSourcePath);
+  if (realRelativePath.startsWith("..") || path.isAbsolute(realRelativePath)) {
+    throw new Error("R24 source resolved outside the selected root");
+  }
+  return fs.readFileSync(realSourcePath, "utf8");
+}
+
+function loadR24Messages(options = {}) {
+  return Object.fromEntries(Object.entries(MESSAGE_SOURCES).map(([locale, relativeSource]) => [
+    locale,
+    JSON.parse(readWhitelistedText(relativeSource, options.root)),
+  ]));
+}
+
+function readR24PageSource(options = {}) {
+  return readWhitelistedText(PAGE_SOURCE, options.root);
+}
+
+function readR24AliasPageSource(options = {}) {
+  return readWhitelistedText(ALIAS_PAGE_SOURCE, options.root);
+}
 
 function loadR24Source(relativeSource, options = {}) {
   const allowedImports = SOURCE_IMPORTS[relativeSource];
@@ -49,6 +92,7 @@ function loadR24Source(relativeSource, options = {}) {
       module: ts.ModuleKind.CommonJS,
       target: ts.ScriptTarget.ES2022,
       strict: true,
+      ...(relativeSource.endsWith(".tsx") ? { jsx: ts.JsxEmit.ReactJSX } : {}),
     },
     reportDiagnostics: true,
   });
@@ -71,6 +115,7 @@ function loadR24Source(relativeSource, options = {}) {
     TextDecoder,
     clearTimeout,
     console: blockedConsole,
+    fetch: options.fetch,
     setTimeout,
   });
   const module = { exports: {} };
@@ -142,4 +187,36 @@ function loadT2Route(options = {}) {
   return loadR24Source(ROUTE_SOURCE, { ...sourceOptions, mocks });
 }
 
-module.exports = { loadR24Source, loadT1Modules, loadT2Route };
+function loadR24Component(options = {}) {
+  if (typeof options.fetch !== "function") {
+    throw new Error("R24 component requires an explicit fetch stub");
+  }
+  if (
+    !options.nextIntl ||
+    typeof options.nextIntl.useLocale !== "function" ||
+    typeof options.nextIntl.useTranslations !== "function"
+  ) {
+    throw new Error("R24 component requires a synthetic next-intl module");
+  }
+
+  const mocks = Object.create(null);
+  mocks.react = require("react");
+  mocks["react/jsx-runtime"] = require("react/jsx-runtime");
+  mocks["next-intl"] = options.nextIntl;
+
+  return loadR24Source(COMPONENT_SOURCE, {
+    root: options.root,
+    mocks,
+    fetch: options.fetch,
+  });
+}
+
+module.exports = {
+  loadR24Source,
+  loadT1Modules,
+  loadT2Route,
+  loadR24Messages,
+  readR24PageSource,
+  readR24AliasPageSource,
+  loadR24Component,
+};

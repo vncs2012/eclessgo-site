@@ -78,6 +78,25 @@
       "permissionDenied": "A permissão de localização foi negada."
     }
   },
+  "publicAssistant": {
+    "title": "Converse sobre a comunidade",
+    "description": "Pergunte sobre o perfil, o endereço e as atividades publicadas desta comunidade.",
+    "availability": "Assistente indisponível no momento.",
+    "questionLabel": "Sua pergunta",
+    "questionPlaceholder": "Escreva uma pergunta sobre esta comunidade",
+    "characterCount": "{count} de {max} caracteres",
+    "privacyNotice": "Não informe dados pessoais ou informações privadas na sua pergunta.",
+    "submit": "Enviar pergunta",
+    "pending": "Consultando as informações públicas…",
+    "conversationLabel": "Conversa com a comunidade",
+    "you": "Você",
+    "answerHeading": "Informações publicadas",
+    "sourceLink": "Ver fonte da comunidade",
+    "noInformation": "Não encontrei informação publicada para responder a esta pergunta.",
+    "notConfigured": "O assistente ainda não pode responder. Tente novamente mais tarde.",
+    "unavailable": "Não foi possível responder agora. Tente novamente.",
+    "invalidResponse": "Não foi possível validar esta resposta. Tente novamente."
+  },
   "fileUpload": {
     "invalidType": "Envie uma imagem PNG, JPG ou WebP.",
     "tooLarge": "A imagem precisa ter até {max} MB.",

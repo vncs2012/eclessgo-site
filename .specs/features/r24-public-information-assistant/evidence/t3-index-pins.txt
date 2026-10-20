@@ -1,0 +1,8 @@
+cf17c2924aee888ed8831c07ad97dbc6f8db913d59f870c05d5752c17473fea5  /home/vncs/.codex/visualizations/2026/10/20/01a15a26-0a0f-7bb3-998f-477d09b1e28d/r24/index-candidates/src/lib/public-information-assistant.ts
+759f4ca625f21aae36eb7e5737478abcad22dc23559bbbcbd1677dee298350b6  /home/vncs/.codex/visualizations/2026/10/20/01a15a26-0a0f-7bb3-998f-477d09b1e28d/r24/index-candidates/src/lib/public-information-assistant-provider.ts
+ceebc362bcbaf4cb9b899a46897219f3160b2649d22d7758b969f501d6a3153e  /home/vncs/.codex/visualizations/2026/10/20/01a15a26-0a0f-7bb3-998f-477d09b1e28d/r24/index-candidates/src/app/api/public/churches/slug/[slug]/assistant/route.ts
+0ced139fe9403ed9fdf2069723ab902cf31cc515013e01a1f505960fe9ee8ce2  /home/vncs/.codex/visualizations/2026/10/20/01a15a26-0a0f-7bb3-998f-477d09b1e28d/r24/index-candidates/src/components/site/public-information-assistant.tsx
+e4e559f93c4e476864faff98e6682f3da138e264f185a6561569c95d80cb6aa7  /home/vncs/.codex/visualizations/2026/10/20/01a15a26-0a0f-7bb3-998f-477d09b1e28d/r24/index-candidates/src/app/igrejas/[slug]/page.tsx
+b44a5064d737f2a54cbec092fbcd02c3d8d8fa61261599e8ce75f4d3cc77011a  /home/vncs/.codex/visualizations/2026/10/20/01a15a26-0a0f-7bb3-998f-477d09b1e28d/r24/index-candidates/src/app/comunidades/[slug]/page.tsx
+6d54ea642aa381314222d3faf97b13afddf730ab57940aa05eb485865e10dd97  /home/vncs/.codex/visualizations/2026/10/20/01a15a26-0a0f-7bb3-998f-477d09b1e28d/r24/index-candidates/src/messages/pt-BR.json
+583273f904c7630a003d06c91a22cb078fa31b58e71a38d05950f3a4841da734  /home/vncs/.codex/visualizations/2026/10/20/01a15a26-0a0f-7bb3-998f-477d09b1e28d/r24/index-candidates/src/messages/en.json
