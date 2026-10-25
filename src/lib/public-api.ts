@@ -1,8 +1,9 @@
+import { loadPublicActivityCatalogue, type ActivitySearch } from "./public-activity-catalog";
 import { DEFAULT_API_BASE_URL } from "@/lib/site-config";
 import type { AuthResponse, ChurchResponse, PublicChurchResponse } from "@/lib/generated-api";
 import type { LegalDocumentsResponse } from "@/lib/generated-api";
 import { parseLegalDocuments } from "@/lib/legal";
-import { fetchPublicUpstream } from "@/lib/public-bff";
+import { fetchPublicUpstream, PUBLIC_UPSTREAM_TIMEOUT_MS } from "@/lib/public-bff";
 import type { TraceHeaders } from "@/lib/trace-context";
 import { mapPublicChurchDetails, mapPublicChurchListItem } from "@/lib/public-church-utils";
 import type {
@@ -259,4 +260,8 @@ export async function uploadRegisterChurchImage(input: {
   );
 
   return response.data;
+}
+
+export function getPublicActivityCatalogue(query: ActivitySearch) {
+  return loadPublicActivityCatalogue(DEFAULT_API_BASE_URL, query, fetch, undefined, PUBLIC_UPSTREAM_TIMEOUT_MS);
 }

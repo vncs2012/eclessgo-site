@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "types": [
+      "react"
+    ],
+    "rootDir": "../..",
+    "outDir": ".build",
+    "noEmitOnError": true
+  },
+  "files": [
+    "isolation.d.ts",
+    "../../src/app/atividades/page.tsx",
+    "../../src/lib/public-activity-catalog.ts",
+    "../../src/lib/public-panel-activity-origin.ts",
+    "../../src/components/site/church-public-activities.tsx",
+    "../../src/i18n/messages/activity-interest/pt-BR.ts",
+    "../../src/i18n/messages/activity-interest/en.ts",
+    "../../src/app/atividades/loading.tsx"
+  ]
+}

@@ -13,6 +13,7 @@ import {
 import { ChurchContactCard } from "@/components/site/church-contact-card";
 import { ChurchDetailActions } from "@/components/site/church-detail-actions";
 import { ChurchMap } from "@/components/site/church-map";
+import { ChurchPublicActivities } from "@/components/site/church-public-activities";
 import { PublicInformationAssistant } from "@/components/site/public-information-assistant";
 import {
   ChurchProfileAttributes,
@@ -422,6 +423,7 @@ export default async function ChurchDetailPage({ params }: PageProps) {
             )}
           </div>
         </section>
+        <ChurchPublicActivities churchId={church.id} />
         <PublicInformationAssistant slug={church.slug} />
       </main>
 
