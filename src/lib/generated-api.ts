@@ -880,7 +880,7 @@ export interface ForgotPasswordRequest {
 export interface ForgotPasswordResponse {
   message: string;
   reset_token?: string | null;
-  delivery: string;
+  delivery: "not_configured" | "unconfirmed";
 }
 
 export type GlobalRole = "USER" | "ADMIN" | "SUPER_ADMIN";
