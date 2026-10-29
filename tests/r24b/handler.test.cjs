@@ -106,6 +106,24 @@ test('invalid selection, refusals or extra fields return 502 without echo', asyn
   }
 });
 
+test('more than eight unique published fact IDs return 502 without echo', async () => {
+  const factIds = Array.from({ length: 9 }, (_, index) => `schedule-${index + 1}`);
+  let availableFactIds;
+  const handle = createPublicInformationAssistantHandler({
+    adapter: { select: (input) => {
+      availableFactIds = input.facts.map((fact) => fact.id);
+      return { factIds };
+    } },
+    readPublicChurch: () => ({
+      slug: 'test-church',
+      schedule: factIds.map((_, index) => `Activity ${index + 1}`),
+    }),
+  });
+  assert.deepEqual(await result(await handle(request(), 'test-church')),
+    { status: 502, body: { code: 'INVALID_PROVIDER_RESPONSE' }, cache: 'no-store' });
+  assert.deepEqual(availableFactIds, factIds);
+});
+
 test('reader 404/failure and provider failure use their specified sanitized statuses', async () => {
   let calls = 0;
   for (const [error, status, code] of [[{ status: 404 }, 404, 'COMMUNITY_NOT_FOUND'],

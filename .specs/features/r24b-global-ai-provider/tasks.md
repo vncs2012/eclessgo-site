@@ -162,3 +162,19 @@ T5 passou os gates dirigidos e aguarda janela de commit WEB. Foram 11 métodos d
 O resultado de prontidão é apenas booleano e momentâneo. Não há chamada de fornecedor ao renderizar, sondagem ou pergunta automática; o formulário permite tentativa manual e o POST reavalia a seleção. Histórico de dez pares, fontes locais, escape, erros, abort e descarte por mudança de contexto continuam exercitados nos dois idiomas. Os hunks próprios da página e dos dois locales são idênticos em WT e HEAD, e sua reversão recupera cada preimagem em bytes.
 
 O commit T5 não encerra a feature. Seguem QA independente nova, pelo menos cinco faults comportamentais com controles antes/depois e PostgreSQL novo somente da revisão OWN com tipos/FK/CHECK/UNIQUE e users sentinela, sem ancestrais. Não se declara Verified, operação real ou UAT.
+
+## C1 checkpoint
+
+C1 acrescenta somente cobertura de teste WEB para a rejeição de mais de oito IDs de fatos distintos e publicados. O produto continua byteigual ao pin de baseline. O mapa requisito → evidência e evidência → requisito é:
+
+| Requisito | Evidência no teste WEB |
+| --- | --- |
+| INFO-05 | `tests/r24b/handler.test.cjs:110-124`: gera nove IDs distintos, disponibiliza nove fatos publicados e verifica a igualdade entre os IDs escolhidos e os publicados; `:122-123` exige `502`, `INVALID_PROVIDER_RESPONSE`, `no-store` e corpo sem eco. |
+| AI-17 | `tests/r24b/handler.test.cjs:122-124`: a seleção fora do limite é rejeitada pelo contrato do handler, sem resposta livre nem eco. |
+| AI-18 | `tests/r24b/handler.test.cjs:122-123`: preserva o status sanitizado, o código exato, `no-store` e corpo sem eco. |
+
+No sentido inverso, `tests/r24b/handler.test.cjs:110-124` cobre INFO-05 e AI-17; `:122-123` cobre AI-18. A suíte handler passou 13/13 (12 existentes e o caso novo); provider 6/6, resolver 5/5 e route 6/6: 30 testes backend distintos no total. Typecheck isolado passou com TypeScript 5.9.3 e zero diagnósticos; os gates tiveram zero falhas, skips, todo, warnings e stderr.
+
+O sensor em cópias privadas removeu somente o limite superior. A suíte antiga de 12 testes sobreviveu (12/12); a suíte nova matou a mutação (12/13), exclusivamente no caso novo, que esperava 502 e recebeu 200. O controle intacto de 13 testes passou antes e depois (13/13). Isto é evidência C1, não QA independente. A validação QA1 e suas ressalvas processuais permanecem preservadas; o verdict atual continua FAIL até QA2 independente.
+
+O launcher usado para repetir o handler em cópia nova foi `env -i PATH=/usr/bin:/bin /mnt/data/npm-cache/node-v24.18.0-linux-x64/bin/node <run>/run-tests.cjs <run> /mnt/data/coding/Particular/comunidade/eclessGO/eclessgo-web`, com cwd `<run>`. O runner usa `node:test` `run({ isolation: 'none', concurrency: 1 })`; durante o carregamento do helper original, expõe somente PATH e restaura as variáveis internas `NODE_TEST_*` em seguida. Helper e runner são cópias físicas pinned antes de cada execução, sem alterações versionadas.
