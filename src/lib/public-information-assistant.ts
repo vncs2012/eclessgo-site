@@ -22,9 +22,15 @@ export interface PublicInformationAssistantTimer {
   clearTimeout(handle: unknown): void;
 }
 
+export type PublicInformationAssistantResolution =
+  | { kind: "ready"; adapter: PublicInformationAssistantAdapter }
+  | { kind: "not-configured" }
+  | { kind: "unavailable" };
+
 export interface PublicInformationAssistantDependencies {
   readPublicChurch(slug: string): Promise<unknown> | unknown;
   adapter?: PublicInformationAssistantAdapter | null;
+  resolveAdapter?: () => Promise<PublicInformationAssistantResolution> | PublicInformationAssistantResolution;
   timer?: PublicInformationAssistantTimer;
 }
 
@@ -270,7 +276,23 @@ export function createPublicInformationAssistantHandler(
 
     const input = parseAssistantRequest(body);
     if (!input) return failure(400, "INVALID_REQUEST");
-    if (!dependencies.adapter) return failure(503, "ASSISTANT_NOT_CONFIGURED");
+
+    let adapter = dependencies.adapter;
+    if (dependencies.resolveAdapter) {
+      try {
+        const resolution = await dependencies.resolveAdapter();
+        const kind = resolution?.kind;
+        if (kind === "not-configured") return failure(503, "ASSISTANT_NOT_CONFIGURED");
+        if (kind !== "ready") return failure(503, "ASSISTANT_UNAVAILABLE");
+        const selected = resolution.adapter;
+        const select = selected?.select;
+        if (typeof select !== "function") return failure(503, "ASSISTANT_UNAVAILABLE");
+        adapter = { select: (value) => select.call(selected, value) };
+      } catch {
+        return failure(503, "ASSISTANT_UNAVAILABLE");
+      }
+    }
+    if (!adapter) return failure(503, "ASSISTANT_NOT_CONFIGURED");
 
     let church: unknown;
     try {
@@ -311,7 +333,7 @@ export function createPublicInformationAssistantHandler(
 
     let selection: unknown;
     try {
-      const adapterResult = Promise.resolve().then(() => dependencies.adapter!.select({
+      const adapterResult = Promise.resolve().then(() => adapter.select({
         question: input.question,
         locale: input.locale,
         slug,

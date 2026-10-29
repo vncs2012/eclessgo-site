@@ -2240,3 +2240,59 @@ export interface WhatsAppStatusResponse {
   runtime: WhatsAppRuntimeStatus;
   health: WhatsAppHealthStatus;
 }
+
+// R24b schemas from the isolated committed API contract.
+
+export interface AdminProviderResponse {
+  provider: "openai" | "anthropic" | null;
+  version: number;
+}
+
+export interface ErrorDetail_Literal__FORBIDDEN___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__INVALID_SELECTION___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__PERSISTENCE_UNAVAILABLE___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__UNAUTHENTICATED___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__VERSION_CONFLICT___ {
+  code: string;
+}
+
+export interface ErrorResponse_Literal__FORBIDDEN___ {
+  detail: ErrorDetail_Literal__FORBIDDEN___;
+}
+
+export interface ErrorResponse_Literal__INVALID_SELECTION___ {
+  detail: ErrorDetail_Literal__INVALID_SELECTION___;
+}
+
+export interface ErrorResponse_Literal__PERSISTENCE_UNAVAILABLE___ {
+  detail: ErrorDetail_Literal__PERSISTENCE_UNAVAILABLE___;
+}
+
+export interface ErrorResponse_Literal__UNAUTHENTICATED___ {
+  detail: ErrorDetail_Literal__UNAUTHENTICATED___;
+}
+
+export interface ErrorResponse_Literal__VERSION_CONFLICT___ {
+  detail: ErrorDetail_Literal__VERSION_CONFLICT___;
+}
+
+export interface ProviderSelectionRequest {
+  provider: "openai" | "anthropic" | null;
+  expected_version: number;
+}
+
+export interface PublicProviderResponse {
+  provider: "openai" | "anthropic" | null;
+}

@@ -1,13 +1,13 @@
 import { ApiRequestError, getPublicChurchBySlug } from "@/lib/public-api";
 import { createPublicInformationAssistantHandler } from "@/lib/public-information-assistant";
-import { publicInformationAssistantProvider } from "@/lib/public-information-assistant-provider";
+import { resolvePublicInformationAssistant } from "@/lib/public-information-assistant-resolver";
 
 type AssistantRouteContext = {
   params: Promise<{ slug: string }>;
 };
 
 const handleAssistantRequest = createPublicInformationAssistantHandler({
-  adapter: publicInformationAssistantProvider,
+  resolveAdapter: resolvePublicInformationAssistant,
   async readPublicChurch(slug) {
     try {
       return await getPublicChurchBySlug(slug, { cache: "no-store" });

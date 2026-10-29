@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "types": ["node"],
+    "noEmit": true,
+    "baseUrl": "../..",
+    "paths": { "@/*": ["src/*"] }
+  },
+  "files": [
+    "../../src/lib/public-information-assistant-provider.ts",
+    "../../src/lib/public-information-assistant-resolver.ts",
+    "../../src/lib/public-information-assistant.ts",
+    "../../src/lib/generated-api.ts",
+    "../../src/app/api/public/churches/slug/[slug]/assistant/route.ts",
+    "./type-stubs.d.ts"
+  ]
+}
