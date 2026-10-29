@@ -39,6 +39,13 @@ export interface AnnouncementRequest {
   attachments?: unknown[];
 }
 
+export interface ApplyTaskTemplateRequest {
+  template_id: "first_follow_up_v1" | "review_follow_up_v1";
+  assigned_to_user_id: string;
+  idempotency_key: string;
+  confirmed: boolean;
+}
+
 export interface AssignmentResponseRequest {
   response: "CONFIRMED" | "DECLINED";
   response_note?: string | null;
@@ -104,7 +111,7 @@ export interface Body_upload_register_church_media_api_v1_auth_register_church_u
   file: string;
 }
 
-export type BusinessAuditAction = "MEMBERSHIP_ROLE_CHANGED" | "CHURCH_PUBLICATION_REVIEWED" | "MINISTRY_TEAM_CREATED" | "MINISTRY_TEAM_UPDATED" | "MINISTRY_TEAM_MEMBER_ADDED" | "MINISTRY_TEAM_MEMBER_UPDATED" | "SERVICE_SCHEDULE_CREATED" | "SERVICE_SCHEDULE_UPDATED" | "SERVICE_SCHEDULE_PUBLISHED" | "SERVICE_SCHEDULE_CANCELLED" | "PAYMENT_WEBHOOK_PROCESSED" | "PAYMENT_RECONCILIATED";
+export type BusinessAuditAction = "MEMBERSHIP_ROLE_CHANGED" | "CHURCH_PUBLICATION_REVIEWED" | "MINISTRY_TEAM_CREATED" | "MINISTRY_TEAM_UPDATED" | "MINISTRY_TEAM_MEMBER_ADDED" | "MINISTRY_TEAM_MEMBER_UPDATED" | "SERVICE_SCHEDULE_CREATED" | "SERVICE_SCHEDULE_UPDATED" | "SERVICE_SCHEDULE_PUBLISHED" | "SERVICE_SCHEDULE_CANCELLED" | "MEMBERSHIP_STATUS_CHANGED" | "MEMBERSHIP_INVITED" | "MEMBERSHIP_INVITE_RESENT" | "MEMBERSHIP_JOINED" | "MEMBERSHIP_LEFT" | "COMMUNITY_EVENT_CREATED" | "COMMUNITY_EVENT_UPDATED" | "COMMUNITY_EVENT_DELETED" | "COMMUNITY_ANNOUNCEMENT_CREATED" | "COMMUNITY_ANNOUNCEMENT_UPDATED" | "COMMUNITY_ANNOUNCEMENT_DELETED" | "COMMUNITY_GROUP_CREATED" | "COMMUNITY_PRAYER_MARKED_ANSWERED" | "COMMUNITY_PRAYER_COMMENT_MODERATED" | "COMMUNITY_POST_REMOVED_BY_MODERATOR" | "COMMUNITY_POST_COMMENT_REMOVED_BY_MODERATOR" | "COMMUNITY_POST_MODERATION_STATUS_CHANGED" | "COMMUNITY_POST_REPORT_RESOLVED" | "COMMUNITY_GROUP_MESSAGE_MODERATED" | "CHURCH_SETTINGS_UPDATED" | "CHURCH_LIVE_STARTED" | "CHURCH_LIVE_RESTARTED" | "CHURCH_LIVE_STOPPED" | "PAYMENT_WEBHOOK_PROCESSED" | "PAYMENT_RECONCILIATED" | "CAMPAIGN_CREATED" | "CAMPAIGN_UPDATED" | "CAMPAIGN_CANCELLED" | "MANUAL_DONATION_CREATED" | "MANUAL_DONATION_CONFIRMED" | "DONATION_CANCELLED" | "DONATION_REFUND_REQUESTED" | "EXPENSE_CREATED" | "EXPENSE_CANCELLED";
 
 export interface BusinessAuditEventResponse {
   id: string;
@@ -275,6 +282,12 @@ export type ComplianceSeverity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 export type ComplianceStatus = "RECEIVED" | "TRIAGED" | "IN_REVIEW" | "ACTION_TAKEN" | "DISMISSED" | "CLOSED" | "ESCALATED";
 
 export type ComplianceTargetType = "ANNOUNCEMENT" | "PRAYER" | "EVENT" | "GROUP" | "MEMBER" | "CHURCH" | "OTHER";
+
+export interface ConfirmPayload {
+  mode: "LINK" | "CREATE";
+  person_id?: string | null;
+  classification?: "PERSON" | "VISITOR" | null;
+}
 
 export interface CreateCareRequestRequest {
   person_id: string;
@@ -511,6 +524,11 @@ export interface DataResponse_PersonJourneyResponse_ {
   message?: string | null;
 }
 
+export interface DataResponse_PersonRelationshipResponse_ {
+  data: PersonRelationshipResponse;
+  message?: string | null;
+}
+
 export interface DataResponse_ProcessPushReceiptsResponse_ {
   data: ProcessPushReceiptsResponse;
   message?: string | null;
@@ -558,6 +576,26 @@ export interface DataResponse_TestPushResponse_ {
 
 export interface DataResponse_TokenPairResponse_ {
   data: TokenPairResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_WhatsAppConsentEventResponse_ {
+  data: WhatsAppConsentEventResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_WhatsAppConsentStateResponse_ {
+  data: WhatsAppConsentStateResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_WhatsAppSessionBindingResponse_ {
+  data: WhatsAppSessionBindingResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_WhatsAppStatusResponse_ {
+  data: WhatsAppStatusResponse;
   message?: string | null;
 }
 
@@ -1062,6 +1100,8 @@ export interface ManualDonationRequest {
 
 export type MembershipStatus = "PENDING" | "ACTIVE" | "INACTIVE";
 
+export type MessageHistoryState = "reserved" | "accepted" | "unknown" | "rejected" | "pending" | "server" | "delivered" | "read" | "played" | "failed";
+
 export interface MyAssignmentResponse {
   assignment: ScheduleAssignmentResponse;
   slot: Record<string, unknown>;
@@ -1093,6 +1133,20 @@ export interface NotificationResponse {
 
 export interface NotificationsReadAllResponse {
   updated: number;
+}
+
+export type OperationalAuditAction = "person.created" | "person.updated" | "person.journey.changed" | "person.task.created" | "person.task.completed" | "person.task.cancelled" | "group.person_participation.joined" | "group.person_participation.rejoined" | "group.person_participation.left" | "event.attendance.person.marked" | "event.attendance.person.restored" | "event.attendance.person.invalidated" | "group.administration.created" | "group.administration.updated" | "group.administration.closed" | "event.attendance.opened" | "event.attendance.closed";
+
+export interface OperationalAuditEventResponse {
+  id: string;
+  action: OperationalAuditAction;
+  family: "REGISTRATION" | "FOLLOW_UP" | "GROUP" | "ATTENDANCE";
+  target_type: "person" | "person_follow_up_task" | "group_person_participation" | "event_attendance_person" | "group" | "event_attendance_occurrence";
+  target_id: string | null;
+  outcome: string;
+  actor_user_id: string | null;
+  occurred_at: string;
+  changed_fields: ("name" | "classification" | "email" | "phone")[];
 }
 
 export interface PaginatedResponse_AuditLogResponse_ {
@@ -1132,6 +1186,11 @@ export interface PaginatedResponse_ExpenseResponse_ {
 
 export interface PaginatedResponse_NotificationResponse_ {
   data: NotificationResponse[];
+  meta: PaginationMeta;
+}
+
+export interface PaginatedResponse_OperationalAuditEventResponse_ {
+  data: OperationalAuditEventResponse[];
   meta: PaginationMeta;
 }
 
@@ -1269,6 +1328,26 @@ export interface PeaceVerseResponse {
   reference: string;
   text: string;
   version: string;
+}
+
+export interface PeopleAttendanceReportResponse {
+  data: PeopleAttendanceReportRow[];
+  meta: PaginationMeta;
+  summary: PeopleAttendanceReportSummary;
+}
+
+export interface PeopleAttendanceReportRow {
+  id: string;
+  name: string;
+  classification: PersonClassification;
+  presence_count: number;
+  last_present_at: string | null;
+}
+
+export interface PeopleAttendanceReportSummary {
+  people_total: number;
+  people_with_presence: number;
+  presences_total: number;
 }
 
 export interface PeopleImportBatchDetailResponse {
@@ -1469,6 +1548,45 @@ export interface PersonFollowUpTasksResponse {
   person_active: boolean;
 }
 
+export interface PersonGroupLink {
+  group_id: string;
+  group_name: string;
+  person_id: string;
+  person_name: string;
+}
+
+export interface PersonGroupLinksMeta {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+}
+
+export interface PersonGroupLinksResponse {
+  data: PersonGroupLink[];
+  meta: PersonGroupLinksMeta;
+}
+
+export interface PersonHistoryEntryResponse {
+  id: string;
+  action: "person.created" | "person.updated";
+  created_at: string;
+  actor_user_id?: string | null;
+  changed_fields: ("name" | "classification" | "email" | "phone")[];
+}
+
+export interface PersonHistoryMeta {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+}
+
+export interface PersonHistoryResponse {
+  data: PersonHistoryEntryResponse[];
+  meta: PersonHistoryMeta;
+}
+
 export interface PersonJourneyResponse {
   person_id: string;
   stage: PersonJourneyStage;
@@ -1494,6 +1612,50 @@ export interface PersonListResponse {
   meta: PersonListMeta;
 }
 
+export interface PersonRelationshipCandidateListResponse {
+  data: PersonRelationshipCandidateResponse[];
+}
+
+export interface PersonRelationshipCandidateResponse {
+  id: string;
+  name: string;
+}
+
+export interface PersonRelationshipCreateRequest {
+  source_person_id: string;
+  target_person_id: string;
+  type: PersonRelationshipType;
+}
+
+export interface PersonRelationshipEndEnvelope {
+  data: PersonRelationshipEndResponse;
+}
+
+export interface PersonRelationshipEndResponse {
+  id: string;
+  ended_at: string;
+}
+
+export interface PersonRelationshipListResponse {
+  data: PersonRelationshipResponse[];
+}
+
+export interface PersonRelationshipResponse {
+  id: string;
+  source_person_id: string;
+  source_person_name: string;
+  target_person_id: string;
+  target_person_name: string;
+  type: PersonRelationshipType;
+  origin: string;
+  visibility: string;
+  created_by_user_id: string;
+  created_at: string;
+  ended_at: string | null;
+}
+
+export type PersonRelationshipType = "RESPONSIBLE_FOR" | "MENTORS" | "LEADS";
+
 export interface PersonResponse {
   id: string;
   church_id: string;
@@ -1504,6 +1666,27 @@ export interface PersonResponse {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
+}
+
+export interface PersonTimelineEntryResponse {
+  id: string;
+  action: "person.created" | "person.updated" | "person.journey.changed" | "person.task.created" | "person.task.completed" | "person.task.cancelled" | "group.person_participation.joined" | "group.person_participation.rejoined" | "group.person_participation.left" | "event.attendance.person.marked" | "event.attendance.person.restored" | "event.attendance.person.invalidated";
+  family: "REGISTRATION" | "FOLLOW_UP" | "GROUP" | "ATTENDANCE";
+  created_at: string;
+  actor_user_id?: string | null;
+  changed_fields: ("name" | "classification" | "email" | "phone")[];
+}
+
+export interface PersonTimelineMeta {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+}
+
+export interface PersonTimelineResponse {
+  data: PersonTimelineEntryResponse[];
+  meta: PersonTimelineMeta;
 }
 
 export interface PersonUpdateRequest {
@@ -1675,6 +1858,13 @@ export interface RegisterNotificationTokenRequest {
   platform: "android" | "ios" | "web";
 }
 
+export interface RegisterPayload {
+  consent: boolean;
+  name: string;
+  contact_kind: "email" | "phone";
+  contact_value: string;
+}
+
 export interface RegisterRequest {
   email: string;
   password: string;
@@ -1766,6 +1956,27 @@ export interface ServiceScheduleResponse {
 }
 
 export type ServiceScheduleStatus = "DRAFT" | "PUBLISHED" | "CANCELLED";
+
+export interface TaskTemplateCatalogResponse {
+  data: TaskTemplateView[];
+}
+
+export interface TaskTemplateIntentResponse {
+  data: TaskTemplateIntentView;
+}
+
+export interface TaskTemplateIntentView {
+  id: string;
+  template_id: "first_follow_up_v1" | "review_follow_up_v1";
+  status: "QUEUED" | "COMPLETED" | "FAILED";
+  task_id: string | null;
+}
+
+export interface TaskTemplateView {
+  id: string;
+  version: number;
+  task_title: string;
+}
 
 export interface TeamCreateRequest {
   name: string;
@@ -1874,6 +2085,17 @@ export interface UnavailablePersonReferenceResponse {
   id: string;
 }
 
+export interface UniversalSearchResponse {
+  data: UniversalSearchResult[];
+}
+
+export interface UniversalSearchResult {
+  kind: "person" | "group";
+  id: string;
+  label: string;
+  path: string;
+}
+
 export interface UpdateAvatarRequest {
   avatar_url: string;
 }
@@ -1934,4 +2156,87 @@ export interface ValidationError {
   type: string;
   input?: unknown;
   ctx?: Record<string, unknown>;
+}
+
+export interface WhatsAppBindingStatus {
+  state: "UNBOUND" | "ACTIVE" | "INACTIVE";
+  session_id?: string | null;
+  version: number;
+  updated_at: string | null;
+}
+
+export type WhatsAppConsentAction = "opt_in" | "opt_out";
+
+export interface WhatsAppConsentCreateRequest {
+  action: WhatsAppConsentAction;
+  chat_id: string;
+  explicit_confirmation: boolean;
+  expected_version: number;
+  idempotency_key: string;
+}
+
+export interface WhatsAppConsentEventResponse {
+  id: string;
+  person_id: string;
+  chat_id: string;
+  action: WhatsAppConsentAction;
+  version: number;
+  operator_user_id: string;
+  occurred_at: string;
+}
+
+export interface WhatsAppConsentEventsResponse {
+  data: WhatsAppConsentEventResponse[];
+  meta: PaginationMeta;
+}
+
+export interface WhatsAppConsentStateResponse {
+  person_id: string;
+  chat_id: string;
+  action: WhatsAppConsentAction | null;
+  version: number;
+  operator_user_id?: string | null;
+  occurred_at: string | null;
+}
+
+export interface WhatsAppHealthStatus {
+  status?: string;
+  reason?: string;
+  checked_at?: null;
+}
+
+export interface WhatsAppMessageHistoryResponse {
+  id: string;
+  person_id: string;
+  operator_user_id: string;
+  session_id: string;
+  state: MessageHistoryState;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WhatsAppMessagesResponse {
+  data: WhatsAppMessageHistoryResponse[];
+  meta: PaginationMeta;
+}
+
+export interface WhatsAppRuntimeStatus {
+  enabled?: boolean;
+  send_enabled?: boolean;
+}
+
+export interface WhatsAppSessionBindingResponse {
+  church_id: string;
+  session_id?: string | null;
+  active: boolean;
+  version: number;
+  operator_user_id?: string | null;
+  updated_at: string | null;
+}
+
+export interface WhatsAppStatusResponse {
+  church_id: string;
+  binding: WhatsAppBindingStatus;
+  runtime: WhatsAppRuntimeStatus;
+  health: WhatsAppHealthStatus;
 }
