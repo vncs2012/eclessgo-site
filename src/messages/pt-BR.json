@@ -81,7 +81,8 @@
   "publicAssistant": {
     "title": "Converse sobre a comunidade",
     "description": "Pergunte sobre o perfil, o endereço e as atividades publicadas desta comunidade.",
-    "availability": "Assistente indisponível no momento.",
+    "availability": "O assistente estava indisponível ao abrir esta página. Você pode tentar uma pergunta.",
+    "availabilityReady": "Ao abrir a página, o assistente poderia responder. A disponibilidade é verificada a cada pergunta.",
     "questionLabel": "Sua pergunta",
     "questionPlaceholder": "Escreva uma pergunta sobre esta comunidade",
     "characterCount": "{count} de {max} caracteres",

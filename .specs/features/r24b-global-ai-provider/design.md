@@ -64,3 +64,12 @@ Os dois adaptadores usam fetch server-side, URLs oficiais fixas, redirect error 
 Falha de transporte/HTTP retorna 503; timeout do adaptador retorna 504; recusa, truncamento, JSON/seleção inválida e chaves factIds duplicadas retornam 502. Uma seleção vazia somente é aceita quando JSON e envelope são válidos. Um draft inicial normalizava chaves duplicadas e produzia falso 200 no_information; testes reproduziram a falha, e o parser passou a rejeitar a ambiguidade. O RED e o patch estão preservados como defeito corrigido antes do commit, não como sensor da QA independente.
 
 O gate passou 29 métodos Node distintos e typecheck isolado TypeScript 5.9.3; foram usados apenas transporte, identidades e configuração sintéticos. WEB, PANEL e MOBILE têm os mesmos bytes gerados incrementais; os tipos de erro seguem a limitação const para string já documentada. Não se alegam chamadas reais, JWT, app completo, retenção zero, produção ou UAT. T5 e QA independente permanecem pendentes.
+
+
+## T5 checkpoint
+
+Após localizar um detalhe público válido, a página server-side chama uma vez o resolver T4 e passa somente slug e available booleano ao componente. Nenhuma consulta ocorre em metadata, static params, 404 ou tela de detalhe indisponível; falhas do resolver produzem false. A rota alias delega à mesma página. O resolver não chama fornecedor na renderização e evita consulta de seleção quando OFF. O POST reavalia por pedido.
+
+Os textos pt-BR/en descrevem o retrato de modo cauteloso e pontual; a interação continua manual mesmo quando o retrato é false. O gate passou 11 métodos distintos em WT+OWN e HEAD+OWN, além de typecheck isolado nas duas variantes. React, NextIntl, componente, página e alias são reais; fronteiras externas são stubs nomeados. Os três arquivos mistos revertem byte a byte às preimagens, com operações OWN idênticas em WT e HEAD.
+
+Esse gate usa fetch e resolver sintéticos e não prova navegador real, fornecedor real, produção ou UAT. A QA independente, revisão PostgreSQL da revisão OWN e sensores comportamentais seguem obrigatórios após o commit T5.

@@ -97,3 +97,8 @@ A R24 entrega o assistente e um adaptador ausente. O primeiro lançamento precis
 - [ ] Cada task passa seus testes dirigidos e revisão de adequação; commits locais aguardam janela específica.
 - [ ] QA independente após última fonte confronta AC/assertions e detecta ao menos cinco faults comportamentais válidos, com controles antes/depois.
 - [ ] Nenhuma conclusão de operação real, retenção zero de fornecedor, produção ou UAT humana é alegada.
+
+
+## T5 checkpoint
+
+A conversa recebe somente um retrato booleano de disponibilidade derivado no servidor após localizar a comunidade. A interface preserva envio manual, revalidação no POST e os critérios INFO-11..15. A conclusão desses critérios na entrega atual ainda depende da QA independente após o commit T5; nenhum requisito é marcado Verified antecipadamente.

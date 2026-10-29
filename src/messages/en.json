@@ -81,7 +81,8 @@
   "publicAssistant": {
     "title": "Ask about this community",
     "description": "Ask about this community’s published profile, address, and activities.",
-    "availability": "The assistant is unavailable at this time.",
+    "availability": "The assistant was unavailable when this page opened. You can still try a question.",
+    "availabilityReady": "When this page opened, the assistant might be able to answer. Availability is checked for each question.",
     "questionLabel": "Your question",
     "questionPlaceholder": "Write a question about this community",
     "characterCount": "{count} of {max} characters",

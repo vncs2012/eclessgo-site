@@ -15,6 +15,7 @@ import { ChurchDetailActions } from "@/components/site/church-detail-actions";
 import { ChurchMap } from "@/components/site/church-map";
 import { ChurchPublicActivities } from "@/components/site/church-public-activities";
 import { PublicInformationAssistant } from "@/components/site/public-information-assistant";
+import { resolvePublicInformationAssistant } from "@/lib/public-information-assistant-resolver";
 import {
   ChurchProfileAttributes,
   ChurchProfileLinks,
@@ -242,6 +243,12 @@ export default async function ChurchDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const church = await loadChurch(slug);
   if (!church) return <PublicChurchUnavailable slug={slug} />;
+  let available = false;
+  try {
+    available = (await resolvePublicInformationAssistant()).kind === "ready";
+  } catch {
+    // Availability is only a snapshot; a failed check remains unavailable.
+  }
 
   const publicUrl = `${SITE_URL}/comunidades/${church.slug}`;
   const email = pickRecordValue(church.contact, ["email", "contact_email"]);
@@ -424,7 +431,7 @@ export default async function ChurchDetailPage({ params }: PageProps) {
           </div>
         </section>
         <ChurchPublicActivities churchId={church.id} />
-        <PublicInformationAssistant slug={church.slug} />
+        <PublicInformationAssistant slug={church.slug} available={available} />
       </main>
 
       <SiteFooter />

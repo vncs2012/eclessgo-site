@@ -35,3 +35,10 @@ Uma gravação em conflito preserva a escolha em edição e exige recarga explí
 A ativação permanece separada, ausente e OFF por padrão. Modelo e máximo de saída são obrigatórios somente para o fornecedor selecionado e não têm valores padrão; essa configuração não substitui decisão financeira ou autorização de operação.
 
 Anthropic usa Bearer e a versão fixa 2026-10-21 do endpoint Messages. ASSISTANT_ANTHROPIC_WORKSPACE_ID é opcional no servidor: chaves vinculadas a um workspace não precisam desse cabeçalho, enquanto chaves multiescopo o exigem. O operador deve confirmar o escopo antes de qualquer ativação; nenhum segredo real foi consultado.
+
+
+## T5 boundary decisions
+
+O retrato de disponibilidade é pontual e reflete apenas seleção e configuração observadas pelo servidor, sem afirmar saúde do fornecedor. A interface comunica essa incerteza; não recebe adaptador, fornecedor, modelo, chave ou limites. Mesmo quando o retrato é indisponível, uma pergunta manual pode ser tentada e o POST reavalia a seleção.
+
+A conversa continua sem solicitação automática, sem histórico enviado ao servidor e com no máximo dez pares em memória. Trocas de comunidade ou idioma e desmontagem abortam pedidos em curso e descartam resultados tardios.

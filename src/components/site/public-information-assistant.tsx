@@ -90,7 +90,7 @@ function isNotConfiguredError(value: unknown): boolean {
   return isRecord(value) && hasExactKeys(value, ["code"]) && value.code === "ASSISTANT_NOT_CONFIGURED";
 }
 
-export function PublicInformationAssistant({ slug }: { slug: string }) {
+export function PublicInformationAssistant({ slug, available = false }: { slug: string; available?: boolean }) {
   const translations = useTranslations("publicAssistant");
   const localeValue = useLocale();
   const locale: AssistantLocale = localeValue === "pt-BR" ? "pt-BR" : "en";
@@ -206,8 +206,10 @@ export function PublicInformationAssistant({ slug }: { slug: string }) {
           {translations("title")}
         </h2>
         <p className="mt-2 text-sm leading-7 text-zinc-300">{translations("description")}</p>
-        <p className="mt-3 rounded-xl border border-amber-300/20 bg-amber-400/5 px-4 py-3 text-sm text-amber-100">
-          {translations("availability")}
+        <p className={available
+          ? "mt-3 rounded-xl border border-emerald-300/20 bg-emerald-400/5 px-4 py-3 text-sm text-emerald-100"
+          : "mt-3 rounded-xl border border-amber-300/20 bg-amber-400/5 px-4 py-3 text-sm text-amber-100"}>
+          {translations(available ? "availabilityReady" : "availability")}
         </p>
 
         <form className="mt-6 space-y-4" onSubmit={handleSubmit} aria-busy={viewState.pending}>

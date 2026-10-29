@@ -100,8 +100,8 @@ T1 → T2 → T3 → T4 → T5
 **Requirement**: AI-18 e INFO-11..15
 **Nominal paths proposed**: WEB componente acima, `src/app/igrejas/[slug]/page.tsx`, `src/messages/{pt-BR,en}.json` e testes próprios. Baseline dos três mistos antes de escrita.
 **Done when**:
-- [ ] Estados configured/unavailable são honestos, sem segredo e sem pergunta automática; mudança/contexto mantém abort e INFO-11..15.
-- [ ] Gate T5 e comparação de hunks OWN nos três mistos passam. QA independente segue após última fonte e commit.
+- [x] Estados configured/unavailable são honestos, sem segredo e sem pergunta automática; mudança/contexto mantém abort e INFO-11..15.
+- [x] Gate T5 e comparação de hunks OWN nos três mistos passam. QA independente segue após última fonte e commit.
 **Tests**: integration
 **Gate**: T5
 **Commit**: feat(assistant): show public assistant availability
@@ -153,3 +153,12 @@ T4 passou o gate dirigido e aguarda janela de commit WEB. São 29 métodos Node 
 A seleção é consultada por pedido após validação, com timeout de 8000 ms e abort antes do leitor. OFF, nenhuma seleção e configuração ausente do selecionado retornam 503 NOT_CONFIGURED; resolução indisponível retorna 503 UNAVAILABLE. Timeout de adaptador continua 5000 ms/504; transporte/HTTP falho dá 503 e recusa, truncamento ou seleção inválida dá 502. Chave JSON duplicada, inclusive escapada, foi um defeito do draft reproduzido e corrigido antes do commit; o RED e o patch estão preservados, sem contá-los como QA ou sensores independentes.
 
 A saída OpenAI aceita reasoning documentado com uma mensagem final; Anthropic usa Bearer e versão 2026-10-21, com workspace opcional para chave não vinculada. Nenhum modelo ou limite financeiro padrão foi escolhido. O candidato gerado incremental de T3 foi aplicado e os três clientes coincidem. T5 e QA independente após a última fonte seguem obrigatórios, incluindo PostgreSQL novo somente da revisão OWN e os sensores comportamentais.
+
+
+## T5 checkpoint
+
+T5 passou os gates dirigidos e aguarda janela de commit WEB. Foram 11 métodos distintos: sete de componente e quatro de página/alias, executados em WT+OWN e HEAD+OWN; nenhum falhou ou foi ignorado e não houve warnings. A tipagem isolada passou nas duas variantes. React, NextIntl, componente, página e alias são reais; fetch, resolver e outras fronteiras da página são sintéticos.
+
+O resultado de prontidão é apenas booleano e momentâneo. Não há chamada de fornecedor ao renderizar, sondagem ou pergunta automática; o formulário permite tentativa manual e o POST reavalia a seleção. Histórico de dez pares, fontes locais, escape, erros, abort e descarte por mudança de contexto continuam exercitados nos dois idiomas. Os hunks próprios da página e dos dois locales são idênticos em WT e HEAD, e sua reversão recupera cada preimagem em bytes.
+
+O commit T5 não encerra a feature. Seguem QA independente nova, pelo menos cinco faults comportamentais com controles antes/depois e PostgreSQL novo somente da revisão OWN com tipos/FK/CHECK/UNIQUE e users sentinela, sem ancestrais. Não se declara Verified, operação real ou UAT.

@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "types": ["node"],
+    "noEmit": true,
+    "baseUrl": "../..",
+    "paths": { "@/*": ["src/*"] }
+  },
+  "files": [
+    "../../src/components/site/public-information-assistant.tsx",
+    "../../src/app/igrejas/[slug]/page.tsx",
+    "../../src/app/comunidades/[slug]/page.tsx",
+    "../../src/types/public.ts",
+    "../../src/lib/generated-api.ts",
+    "./ui-type-stubs.d.ts"
+  ]
+}
