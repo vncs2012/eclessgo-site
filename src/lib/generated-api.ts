@@ -2296,3 +2296,149 @@ export interface ProviderSelectionRequest {
 export interface PublicProviderResponse {
   provider: "openai" | "anthropic" | null;
 }
+
+export interface Capabilities {
+  can_create: boolean;
+  is_responsible: boolean;
+  has_local_admin: boolean;
+}
+
+export interface CreateNetwork {
+  name: string;
+  responsible_email: string;
+}
+
+export interface ErrorDetail_Literal__CONFLICT___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__INVALID_INPUT___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__NOT_FOUND___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__PAYLOAD_TOO_LARGE___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__UNAVAILABLE___ {
+  code: string;
+}
+
+export interface ErrorResponse_Literal__CONFLICT___ {
+  detail: ErrorDetail_Literal__CONFLICT___;
+}
+
+export interface ErrorResponse_Literal__INVALID_INPUT___ {
+  detail: ErrorDetail_Literal__INVALID_INPUT___;
+}
+
+export interface ErrorResponse_Literal__NOT_FOUND___ {
+  detail: ErrorDetail_Literal__NOT_FOUND___;
+}
+
+export interface ErrorResponse_Literal__PAYLOAD_TOO_LARGE___ {
+  detail: ErrorDetail_Literal__PAYLOAD_TOO_LARGE___;
+}
+
+export interface ErrorResponse_Literal__UNAVAILABLE___ {
+  detail: ErrorDetail_Literal__UNAVAILABLE___;
+}
+
+export interface EventView {
+  action: "REQUESTED" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
+  version: number;
+  occurred_at: string;
+}
+
+export interface LinkBase {
+  id: string;
+  network_id: string;
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
+  version: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LocalLink {
+  id: string;
+  network_id: string;
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
+  version: number;
+  created_at: string;
+  updated_at: string;
+  network_name: string | null;
+}
+
+export interface NetworkCreated {
+  id: string;
+  name: string;
+}
+
+export interface NetworkSummary {
+  id: string;
+  name: string;
+  is_responsible: boolean;
+}
+
+export interface OwnedLink {
+  id: string;
+  network_id: string;
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
+  version: number;
+  created_at: string;
+  updated_at: string;
+  requested_ref: string | null;
+  church_name: string | null;
+}
+
+export interface Page_EventView_ {
+  items: EventView[];
+  next_cursor: string | null;
+}
+
+export interface Page_LocalLink_ {
+  items: LocalLink[];
+  next_cursor: string | null;
+}
+
+export interface Page_NetworkSummary_ {
+  items: NetworkSummary[];
+  next_cursor: string | null;
+}
+
+export interface Page_Union_OwnedLink__PeerLink__ {
+  items: (OwnedLink | PeerLink)[];
+  next_cursor: string | null;
+}
+
+export interface PeerLink {
+  church_name: string;
+}
+
+export interface R26a_ErrorDetail_Literal__FORBIDDEN___ {
+  code: string;
+}
+
+export interface R26a_ErrorDetail_Literal__UNAUTHENTICATED___ {
+  code: string;
+}
+
+export interface R26a_ErrorResponse_Literal__FORBIDDEN___ {
+  detail: R26a_ErrorDetail_Literal__FORBIDDEN___;
+}
+
+export interface R26a_ErrorResponse_Literal__UNAUTHENTICATED___ {
+  detail: R26a_ErrorDetail_Literal__UNAUTHENTICATED___;
+}
+
+export interface RequestLink {
+  church_ref: string;
+}
+
+export interface TransitionLink {
+  expected_version: number;
+}
