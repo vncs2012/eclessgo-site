@@ -1,6 +1,6 @@
 # R26a — design local
 
-Status: contrato T0 aprovado, T1 e T2 commitadas localmente; T3 implementada localmente; commits PANEL/WEB e QA independente pendentes. As decisões humanas estão em `context.md`; os detalhes abaixo são escolhas locais de engenharia. A divisão por três entregas preserva fronteiras de transação e autorização.
+Status: Verified LOCAL após QA2 independente PASS e quatro validate_state exit 0; commits documentais de fechamento aguardam janelas ROOT. T1/T2 API, T3 PANEL/WEB e C1 de teste estão commitados localmente. A V1 completa permanece pendente. As decisões humanas estão em `context.md`; os detalhes abaixo são escolhas locais de engenharia.
 
 ## Reuso e alternativas
 
@@ -86,7 +86,7 @@ Todas as respostas, inclusive erros de dependência e validação, enviam `Cache
 
 ## PANEL e riscos
 
-`hooks.ts` hoje exige Church elegível ou SUPER_ADMIN para login e bootstrap. Chamar o caminho relativo `/network-memberships/access` sob o prefixo configurado, padrão `/api/v1`, com a sessão autenticada permite responsável existente sem Church e MEMBER responsável; falha da consulta não vira permissão. Apenas a rota de rede e seu item de navegação recebem a nova capacidade; as demais rotas continuam usando os guards anteriores. Em troca de sessão/comunidade, abortar e descartar respostas antigas. Ações mostram estados, desabilitam duplicação, usam recarga explícita em 409 e não apresentam nomes não autorizados. Locales R26a próprios são integrados ao i18n, sem editar os dois JSON herdados.
+Antes de T3, `hooks.ts` exigia Church elegível ou SUPER_ADMIN para login e bootstrap. Chamar o caminho relativo `/network-memberships/access` sob o prefixo configurado, padrão `/api/v1`, com a sessão autenticada permite responsável existente sem Church e MEMBER responsável; falha da consulta não vira permissão. Apenas a rota de rede e seu item de navegação recebem a nova capacidade; as demais rotas continuam usando os guards anteriores. Em troca de sessão/comunidade, abortar e descartar respostas antigas. Ações mostram estados, desabilitam duplicação, usam recarga explícita em 409 e não apresentam nomes não autorizados. Locales R26a próprios são integrados ao i18n, sem editar os dois JSON herdados.
 
 | Risco | Evidência | Mitigação |
 |---|---|---|
@@ -112,3 +112,7 @@ O interceptor atual pode aplicar a credencial já presente na store; por isso a 
 
 
 A capacidade pode ser compartilhada por provider/hook em `useNetworkAccess.ts` dentro de `App.tsx`, somente em memória: snapshot da geração de sessão, estado de carregamento/erro e cancelamento com descarte por geração e contexto. Não serializar o `Symbol` da geração como chave de cache nem persistir grant. Na volta a `/login` ou ao fallback sem Church, aguardar a capacidade; falha oferece estado de erro/retentativa e não cria ciclo ou acesso. O fluxo de interesse anterior continua com suas regras próprias.
+
+## Verificação independente local
+
+QA2 PASS cobriu a matriz de autorização e os fluxos NET-01–33 nos pins registrados em `tasks.md`. A prova inclui SQLite/PostgreSQL e migration OWN em esquema mínimo, HTTP com autenticação e factory sintéticas, e UI JSDOM com recortes reais e dependências sintéticas. Não comprova JWT real, navegador ou aplicação integral, app nativo, UAT ou produção; providers permaneceram OFF. Os incidentes e limites processuais constam em `preservation.md` e no relatório imutável.

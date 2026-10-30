@@ -1,6 +1,6 @@
 # R26a — vínculo de comunidades a uma rede
 
-Status: contrato T0 aprovado; T1 e T2 commitadas localmente. T3 implementada localmente, com commits PANEL/WEB e QA independente pendentes. Classificação: COMPLEXA.
+Status: Verified LOCAL após QA2 independente PASS e quatro validate_state exit 0; commits documentais de fechamento aguardam janelas ROOT. T1/T2 API, T3 PANEL/WEB e C1 de teste estão commitados localmente. A V1 completa permanece pendente. Classificação: COMPLEXA.
 
 ## Problem Statement
 
@@ -35,7 +35,7 @@ As decisões humanas ficam em `context.md`. As escolhas abaixo são locais de en
 | Falhas e listas | Envelope fechado, no-store, páginas de até 100 itens, sem total; códigos em `design.md` | Comportamento verificável e pouca exposição | Engenharia |
 | Responsável ou comunidade removida fisicamente | Referências podem ficar nulas; trilha permanece e nenhum poder é transferido | Não bloqueia exclusão atual nem inventa reatribuição | Engenharia |
 
-**Open questions: none** — nenhuma decisão de produto adicional foi presumida; o ROOT deve revisar as escolhas locais antes de liberar T1.
+**Open questions: none** — nenhuma decisão de produto adicional foi presumida; as escolhas locais foram revisadas antes da liberação das entregas.
 
 ## User Stories
 
@@ -116,41 +116,41 @@ Entrada/limites, falha atômica, replay, autorização, concorrência e transiç
 
 | Requirement ID | Story | Phase | Status |
 |---|---|---|---|
-| NET-01 | P1 | T1,T2 | Implementing |
-| NET-02 | P1 | T1,T2 | Implementing |
-| NET-03 | P1 | T1,T2 | Implementing |
-| NET-04 | P1 | T1,T2 | Implementing |
-| NET-05 | P1 | T1,T2 | Implementing |
-| NET-06 | P1 | T1,T2 | Implementing |
-| NET-07 | P1 | T1,T2 | Implementing |
-| NET-08 | P1 | T1,T2 | Implementing |
-| NET-09 | P1 | T1,T2 | Implementing |
-| NET-10 | P1 | T1,T2 | Implementing |
-| NET-11 | P1 | T1,T2 | Implementing |
-| NET-12 | P1 | T1,T2 | Implementing |
-| NET-13 | P1 | T1,T2 | Implementing |
-| NET-14 | P1 | T1,T2 | Implementing |
-| NET-15 | P1 | T1,T2 | Implementing |
-| NET-16 | P1 | T1,T2 | Implementing |
-| NET-17 | P1 | T1,T2 | Implementing |
-| NET-18 | P1 | T1,T2 | Implementing |
-| NET-19 | P1 | T1,T2 | Implementing |
-| NET-20 | P1 | T1,T2 | Implementing |
-| NET-21 | P1 | T1,T2 | Implementing |
-| NET-22 | P1 | T1,T2 | Implementing |
-| NET-23 | P1 | T1,T2 | Implementing |
-| NET-24 | P1 | T1,T2 | Pending |
-| NET-25 | P1 | T1,T2 | Implementing |
-| NET-26 | P1 | T1,T2,T3 | Implementing |
-| NET-27 | P1 | T2,T3 | Implementing |
-| NET-28 | P1 | T2,T3 | Implementing |
-| NET-29 | P1 | T2,T3 | Implementing |
-| NET-30 | P1 | T2,T3 | Implementing |
-| NET-31 | P1 | T2,T3 | Implementing |
-| NET-32 | P1 | T2,T3 | Implementing |
-| NET-33 | P1 | T2,T3 | Implementing |
+| NET-01 | P1 | T1,T2 | Verified LOCAL |
+| NET-02 | P1 | T1,T2 | Verified LOCAL |
+| NET-03 | P1 | T1,T2 | Verified LOCAL |
+| NET-04 | P1 | T1,T2 | Verified LOCAL |
+| NET-05 | P1 | T1,T2 | Verified LOCAL |
+| NET-06 | P1 | T1,T2 | Verified LOCAL |
+| NET-07 | P1 | T1,T2 | Verified LOCAL |
+| NET-08 | P1 | T1,T2 | Verified LOCAL |
+| NET-09 | P1 | T1,T2 | Verified LOCAL |
+| NET-10 | P1 | T1,T2 | Verified LOCAL |
+| NET-11 | P1 | T1,T2 | Verified LOCAL |
+| NET-12 | P1 | T1,T2 | Verified LOCAL |
+| NET-13 | P1 | T1,T2 | Verified LOCAL |
+| NET-14 | P1 | T1,T2 | Verified LOCAL |
+| NET-15 | P1 | T1,T2 | Verified LOCAL |
+| NET-16 | P1 | T1,T2 | Verified LOCAL |
+| NET-17 | P1 | T1,T2 | Verified LOCAL |
+| NET-18 | P1 | T1,T2 | Verified LOCAL |
+| NET-19 | P1 | T1,T2 | Verified LOCAL |
+| NET-20 | P1 | T1,T2 | Verified LOCAL |
+| NET-21 | P1 | T1,T2 | Verified LOCAL |
+| NET-22 | P1 | T1,T2 | Verified LOCAL |
+| NET-23 | P1 | T1,T2 | Verified LOCAL |
+| NET-24 | P1 | T1,T2 | Verified LOCAL |
+| NET-25 | P1 | T1,T2 | Verified LOCAL |
+| NET-26 | P1 | T1,T2,T3 | Verified LOCAL |
+| NET-27 | P1 | T2,T3 | Verified LOCAL |
+| NET-28 | P1 | T2,T3 | Verified LOCAL |
+| NET-29 | P1 | T2,T3 | Verified LOCAL |
+| NET-30 | P1 | T2,T3 | Verified LOCAL |
+| NET-31 | P1 | T2,T3 | Verified LOCAL |
+| NET-32 | P1 | T2,T3 | Verified LOCAL |
+| NET-33 | P1 | T2,T3 | Verified LOCAL |
 
-Cobertura planejada: 33 requisitos, 33 mapeados a T1/T2/T3; nenhum Verified. A QA independente fará mapeamento próprio após os commits finais.
+Cobertura verificada: 33 requisitos NET-01–33 mapeados na QA2 independente PASS; limites e ressalvas estão em `validation.md` e `preservation.md`. Verified LOCAL não é conclusão da V1 inteira.
 
 ## Success Criteria
 
@@ -164,3 +164,9 @@ Cobertura planejada: 33 requisitos, 33 mapeados a T1/T2/T3; nenhum Verified. A Q
 NET-27–31 incluem o destino após login, bootstrap e visita posterior a `/login` ou rota curinga: responsável confirmado sem Church chega à área de redes sem ciclo com `/painel` ou `/login`. Conta sem papel ou capacidade continua sob a regra anterior; indisponibilidade da capacidade não cria permissão. MEMBER responsável recebe somente o fluxo adicional de redes e mantém os acessos comunitários que já possuía.
 
 A área de redes usa os três booleanos próprios de capacidade para sua porta de entrada; ações de responsável usam `NetworkSummary.is_responsible` da rede específica. ADMIN local usa somente vínculos da própria comunidade. SUPER_ADMIN pode ler ou criar conforme a matriz, mas não ganha ação de responsável ou ADMIN por ser SUPER_ADMIN.
+
+## Resultado local e evidência
+
+QA1 independente registrou FAIL por uma lacuna de discriminação em NET-15; C1 acrescentou o teste de rollback não-DBAPI e foi commitado na API em `0f382277f19ab011568b41287dffb0850cf7c661`, sem alteração de produto. QA2 independente posterior concluiu PASS em 49 métodos API e 34 UI distintos, 33 requisitos mapeados, oito faults mortos e 16 controles; quatro `validate_state` retornaram 0. Os 34 métodos UI foram executados em WT e HEAD, sem duplicar a contagem.
+
+O relatório canônico imutável `validation.md` tem SHA-256 `198df34e22aea7ff4b4a67a1a56abd506604ad324b584e903f417ff192125794`; `validation-iteration-1.md` preserva QA1 FAIL com SHA-256 `39de97078f771d632ea9a1808016a831984a4b64c5e378698534007c419a2192`. A evidência e as ressalvas ficam em `preservation.md`. A prova é local e isolada, não certifica JWT real, navegador integral, app nativo, UAT ou produção.

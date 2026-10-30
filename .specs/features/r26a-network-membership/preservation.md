@@ -1,4 +1,6 @@
-# R26a — preservação T0 selecionada
+# R26a — preservação selecionada e histórico
+
+As seções T0–T3 abaixo registram seus respectivos instantes; o fechamento atual está ao final. Nenhuma delas afirma preservação integral da árvore.
 
 A captura é parcial e anterior à autoria documental; não é inventário nem cópia integral das árvores. Não há alteração de fonte de produto, teste, configuração, migration, índice, ref ou commit nesta etapa.
 
@@ -71,3 +73,17 @@ A primeira visualização deixou passar um campo público de metadado do cliente
 Os HEADs e a semântica dos três índices seguem iguais à baseline T3; nesta observação os bytes brutos dos três índices também coincidiram. Foram conferidas 36 fontes/documentos readonly selecionados, incluindo os dez herdados e os três caminhos mistos useLoginPageState.ts, Sidebar.tsx e ChurchSwitcher.tsx. Não é alegação de preservação da árvore inteira.
 
 Os três gerados compartilham SHA-256 abda26a67520f47efce1f3bb873ec9117e77f66d72646239f6f951ba984d77f8 e preservam integralmente o prefixo anterior. Quatro colisões de nomes foram comparadas e remapeadas apenas no acréscimo; o carrier aplica e reverte com fuzz zero. Pré/pós-imagens, falhas de fixture, gates e índices selecionados estão em .specs/evidence/r26a-network-membership/t3-b16b919b-a63c-4f71-9acb-946201141845/. Nenhum índice foi staged e nenhuma janela de commit foi aberta.
+
+## R26a — QA e fechamento documental local
+
+A QA1 independente registrou FAIL por lacuna NET-15. C1 commitou somente teste e documentos na API em `0f382277f19ab011568b41287dffb0850cf7c661`, pai `0fd9a503db99087f0fad6123b2f2c44263930cd6`; produto permaneceu intacto. QA2 independente posterior concluiu PASS e quatro validate_state retornaram 0. Os 33 requisitos estão Verified LOCAL nas fontes API `0f382277f19ab011568b41287dffb0850cf7c661`, PANEL `43fb5055cab6225b9944125d65055b6464153eb3` e WEB `90a12a20f4212e30ddec3cdcdf8618ffa9eadd22`; commits documentais de fechamento são distintos dessas fontes e ainda aguardam janelas ROOT.
+
+`validation.md` QA2 é imutável nos quatro espelhos, SHA-256 `198df34e22aea7ff4b4a67a1a56abd506604ad324b584e903f417ff192125794`; `validation-iteration-1.md` QA1 também é imutável, SHA-256 `39de97078f771d632ea9a1808016a831984a4b64c5e378698534007c419a2192`. Manifestos: QA1 `.specs/evidence/r26a-network-membership/qa1-ad7d7a6e-17b8-4217-8671-ec0e7eef2dbc/manifest-qa1.md`; C1 `.specs/evidence/r26a-network-membership/c1-3afa0eec-7963-4684-ab84-676a357f6ad2/manifest-c1.md` SHA-256 `f0b774df62feeadbcd6a476494bed802e4abf18e842e06c947841ae996335a0b`; QA2 `.specs/evidence/r26a-network-membership/qa2-af09c298-fbe1-4f9d-964d-de6e3cbd07cb/manifest-qa2.md` SHA-256 `d2209a7612eafe0ed0ab43eeee3a0b30e45c5acdf78429225eea27b9924b092e`.
+
+A QA1 capturou o snapshot MOBILE depois do primeiro gate; QA2 fez pré-imagem antes de seus gates. QA1 registrou drift apenas de statcache API 26, PANEL 30 e WEB 12, com semântica e extensões iguais, aceito pelo ROOT sem atribuir causa. Em C1, um status amplo com ponto após as quatro exclusões e um segundo separador teve stdout somente em memória, não preservado; addendum retrospectivo e comparação de entradas raw preservados, sem inferência sobre IO dos caminhos proibidos. A comparação C1 registrou 2.643 entradas NÃOOWN e TREE iguais.
+
+Na QA2 alguns helpers derivados não tinham pin próprio antes da primeira execução; os gates afetados foram reproduzidos após pinagem prospectiva, mantendo os ENOENT/EEXIST originais. UI, API e sensores não foram afetados. `write-report.py` nasceu 0664 e foi corrigido para 0600; sua função era texto/lógica de relatório, sem alegação retroativa de conformidade. Inspeções imprimiram identidades e headers sintéticos; nenhuma credencial real ou request real foi observada. Não se infere novo aceite humano nem se apagam as ressalvas.
+
+A baseline de fechamento preserva 92 registros nominais selecionados pela QA2, três cópias adicionais do histórico QA1, pré-imagens WT/HEAD e os três índices brutos; não é cópia integral. As dez superfícies herdadas e os três caminhos mistos PANEL permanecem readonly. Os três gerados têm SHA-256 `abda26a67520f47efce1f3bb873ec9117e77f66d72646239f6f951ba984d77f8` e preservam os 55.719 bytes iniciais SHA-256 `98cf930dd996d8344f941b47b4206b6f7025281ba013945b30c0891e1d7d4ae0`. Detalhes em `.specs/evidence/r26a-network-membership/closure-06860cbc-ef56-4e94-a013-b145b40dc8eb/`.
+
+Os resultados são locais e isolados: esquema mínimo SQLite/PG, migration OWN, autenticação e factory HTTP sintéticas, UI JSDOM com recortes reais e apoio sintético. JWT real, browser/fullapp, native, UAT e produção não foram certificados; providers continuaram OFF. O fechamento de R26a não conclui a V1 inteira.

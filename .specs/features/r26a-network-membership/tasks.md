@@ -1,6 +1,6 @@
-# R26a — tarefas propostas
+# R26a — tarefas e rastreabilidade
 
-Status: T1 e T2 commitadas localmente; T3 implementada e testada localmente, com janelas de commit PANEL/WEB e QA independente pendentes. Ativar `tlc-spec-driven` no Execute e seguir suas regras de testes, rastreabilidade e Verifier; este recorte mantém exatamente três entregas coesas porque cada uma precisa preservar uma fronteira testável de transação, API ou interface. O ROOT libera cada reserva e janela de índice/ref separadamente.
+Status: Verified LOCAL após QA2 independente PASS e quatro validate_state exit 0; commits documentais de fechamento aguardam janelas ROOT. T1/T2 API, T3 PANEL/WEB e C1 de teste estão commitados localmente. A V1 completa permanece pendente. Os três commits documentais serão separados dos commits de fonte e somente ocorrerão após janelas ROOT.
 
 ## Test Coverage Matrix
 
@@ -80,7 +80,7 @@ As entregas são sequenciais. Um teste de comportamento acompanha o código que 
 - [x] Formulários usam conta por e-mail exato e comunidade por slug ou URL http/https dos dois caminhos existentes; sem userinfo ou request externo. Testes provam descarte de query/fragmento, persistência só do slug canônico e rejeição dos demais formatos; nenhum catálogo novo ou dado não autorizado.
 - [x] Novas traduções usam arquivos próprios; JSONs de locale herdados não são alterados. Testes verificam as chaves em pt-BR e en.
 - [x] Comparar e tipar os três gerados; se MOBILE mudar, produzir carrier PANEL, aplicar/reverter em cópia com fuzz zero e comparar bytes. MOBILE permanece sem Git.
-- [ ] Preservar pré-imagens e qualquer hunk misto; commits PANEL/WEB separados e carrier somente com reservas/janelas ROOT.
+- [x] Preservar pré-imagens e qualquer hunk misto; commits PANEL `43fb5055cab6225b9944125d65055b6464153eb3` e WEB `90a12a20f4212e30ddec3cdcdf8618ffa9eadd22` feitos em janelas separadas; MOBILE permanece sem Git.
 
 ## Diagram-Definition Cross-Check
 
@@ -100,7 +100,16 @@ As entregas são sequenciais. Um teste de comportamento acompanha o código que 
 
 ## QA e fechamento
 
-Somente depois do último commit de fonte, QA independente nova Sol6.1/medium/fork none, distinta da autoria, faz verificação por requisito e sensores comportamentais com controles. AD-007 permite duas rodadas abertas e terceira restrita. A QA reexecuta upgrade/downgrade da revisão OWN em PostgreSQL novo sem ancestrais. Falhas geram correção e reverificação segundo o protocolo; nenhuma assinatura, envio ou operação externa. Após PASS independente, executar `validate_state` e fazer fechamento documental sob reserva ROOT. Antes disso, não marcar Verified.
+- [x] QA1 independente: FAIL histórico por lacuna NET-15; `validation-iteration-1.md` preserva o relatório original nos quatro espelhos.
+- [x] C1 adicionou um teste de rollback não-DBAPI sem alteração de produto e foi commitado na API em `0f382277f19ab011568b41287dffb0850cf7c661` (pai `0fd9a503db99087f0fad6123b2f2c44263930cd6`).
+- [x] QA2 independente posterior: PASS em NET-01–33; 49 métodos API e 34 UI distintos, 342 sites API (235 assertions e 107 helpers) e 114 expect UI. WT e HEAD executaram os mesmos 34 métodos UI; não são 68 distintos.
+- [x] Oito faults mortos, 16 controles verdes e zero survivors, erros, skips ou avisos nos gates aceitos. O S4 exato SHA-256 `6bd9c0453a933cebd9c908a18ce491cb0d5f68158df6400a78b9930984c9d7c1` foi morto pelo teste C1: `test_persistence.py:396` esperou `PENDING v1` e observou `APPROVED v2` na cópia mutante.
+- [x] Os quatro `validate_state` da QA2 retornaram exit 0. O relatório canônico `validation.md` é PASS e imutável, SHA-256 `198df34e22aea7ff4b4a67a1a56abd506604ad324b584e903f417ff192125794`; o histórico QA1 imutável tem SHA-256 `39de97078f771d632ea9a1808016a831984a4b64c5e378698534007c419a2192`.
+- [x] O conteúdo de fechamento está preparado; os commits documentais aguardam janelas ROOT separadas e não são fontes cobertas pela QA2.
+
+QA2 tipou 13 raízes de fonte e três gerados com versões próprias; projeção incremental: oito operações, 29 schemas e quatro renomes; carrier MOBILE com aplicação/reversão fuzz 0. Lint PANEL: zero achados novos, dois preexistentes em App/client; Ruff: sete fontes limpas, um I001 em main igual ao parent e teste C1 limpo. Evidência: `.specs/evidence/r26a-network-membership/qa2-af09c298-fbe1-4f9d-964d-de6e3cbd07cb/manifest-qa2.md`, SHA-256 `d2209a7612eafe0ed0ab43eeee3a0b30e45c5acdf78429225eea27b9924b092e`.
+
+A prova usa esquemas mínimos SQLite/PG, migration OWN, autenticação/factory HTTP sintéticas e UI JSDOM com recortes reais e apoio sintético. Não certifica JWT real, navegador ou aplicação integral, native, UAT ou produção; providers permaneceram OFF. Incidentes e ressalvas processuais seguem em `preservation.md`, sem inferir novo aceite humano.
 
 ## T1 — preparação local para revisão
 
@@ -143,4 +152,27 @@ A interface, o cliente compartilhado e os contratos foram preparados nos caminho
 
 TypeScript isolado passou nas 13 raízes PANEL com TS 5.8.3 e nos três contratos gerados com TS 5.8.3, 5.9.3 e 6.0.3, sem duplicatas. O lint isolado de 15 fontes teve zero achados novos; dois achados anteriores em App.tsx e client.ts foram conservados. O carrier MOBILE aplicou e reverteu com fuzz zero e bytes exatos. Os detalhes, limites e mapa direto/reverso estão em .specs/evidence/r26a-network-membership/t3-b16b919b-a63c-4f71-9acb-946201141845/.
 
-O commit PANEL e depois o commit WEB exigem suas janelas próprias; MOBILE permanece sem Git. A QA independente continua pendente e nenhuma feature foi marcada Verified.
+Os commits PANEL e WEB foram feitos em janelas separadas: `43fb5055cab6225b9944125d65055b6464153eb3` e `90a12a20f4212e30ddec3cdcdf8618ffa9eadd22`. MOBILE permanece sem Git. Naquele checkpoint, a QA independente permanecia pendente; seu resultado posterior consta em QA e fechamento.
+
+
+## C1 — regressão não-DBAPI para NET-15
+
+C1 adiciona somente `test_non_dbapi_audit_failure_rolls_back_state_and_history_on_new_connection` em `eclessGO/eclessgo-api/tests/r26a/test_persistence.py`. O teste injeta `RuntimeError` em `SqlNetworkUnit.append_event` durante uma transição `approve` real, depois da atualização do vínculo. Ele exige `UNAVAILABLE` e confere o estado persistido por uma engine nova com `NullPool`; Memberships e o histórico anterior também permanecem iguais. Nenhuma fonte de produto ou outro teste foi alterado.
+
+| NET-15 — resultado esperado | Assertion nova | Valor conferido |
+|---|---|---|
+| A falha é devolvida como indisponibilidade, mapeada pelo endpoint para 503. | `eclessGO/eclessgo-api/tests/r26a/test_persistence.py:377` — `self.assertEqual(caught.exception.code, "UNAVAILABLE")` | `UNAVAILABLE` |
+| A atualização parcial do vínculo é revertida em conexão física nova. | `eclessGO/eclessgo-api/tests/r26a/test_persistence.py:396` — `self.assertEqual([(row["id"], row["status"], row["version"]) for row in links], [(LINK1, "PENDING", 1)])` | `PENDING`, versão `1` |
+| A operação não acrescenta evento de aprovação e conserva o histórico. | `eclessGO/eclessgo-api/tests/r26a/test_persistence.py:401` — `self.assertEqual([(row["link_id"], row["action"], row["version"]) for row in events], [(None, "NETWORK_CREATED", 1), (LINK1, "REQUESTED", 1)])` | `NETWORK_CREATED`, `REQUESTED` |
+| Membership e seus dados não mudam. | `eclessGO/eclessgo-api/tests/r26a/test_persistence.py:418` — `self.assertEqual(member_snapshot(members), member_snapshot(members_before))` | snapshot integral igual |
+
+| Assertion C1 | Requisito coberto |
+|---|---|
+| `test_persistence.py:377` — `caught.exception.code == "UNAVAILABLE"` | NET-15: falha anterior ao commit retorna 503 pela camada HTTP. |
+| `test_persistence.py:396` — vínculo `PENDING v1` em engine nova | NET-15: reverte o estado parcial. |
+| `test_persistence.py:401` — somente `NETWORK_CREATED` e `REQUESTED` | NET-15: não acrescenta evento da transição falha. |
+| `test_persistence.py:418` — snapshot de Membership idêntico | NET-15: preserva Membership e demais dados da operação. |
+
+O gate local executado em cópia allowlisted teve 25 testes de persistência SQLite, 6 unitários e 12 HTTP: 43 métodos distintos, zero falhas, erros, skips ou avisos. Ruff E/F/I/B passou no teste OWN. No sensor C1, o controle intacto passou antes e depois (1 teste cada); o S4 exato, que troca rollback por commit para exceção não-DBAPI, falhou na assertion de estado com `APPROVED v2` em vez de `PENDING v1`, sem erro de setup ou timeout. Os outputs, pins, pre-imagens e mapas estão em `.specs/evidence/r26a-network-membership/c1-3afa0eec-7963-4684-ab84-676a357f6ad2/`.
+
+No momento de C1, o `validation.md` então vigente era FAIL, SHA-256 `39de97078f771d632ea9a1808016a831984a4b64c5e378698534007c419a2192`; `validation-iteration-1.md` preserva essa cópia byte a byte. C1 foi cobertura local, não QA independente; a QA2 posterior passou após o commit API C1.

@@ -1,6 +1,6 @@
 # R26a — decisões e limites
 
-Data: 2026-10-29. Status: contrato T0 aprovado, T1 e T2 commitadas localmente; T3 implementada localmente; commits PANEL/WEB e QA independente pendentes. O histórico `r26-network-unit-hierarchy/{discovery,preservation}.md` é imutável e permanece na namespace original; suas antigas dúvidas e referências a FUTURE retratam aquele momento.
+Data do contrato: 2026-10-29. Status: Verified LOCAL após QA2 independente PASS e quatro validate_state exit 0; commits documentais de fechamento aguardam janelas ROOT. T1/T2 API, T3 PANEL/WEB e C1 de teste estão commitados localmente. A V1 completa permanece pendente. O histórico `r26-network-unit-hierarchy/{discovery,preservation}.md` é imutável e permanece na namespace original; suas dúvidas e referências a FUTURE retratam aquele momento.
 
 ## Decisões humanas vigentes
 
@@ -10,7 +10,7 @@ Data: 2026-10-29. Status: contrato T0 aprovado, T1 e T2 commitadas localmente; T
 - Para pedido ainda pendente, ADMIN ativo da comunidade pode recusar e o responsável da rede pode cancelar. Esta é a resposta humana explícita “Permitir recusa e cancelamento (recomendado)”.
 - Nomes da rede e das comunidades vinculadas são restritos a SUPER_ADMIN, responsável da rede e ADMINs das comunidades vinculadas. Não existe catálogo público. A leitura do nome da rede solicitante pelo ADMIN do pedido pendente é o mínimo necessário para a decisão; não libera as outras comunidades.
 - O vínculo não cria Membership, herança de papéis ou acesso a pessoas, finanças ou outros dados internos de comunidades. Os guards atuais permanecem.
-- R24 e R26 locais integram o primeiro lançamento V1. R24b já está Verified LOCAL com QA2 PASS e ressalvas processuais aceitas; R26a está parcialmente implementado e ainda não foi verificado.
+- R24 e R26 locais integram o primeiro lançamento V1. R24b e R26a estão Verified LOCAL após QA independente; o fechamento da V1 inteira permanece pendente. As ressalvas próprias de cada QA continuam registradas.
 
 ## Escolhas de implementação propostas
 
@@ -22,7 +22,7 @@ A interface de criação aceita o e-mail exato da conta existente; a solicitaç�
 
 ## Não incluído
 
-Sem hierarquia multinível, múltiplas redes ativas, concessão de dados cruzados, edição de rede, troca de responsável, exclusão, expurgo, mensagens, provedor ou UI administrativa MOBILE. Não há permissão para ler corpos de migrations ancestrais ou antecipar seu head. R16a segue sem expansão, R22b reservado e R30/R34 futuros; D01 mantém corte inclusivo de 30 dias e worker OFF, com demais políticas pendentes.
+Sem hierarquia multinível, múltiplas redes ativas, concessão de dados cruzados, edição de rede, troca de responsável, exclusão, expurgo, mensagens, provedor ou UI administrativa MOBILE. Não houve permissão para ler ou executar corpos de migrations ancestrais; o parent da revisão OWN foi confirmado pelos metadados autorizados. R16a segue sem expansão, R22b reservado e R30/R34 futuros; D01 mantém corte inclusivo de 30 dias e worker OFF, com demais políticas pendentes.
 
 A sequência é três entregas locais e QA independente após a última fonte commitada. O ROOT avalia contrato e reserva nominal antes de liberar cada etapa. Android e iOS devem compartilhar a versão no primeiro lançamento; EAS permanece só em avaliação, sem cloud, gasto, upload ou publicação.
 
@@ -36,3 +36,7 @@ Cada NetworkSummary autorizado inclui `is_responsible`, calculado para o ator co
 A página de login decide o destino de sessões já autenticadas. O caso responsável sem Church exige ajuste nominal em `src/pages/Login.tsx`, além do fallback em `src/App.tsx` e do fluxo de login/bootstrap em `src/features/auth/hooks.ts`. O formulário `useLoginPageState.ts` apenas delega ao hook e permanece readonly; o `Sidebar.tsx` recebe itens calculados e também permanece readonly. Ambos estão mistos e suas pré-imagens foram preservadas.
 
 A verificação de capacidade no login usa a sessão recém-obtida pelo cliente compartilhado, antes de aceitar conta sem Church elegível; o padrão existente de consulta de comunidades já usa credencial transitória. Sem resposta válida com `is_responsible=true`, a exceção não é concedida. Isso não concede Church, Membership ou papel novo.
+
+## QA independente e fechamento local
+
+QA1 FAIL foi preservada; o commit C1 de teste `0f382277f19ab011568b41287dffb0850cf7c661` acrescentou cobertura NET-15 sem mudar produto. QA2 independente concluiu PASS nas fontes API `0f382277f19ab011568b41287dffb0850cf7c661`, PANEL `43fb5055cab6225b9944125d65055b6464153eb3` e WEB `90a12a20f4212e30ddec3cdcdf8618ffa9eadd22`; os relatórios QA1/QA2 e suas ressalvas permanecem imutáveis. Os 33 requisitos estão Verified LOCAL, sem declarar V1, UAT ou produção concluídas. `tasks.md` e `preservation.md` registram resultados e limites.
