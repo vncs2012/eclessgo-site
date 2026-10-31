@@ -26,25 +26,28 @@ function normalizeOptionalText(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
+function normalizeAddressPart(value: unknown): string | null {
+  if (typeof value === "string") return value.trim() || null;
+  return typeof value === "number" && Number.isFinite(value) ? String(value) : null;
+}
+
 export function normalizeAddress(address: RawChurch["address"]): string {
   if (!address) return "Endereço não informado";
   if (typeof address === "string") return address;
 
   const record = getAddressRecord(address);
-  const explicit =
-    record.formatted_address ||
-    record.full_address ||
-    record.display_name ||
-    record.address ||
-    record.street;
+  const explicit = [
+    record.formatted_address,
+    record.full_address,
+    record.display_name,
+    record.address,
+  ].map(normalizeOptionalText).find((part) => part !== null);
 
-  if (typeof explicit === "string" && explicit.trim()) {
-    return explicit.trim();
-  }
+  if (explicit) return explicit;
 
   const parts = [record.street, record.number, record.neighborhood, record.city, record.state]
-    .filter((part): part is string => typeof part === "string" && part.trim().length > 0)
-    .map((part) => part.trim());
+    .map(normalizeAddressPart)
+    .filter((part): part is string => part !== null);
 
   return parts.length > 0 ? parts.join(", ") : "Endereço não informado";
 }
