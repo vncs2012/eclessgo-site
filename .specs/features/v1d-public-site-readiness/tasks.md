@@ -33,7 +33,7 @@ Depends on: T1
 Where: relatório independente coordenado pelo ROOT
 Tests: outcome check e discriminação em scratch novo após último commit de fonte.
 Gate: QA PASS com file:line, sensores válidos e preservação.
-Status: pendente.
+Status: concluída, QA1 independente PASS na fonte 6da91fa43c73ec6dacf0fcfaf9f2f696ec4e3a49; relatório validation.md SHA-256 ed2e6b815c987aeb7e8d96b174fab4d34bb577748a9eead86e54a05f1c3d86e2.
 
 ### T3: fechamento documental
 Depends on: T2
