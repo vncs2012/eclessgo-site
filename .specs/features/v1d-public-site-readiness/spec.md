@@ -31,12 +31,19 @@ Busca vazia não é falha; slug ausente não é503; viewport móvel não é emul
 ## Requirement Traceability
 | ID | Task | Status |
 |---|---|---|
-| V1D-01 | T1 | implemented locally; T2 pending |
-| V1D-02 | T1 | implemented locally; T2 pending |
-| V1D-03 | T1 | implemented locally; T2 pending |
-| V1D-04 | T1 | implemented locally; T2 pending |
-| V1D-05 | T1 | implemented locally; T2 pending |
-| V1D-06 | T1 | implemented locally; T2 pending |
+| V1D-01 | T1 | Verified LOCAL; QA1 PASS |
+| V1D-02 | T1 | Verified LOCAL; QA1 PASS |
+| V1D-03 | T1 | Verified LOCAL; QA1 PASS |
+| V1D-04 | T1 | Verified LOCAL; QA1 PASS |
+| V1D-05 | T1 | Verified LOCAL; QA1 PASS |
+| V1D-06 | T1 | Verified LOCAL; QA1 PASS |
 
-## T1 local evidence
+## T1 local evidence (histórico anterior à QA1)
 O gate autoral C1 passou110assertions, com42checks como subconjunto,6jornadas e0skips. O candidato é105fontes BASE+1OWN normalizeAddress. Matriz/reverso: ROOT/.specs/evidence/v1d-public-site-readiness/t1-integration-bfb1a512-935b-4779-aeb7-ac6573a30198/final-functional-matrix.md. A preparação e clone novos conferiram paridade dos106arquivos e16828dependências ao Full verde; não houve nova execução Full após mudanças exclusivas de metadata/docs. T2 independente e T3 continuam pendentes; nenhum Verified/UAT/produção é declarado.
+
+## Fechamento T3, 2026-10-31
+V1d está Verified LOCAL nos seis ACs. T1 fonte `6da91fa43c73ec6dacf0fcfaf9f2f696ec4e3a49` e T2 documental `ea56b7441b8e670e753230e6fb838ad7eef5887b` estão commitados. QA1 independente PASS na fonte T1, relatório validation.md SHA-256 `ed2e6b815c987aeb7e8d96b174fab4d34bb577748a9eead86e54a05f1c3d86e2`. As frases pendentes nas seções históricas T1 são checkpoints anteriores, superados por este registro, sem mudança retroativa das expectativas.
+
+Full110avaliações/39sites,42checksSUBCONJUNTO/6jornadas; optimizedLOCAL78avaliações/30checksSUBCONJUNTO/2jornadas,TypeScript habilitado/21páginas,perfilstrictreleaseausente. Sete focos, noveexecuçõesfault e18controlesincluindopreliminares,zero sobreviventes/skips/pageerrors. PreparepóscommitREAL passou;106fontes=105BASE+1OWN,13deltasWTfora.
+
+BackendfixtureHTTP,viewportmóvel não nativo,demoIAB40989 separada e nãoUAT. HistóricosRED/setup/pré-IO/modos/bytecode preservados,sem garantia retroativa. iOS,nativo em execução,UAT,operacional,R32 e publicaçãoV1 continuam pendentes;R24b/R26a VerifiedLOCAL/providersOFF,V1cunsignedAndroidfechada,R30/R34futuros,R22breservado. Próxima tarefaAndroid será delimitada pelo ROOT e não é iniciada aqui.

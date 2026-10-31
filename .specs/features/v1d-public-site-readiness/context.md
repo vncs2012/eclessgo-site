@@ -24,3 +24,10 @@ C1 Full verde foi mantido por paridade106fontes/16828dependências e run/spec/fi
 A falha de X11 do headed permanece histórica; o painel IAB visível usa contexto separado. Demo corrigida http://127.0.0.1:40989, anterior35351 mantida até troca pelo ROOT. Nenhum aceite humano/UAT é inferido pela abertura da página.
 
 Ressalvas instrumentais preservadas: arquivos OWN criados inicialmente0644 sob0700 e normalizados0600 na execução original; bytecode __pycache__ instrumental criado sob diretório0775 e corrigido0700 tardiamente na C1. O bytecode está preservado e fora de manifesto/stage. Não há garantia retroativa universal de modos.
+
+## Fechamento T3, 2026-10-31
+V1d está Verified LOCAL nos seis ACs. T1 fonte `6da91fa43c73ec6dacf0fcfaf9f2f696ec4e3a49` e T2 documental `ea56b7441b8e670e753230e6fb838ad7eef5887b` estão commitados. QA1 independente PASS na fonte T1, relatório validation.md SHA-256 `ed2e6b815c987aeb7e8d96b174fab4d34bb577748a9eead86e54a05f1c3d86e2`. As frases pendentes nas seções históricas T1 são checkpoints anteriores, superados por este registro, sem mudança retroativa das expectativas.
+
+Full110avaliações/39sites,42checksSUBCONJUNTO/6jornadas; optimizedLOCAL78avaliações/30checksSUBCONJUNTO/2jornadas,TypeScript habilitado/21páginas,perfilstrictreleaseausente. Sete focos, noveexecuçõesfault e18controlesincluindopreliminares,zero sobreviventes/skips/pageerrors. PreparepóscommitREAL passou;106fontes=105BASE+1OWN,13deltasWTfora.
+
+BackendfixtureHTTP,viewportmóvel não nativo,demoIAB40989 separada e nãoUAT. HistóricosRED/setup/pré-IO/modos/bytecode preservados,sem garantia retroativa. iOS,nativo em execução,UAT,operacional,R32 e publicaçãoV1 continuam pendentes;R24b/R26a VerifiedLOCAL/providersOFF,V1cunsignedAndroidfechada,R30/R34futuros,R22breservado. Próxima tarefaAndroid será delimitada pelo ROOT e não é iniciada aqui.
