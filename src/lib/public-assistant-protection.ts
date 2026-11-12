@@ -87,46 +87,54 @@ export function createMemoryProtectionStore(
 ): AssistantProtectionStore {
   const now = options.now ?? Date.now;
   const maxEntries = options.maxEntries ?? 10_000;
-  const entries = new Map<string, { value: string; expiresAt: number }>();
+  type Entry = { value: string; expiresAt: number };
+  // Counters and cache live apart: a flood of cache writes or fresh keys must
+  // never evict a live counter, or limits and the spend ceiling would reset.
+  const counters = new Map<string, Entry>();
+  const cache = new Map<string, Entry>();
 
-  const live = (key: string) => {
-    const entry = entries.get(key);
+  const live = (map: Map<string, Entry>, key: string) => {
+    const entry = map.get(key);
     if (!entry) return null;
     if (entry.expiresAt <= now()) {
-      entries.delete(key);
+      map.delete(key);
       return null;
     }
     return entry;
   };
-  const prune = () => {
-    if (entries.size < maxEntries) return;
+  const dropExpired = (map: Map<string, Entry>) => {
     const current = now();
-    for (const [key, entry] of entries) if (entry.expiresAt <= current) entries.delete(key);
-    // Still full: drop the oldest insertions first (Map preserves insertion order).
-    for (const key of entries.keys()) {
-      if (entries.size < maxEntries) break;
-      entries.delete(key);
-    }
+    for (const [key, entry] of map) if (entry.expiresAt <= current) map.delete(key);
   };
 
   return {
     async increment(key, ttlMs) {
-      const entry = live(key);
+      const entry = live(counters, key);
       if (entry) {
         entry.value = String(Number(entry.value) + 1);
         return Number(entry.value);
       }
-      prune();
-      entries.set(key, { value: "1", expiresAt: now() + ttlMs });
+      if (counters.size >= maxEntries) dropExpired(counters);
+      // Still full: fail closed (callers answer "unavailable") instead of
+      // forgetting live counts. The global counter is always admitted.
+      if (counters.size >= maxEntries && !key.includes(":rl:global:")) {
+        throw new Error("Protection counter store is full");
+      }
+      counters.set(key, { value: "1", expiresAt: now() + ttlMs });
       return 1;
     },
     async get(key) {
-      return live(key)?.value ?? null;
+      return live(cache, key)?.value ?? live(counters, key)?.value ?? null;
     },
     async set(key, value, ttlMs) {
-      entries.delete(key);
-      prune();
-      entries.set(key, { value, expiresAt: now() + ttlMs });
+      cache.delete(key);
+      if (cache.size >= maxEntries) dropExpired(cache);
+      // Cache entries are disposable: drop the oldest insertions first.
+      for (const oldest of cache.keys()) {
+        if (cache.size < maxEntries) break;
+        cache.delete(oldest);
+      }
+      cache.set(key, { value, expiresAt: now() + ttlMs });
     },
   };
 }
@@ -188,12 +196,22 @@ export function createProtectionStoreFromEnv(env: Environment): AssistantProtect
     : createMemoryProtectionStore();
 }
 
-/** Prefers Vercel's `x-real-ip`, then the first `x-forwarded-for` hop. */
-export function clientIp(request: Request): string {
-  const realIp = request.headers.get("x-real-ip")?.trim();
-  if (realIp) return realIp.slice(0, 64);
-  const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  return forwarded ? forwarded.slice(0, 64) : "unknown";
+/**
+ * Client IP from proxy headers, read only behind a proxy that overwrites them:
+ * on Vercel (`VERCEL` is set) the edge replaces `x-real-ip` / `x-forwarded-for`
+ * with the real client address. Elsewhere set `ASSISTANT_TRUST_PROXY_HEADERS=true`
+ * only when a trusted proxy does the same. Without that trust the headers are
+ * client-controlled, so every request shares one bucket instead.
+ */
+export function clientIp(request: Request, env: Environment = {}): string {
+  const trusted =
+    Boolean(env.VERCEL?.trim()) || env.ASSISTANT_TRUST_PROXY_HEADERS?.trim().toLowerCase() === "true";
+  if (!trusted) return "untrusted";
+  for (const header of ["x-real-ip", "x-vercel-forwarded-for", "x-forwarded-for"]) {
+    const value = request.headers.get(header)?.split(",")[0]?.trim();
+    if (value) return value.slice(0, 64);
+  }
+  return "unknown";
 }
 
 function originHost(value: string | null | undefined): string | null {
@@ -278,7 +296,7 @@ export function createAssistantProtection(options: {
     async admit(request, slug) {
       const current = limits();
       try {
-        const ip = await sha256Hex(clientIp(request));
+        const ip = await sha256Hex(clientIp(request, env()));
         for (const [scope, limit, windowMs] of [
           [`ip:${ip}`, current.ipPerMinute, MINUTE_MS],
           [`ip:${ip}`, current.ipPerHour, HOUR_MS],

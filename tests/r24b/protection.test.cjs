@@ -9,13 +9,14 @@ const {
 
 const LIMITS = { ipPerMinute: 2, ipPerHour: 100, slugPerHour: 100, globalPerDay: 100, cacheTtlMs: 0 };
 
-function harness({ limits = {}, store, now } = {}) {
+function harness({ limits = {}, store, now, trustProxy = true } = {}) {
   const clock = { t: Date.UTC(2026, 10, 12, 12, 0, 0) };
   const tick = now ?? (() => clock.t);
   const counters = { resolutions: 0, reads: 0, selects: 0 };
   const protection = createAssistantProtection({
     store: store ?? createMemoryProtectionStore({ now: tick }),
     limits: { ...LIMITS, ...limits },
+    env: trustProxy ? { VERCEL: '1' } : {},
     now: tick,
   });
   const handle = createPublicInformationAssistantHandler({
@@ -174,17 +175,39 @@ test('Upstash REST store uses pipelined INCR+PEXPIRE NX, GET and SET PX', async 
   await assert.rejects(failing.increment('k', 1000));
 });
 
-test('memory store stays bounded', async () => {
+test('untrusted proxy headers cannot mint fresh IP buckets', async () => {
+  const { handle } = harness({ trustProxy: false });
+  assert.equal((await handle(from('198.51.100.10'), 'test-church')).status, 200);
+  assert.equal((await handle(from('198.51.100.11'), 'test-church')).status, 200);
+  assert.equal((await handle(from('198.51.100.12'), 'test-church')).status, 429, 'spoofed IPs share one bucket');
+});
+
+test('memory store keeps live counters and fails closed when full', async () => {
   const store = createMemoryProtectionStore({ now: () => 0, maxEntries: 3 });
-  for (const key of ['a', 'b', 'c', 'd']) await store.increment(key, 1000);
-  assert.equal(await store.get('a'), null);
-  assert.equal(await store.get('d'), '1');
+  for (const key of ['a', 'b', 'c']) await store.increment(key, 1000);
+  await assert.rejects(store.increment('d', 1000));
+  assert.equal(await store.get('a'), '1', 'live counter never evicted');
+  assert.equal(await store.increment('a', 1000), 2);
+  assert.equal(await store.increment('assistant:rl:global:1:0', 1000), 1, 'global counter always admitted');
+
+  for (const key of ['x', 'y', 'z', 'w']) await store.set(key, key, 1000);
+  assert.equal(await store.get('x'), null, 'cache evicts oldest');
+  assert.equal(await store.get('w'), 'w');
+  assert.equal(await store.get('b'), '1', 'cache writes do not touch counters');
+});
+
+test('full counter store makes the endpoint unavailable, not unlimited', async () => {
+  const store = createMemoryProtectionStore({ maxEntries: 1 });
+  const { handle, counters } = harness({ store });
+  assert.equal((await handle(from('198.51.100.20'), 'test-church')).status, 503);
+  assert.equal(counters.resolutions, 0);
 });
 
 test('real route enforces origin and IP limit before calling the provider', async () => {
   const { POST } = moduleAt('src/app/api/public/churches/slug/[slug]/assistant/route.ts');
   for (const name of Object.keys(process.env)) if (name !== 'PATH') delete process.env[name];
   Object.assign(process.env, env('openai'), {
+    VERCEL: '1',
     ASSISTANT_RATE_LIMIT_IP_PER_MINUTE: '1', ASSISTANT_RATE_LIMIT_IP_PER_HOUR: '100',
     ASSISTANT_RATE_LIMIT_SLUG_PER_HOUR: '100000', ASSISTANT_GLOBAL_DAILY_LIMIT: '100000',
     ASSISTANT_RESPONSE_CACHE_TTL_SECONDS: '0',
