@@ -32,6 +32,11 @@ export interface AddComplianceNoteRequest {
   visibility?: ComplianceNoteVisibility;
 }
 
+export interface AdminProviderResponse {
+  provider: "openai" | "anthropic" | null;
+  version: number;
+}
+
 export interface AnnouncementRequest {
   title: string;
   content: string;
@@ -111,7 +116,7 @@ export interface Body_upload_register_church_media_api_v1_auth_register_church_u
   file: string;
 }
 
-export type BusinessAuditAction = "MEMBERSHIP_ROLE_CHANGED" | "CHURCH_PUBLICATION_REVIEWED" | "MINISTRY_TEAM_CREATED" | "MINISTRY_TEAM_UPDATED" | "MINISTRY_TEAM_MEMBER_ADDED" | "MINISTRY_TEAM_MEMBER_UPDATED" | "SERVICE_SCHEDULE_CREATED" | "SERVICE_SCHEDULE_UPDATED" | "SERVICE_SCHEDULE_PUBLISHED" | "SERVICE_SCHEDULE_CANCELLED" | "MEMBERSHIP_STATUS_CHANGED" | "MEMBERSHIP_INVITED" | "MEMBERSHIP_INVITE_RESENT" | "MEMBERSHIP_JOINED" | "MEMBERSHIP_LEFT" | "COMMUNITY_EVENT_CREATED" | "COMMUNITY_EVENT_UPDATED" | "COMMUNITY_EVENT_DELETED" | "COMMUNITY_ANNOUNCEMENT_CREATED" | "COMMUNITY_ANNOUNCEMENT_UPDATED" | "COMMUNITY_ANNOUNCEMENT_DELETED" | "COMMUNITY_GROUP_CREATED" | "COMMUNITY_PRAYER_MARKED_ANSWERED" | "COMMUNITY_PRAYER_COMMENT_MODERATED" | "COMMUNITY_POST_REMOVED_BY_MODERATOR" | "COMMUNITY_POST_COMMENT_REMOVED_BY_MODERATOR" | "COMMUNITY_POST_MODERATION_STATUS_CHANGED" | "COMMUNITY_POST_REPORT_RESOLVED" | "COMMUNITY_GROUP_MESSAGE_MODERATED" | "CHURCH_SETTINGS_UPDATED" | "CHURCH_LIVE_STARTED" | "CHURCH_LIVE_RESTARTED" | "CHURCH_LIVE_STOPPED" | "PAYMENT_WEBHOOK_PROCESSED" | "PAYMENT_RECONCILIATED" | "CAMPAIGN_CREATED" | "CAMPAIGN_UPDATED" | "CAMPAIGN_CANCELLED" | "MANUAL_DONATION_CREATED" | "MANUAL_DONATION_CONFIRMED" | "DONATION_CANCELLED" | "DONATION_REFUND_REQUESTED" | "EXPENSE_CREATED" | "EXPENSE_CANCELLED";
+export type BusinessAuditAction = "MEMBERSHIP_ROLE_CHANGED" | "CHURCH_PUBLICATION_REVIEWED" | "MINISTRY_TEAM_CREATED" | "MINISTRY_TEAM_UPDATED" | "MINISTRY_TEAM_MEMBER_ADDED" | "MINISTRY_TEAM_MEMBER_UPDATED" | "SERVICE_SCHEDULE_CREATED" | "SERVICE_SCHEDULE_UPDATED" | "SERVICE_SCHEDULE_PUBLISHED" | "SERVICE_SCHEDULE_CANCELLED" | "MEMBERSHIP_STATUS_CHANGED" | "MEMBERSHIP_INVITED" | "MEMBERSHIP_INVITE_RESENT" | "MEMBERSHIP_JOINED" | "MEMBERSHIP_LEFT" | "PERSON_ACCESS_LINKED" | "PERSON_ACCESS_UNLINKED" | "COMMUNITY_EVENT_CREATED" | "COMMUNITY_EVENT_UPDATED" | "COMMUNITY_EVENT_DELETED" | "COMMUNITY_ANNOUNCEMENT_CREATED" | "COMMUNITY_ANNOUNCEMENT_UPDATED" | "COMMUNITY_ANNOUNCEMENT_DELETED" | "COMMUNITY_GROUP_CREATED" | "COMMUNITY_PRAYER_MARKED_ANSWERED" | "COMMUNITY_PRAYER_COMMENT_MODERATED" | "COMMUNITY_POST_REMOVED_BY_MODERATOR" | "COMMUNITY_POST_COMMENT_REMOVED_BY_MODERATOR" | "COMMUNITY_POST_MODERATION_STATUS_CHANGED" | "COMMUNITY_POST_REPORT_RESOLVED" | "COMMUNITY_GROUP_MESSAGE_MODERATED" | "CHURCH_SETTINGS_UPDATED" | "CHURCH_LIVE_STARTED" | "CHURCH_LIVE_RESTARTED" | "CHURCH_LIVE_STOPPED" | "PAYMENT_WEBHOOK_PROCESSED" | "PAYMENT_RECONCILIATED" | "CAMPAIGN_CREATED" | "CAMPAIGN_UPDATED" | "CAMPAIGN_CANCELLED" | "MANUAL_DONATION_CREATED" | "MANUAL_DONATION_CONFIRMED" | "DONATION_CANCELLED" | "DONATION_REFUND_REQUESTED" | "EXPENSE_CREATED" | "EXPENSE_CANCELLED";
 
 export interface BusinessAuditEventResponse {
   id: string;
@@ -157,6 +162,12 @@ export interface CampaignUpdateRequest {
   is_public?: boolean | null;
   show_progress?: boolean | null;
   status?: string | null;
+}
+
+export interface Capabilities {
+  can_create: boolean;
+  is_responsible: boolean;
+  has_local_admin: boolean;
 }
 
 export interface CareRequestListResponse {
@@ -305,6 +316,11 @@ export interface CreateComplianceReportRequest {
   contact_email?: string | null;
   contact_phone?: string | null;
   evidence_links?: string[];
+}
+
+export interface CreateNetwork {
+  name: string;
+  responsible_email: string;
 }
 
 export interface CurrentUserResponse {
@@ -748,6 +764,46 @@ export interface DonationWebhookStatusResponse {
   is_final_status: boolean;
 }
 
+export interface ErrorDetail_Literal__CONFLICT___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__FORBIDDEN___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__INVALID_INPUT___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__INVALID_SELECTION___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__NOT_FOUND___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__PAYLOAD_TOO_LARGE___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__PERSISTENCE_UNAVAILABLE___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__UNAUTHENTICATED___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__UNAVAILABLE___ {
+  code: string;
+}
+
+export interface ErrorDetail_Literal__VERSION_CONFLICT___ {
+  code: string;
+}
+
 export interface ErrorResponse {
   statusCode: number;
   code: string;
@@ -755,6 +811,46 @@ export interface ErrorResponse {
   message: string;
   timestamp: string;
   details?: Record<string, unknown>[] | null;
+}
+
+export interface ErrorResponse_Literal__CONFLICT___ {
+  detail: ErrorDetail_Literal__CONFLICT___;
+}
+
+export interface ErrorResponse_Literal__FORBIDDEN___ {
+  detail: ErrorDetail_Literal__FORBIDDEN___;
+}
+
+export interface ErrorResponse_Literal__INVALID_INPUT___ {
+  detail: ErrorDetail_Literal__INVALID_INPUT___;
+}
+
+export interface ErrorResponse_Literal__INVALID_SELECTION___ {
+  detail: ErrorDetail_Literal__INVALID_SELECTION___;
+}
+
+export interface ErrorResponse_Literal__NOT_FOUND___ {
+  detail: ErrorDetail_Literal__NOT_FOUND___;
+}
+
+export interface ErrorResponse_Literal__PAYLOAD_TOO_LARGE___ {
+  detail: ErrorDetail_Literal__PAYLOAD_TOO_LARGE___;
+}
+
+export interface ErrorResponse_Literal__PERSISTENCE_UNAVAILABLE___ {
+  detail: ErrorDetail_Literal__PERSISTENCE_UNAVAILABLE___;
+}
+
+export interface ErrorResponse_Literal__UNAUTHENTICATED___ {
+  detail: ErrorDetail_Literal__UNAUTHENTICATED___;
+}
+
+export interface ErrorResponse_Literal__UNAVAILABLE___ {
+  detail: ErrorDetail_Literal__UNAVAILABLE___;
+}
+
+export interface ErrorResponse_Literal__VERSION_CONFLICT___ {
+  detail: ErrorDetail_Literal__VERSION_CONFLICT___;
 }
 
 export interface EventAttendanceCloseRequest {
@@ -841,6 +937,12 @@ export interface EventRequest {
 
 export interface EventRsvpRequest {
   status?: "GOING" | "INTERESTED" | "DECLINED";
+}
+
+export interface EventView {
+  action: "REQUESTED" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
+  version: number;
+  occurred_at: string;
 }
 
 export interface ExpenseCreateRequest {
@@ -1074,8 +1176,27 @@ export interface LegalDocumentsResponse {
   privacy: LegalDocumentResponse;
 }
 
+export interface LinkBase {
+  id: string;
+  network_id: string;
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
+  version: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface LiveStartRequest {
   live_url: string;
+}
+
+export interface LocalLink {
+  id: string;
+  network_id: string;
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
+  version: number;
+  created_at: string;
+  updated_at: string;
+  network_name: string | null;
 }
 
 export interface LoginRequest {
@@ -1114,6 +1235,17 @@ export interface MyPersonFollowUpTasksResponse {
   meta: PaginationMeta;
 }
 
+export interface NetworkCreated {
+  id: string;
+  name: string;
+}
+
+export interface NetworkSummary {
+  id: string;
+  name: string;
+  is_responsible: boolean;
+}
+
 export interface NotificationReadResponse {
   id: string;
   read: boolean;
@@ -1147,6 +1279,37 @@ export interface OperationalAuditEventResponse {
   actor_user_id: string | null;
   occurred_at: string;
   changed_fields: ("name" | "classification" | "email" | "phone")[];
+}
+
+export interface OwnedLink {
+  id: string;
+  network_id: string;
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
+  version: number;
+  created_at: string;
+  updated_at: string;
+  requested_ref: string | null;
+  church_name: string | null;
+}
+
+export interface Page_EventView_ {
+  items: EventView[];
+  next_cursor: string | null;
+}
+
+export interface Page_LocalLink_ {
+  items: LocalLink[];
+  next_cursor: string | null;
+}
+
+export interface Page_NetworkSummary_ {
+  items: NetworkSummary[];
+  next_cursor: string | null;
+}
+
+export interface Page_Union_OwnedLink__PeerLink__ {
+  items: (OwnedLink | PeerLink)[];
+  next_cursor: string | null;
 }
 
 export interface PaginatedResponse_AuditLogResponse_ {
@@ -1330,6 +1493,10 @@ export interface PeaceVerseResponse {
   version: string;
 }
 
+export interface PeerLink {
+  church_name: string;
+}
+
 export interface PeopleAttendanceReportResponse {
   data: PeopleAttendanceReportRow[];
   meta: PaginationMeta;
@@ -1443,6 +1610,35 @@ export interface PeopleImportReversalResponse {
   status: string;
   reversed_at: string;
   reversed_rows: number;
+}
+
+export interface PersonAccessGrantData {
+  id: string;
+  church_id: string;
+  user_id: string;
+  role: ChurchRole;
+  status: MembershipStatus;
+  reset_token: string | null;
+  delivery: "not_configured" | "unconfirmed" | "accepted" | "failed" | "not_sent";
+  person_id: string;
+  person_link: string;
+}
+
+export interface PersonAccessGrantRequest {
+  role: ChurchRole;
+  email?: string | null;
+}
+
+export interface PersonAccessGrantResponse {
+  data: PersonAccessGrantData;
+  message?: string | null;
+}
+
+export interface PersonAccessResponse {
+  member_id: string;
+  user_id: string;
+  role: ChurchRole;
+  status: MembershipStatus;
 }
 
 export interface PersonCandidateResponse {
@@ -1666,6 +1862,7 @@ export interface PersonResponse {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
+  access: PersonAccessResponse | null;
 }
 
 export interface PersonTimelineEntryResponse {
@@ -1732,6 +1929,11 @@ export interface ProcessPushReceiptsResponse {
   retryPush: Record<string, unknown>;
 }
 
+export interface ProviderSelectionRequest {
+  provider: "openai" | "anthropic" | null;
+  expected_version: number;
+}
+
 export interface PublicChurchResponse {
   id: string;
   name: string;
@@ -1748,6 +1950,10 @@ export interface PublicChurchResponse {
   member_count: number;
   plan: string;
   distance?: number | null;
+}
+
+export interface PublicProviderResponse {
+  provider: "openai" | "anthropic" | null;
 }
 
 export interface PublicationReviewRequest {
@@ -1875,6 +2081,10 @@ export interface RegisterRequest {
 
 export interface ReportResolveRequest {
   status: "REVIEWED" | "DISMISSED";
+}
+
+export interface RequestLink {
+  church_ref: string;
 }
 
 export interface ResetPasswordRequest {
@@ -2070,6 +2280,10 @@ export interface TrackAnalyticsEventRequest {
   metadata?: Record<string, unknown> | null;
 }
 
+export interface TransitionLink {
+  expected_version: number;
+}
+
 export interface UnavailableCarePersonReference {
   state: string;
   id: string;
@@ -2239,206 +2453,4 @@ export interface WhatsAppStatusResponse {
   binding: WhatsAppBindingStatus;
   runtime: WhatsAppRuntimeStatus;
   health: WhatsAppHealthStatus;
-}
-
-// R24b schemas from the isolated committed API contract.
-
-export interface AdminProviderResponse {
-  provider: "openai" | "anthropic" | null;
-  version: number;
-}
-
-export interface ErrorDetail_Literal__FORBIDDEN___ {
-  code: string;
-}
-
-export interface ErrorDetail_Literal__INVALID_SELECTION___ {
-  code: string;
-}
-
-export interface ErrorDetail_Literal__PERSISTENCE_UNAVAILABLE___ {
-  code: string;
-}
-
-export interface ErrorDetail_Literal__UNAUTHENTICATED___ {
-  code: string;
-}
-
-export interface ErrorDetail_Literal__VERSION_CONFLICT___ {
-  code: string;
-}
-
-export interface ErrorResponse_Literal__FORBIDDEN___ {
-  detail: ErrorDetail_Literal__FORBIDDEN___;
-}
-
-export interface ErrorResponse_Literal__INVALID_SELECTION___ {
-  detail: ErrorDetail_Literal__INVALID_SELECTION___;
-}
-
-export interface ErrorResponse_Literal__PERSISTENCE_UNAVAILABLE___ {
-  detail: ErrorDetail_Literal__PERSISTENCE_UNAVAILABLE___;
-}
-
-export interface ErrorResponse_Literal__UNAUTHENTICATED___ {
-  detail: ErrorDetail_Literal__UNAUTHENTICATED___;
-}
-
-export interface ErrorResponse_Literal__VERSION_CONFLICT___ {
-  detail: ErrorDetail_Literal__VERSION_CONFLICT___;
-}
-
-export interface ProviderSelectionRequest {
-  provider: "openai" | "anthropic" | null;
-  expected_version: number;
-}
-
-export interface PublicProviderResponse {
-  provider: "openai" | "anthropic" | null;
-}
-
-export interface Capabilities {
-  can_create: boolean;
-  is_responsible: boolean;
-  has_local_admin: boolean;
-}
-
-export interface CreateNetwork {
-  name: string;
-  responsible_email: string;
-}
-
-export interface ErrorDetail_Literal__CONFLICT___ {
-  code: string;
-}
-
-export interface ErrorDetail_Literal__INVALID_INPUT___ {
-  code: string;
-}
-
-export interface ErrorDetail_Literal__NOT_FOUND___ {
-  code: string;
-}
-
-export interface ErrorDetail_Literal__PAYLOAD_TOO_LARGE___ {
-  code: string;
-}
-
-export interface ErrorDetail_Literal__UNAVAILABLE___ {
-  code: string;
-}
-
-export interface ErrorResponse_Literal__CONFLICT___ {
-  detail: ErrorDetail_Literal__CONFLICT___;
-}
-
-export interface ErrorResponse_Literal__INVALID_INPUT___ {
-  detail: ErrorDetail_Literal__INVALID_INPUT___;
-}
-
-export interface ErrorResponse_Literal__NOT_FOUND___ {
-  detail: ErrorDetail_Literal__NOT_FOUND___;
-}
-
-export interface ErrorResponse_Literal__PAYLOAD_TOO_LARGE___ {
-  detail: ErrorDetail_Literal__PAYLOAD_TOO_LARGE___;
-}
-
-export interface ErrorResponse_Literal__UNAVAILABLE___ {
-  detail: ErrorDetail_Literal__UNAVAILABLE___;
-}
-
-export interface EventView {
-  action: "REQUESTED" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
-  version: number;
-  occurred_at: string;
-}
-
-export interface LinkBase {
-  id: string;
-  network_id: string;
-  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
-  version: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface LocalLink {
-  id: string;
-  network_id: string;
-  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
-  version: number;
-  created_at: string;
-  updated_at: string;
-  network_name: string | null;
-}
-
-export interface NetworkCreated {
-  id: string;
-  name: string;
-}
-
-export interface NetworkSummary {
-  id: string;
-  name: string;
-  is_responsible: boolean;
-}
-
-export interface OwnedLink {
-  id: string;
-  network_id: string;
-  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | "ENDED";
-  version: number;
-  created_at: string;
-  updated_at: string;
-  requested_ref: string | null;
-  church_name: string | null;
-}
-
-export interface Page_EventView_ {
-  items: EventView[];
-  next_cursor: string | null;
-}
-
-export interface Page_LocalLink_ {
-  items: LocalLink[];
-  next_cursor: string | null;
-}
-
-export interface Page_NetworkSummary_ {
-  items: NetworkSummary[];
-  next_cursor: string | null;
-}
-
-export interface Page_Union_OwnedLink__PeerLink__ {
-  items: (OwnedLink | PeerLink)[];
-  next_cursor: string | null;
-}
-
-export interface PeerLink {
-  church_name: string;
-}
-
-export interface R26a_ErrorDetail_Literal__FORBIDDEN___ {
-  code: string;
-}
-
-export interface R26a_ErrorDetail_Literal__UNAUTHENTICATED___ {
-  code: string;
-}
-
-export interface R26a_ErrorResponse_Literal__FORBIDDEN___ {
-  detail: R26a_ErrorDetail_Literal__FORBIDDEN___;
-}
-
-export interface R26a_ErrorResponse_Literal__UNAUTHENTICATED___ {
-  detail: R26a_ErrorDetail_Literal__UNAUTHENTICATED___;
-}
-
-export interface RequestLink {
-  church_ref: string;
-}
-
-export interface TransitionLink {
-  expected_version: number;
 }
