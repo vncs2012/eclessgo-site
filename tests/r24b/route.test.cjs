@@ -9,8 +9,14 @@ function configure(provider) {
     'ANTHROPIC_API_KEY','ASSISTANT_ANTHROPIC_MODEL','ASSISTANT_ANTHROPIC_MAX_OUTPUT_TOKENS',
     'ASSISTANT_ANTHROPIC_WORKSPACE_ID',
   ]) delete process.env[name];
-  Object.assign(process.env, env(provider));
+  Object.assign(process.env, env(provider), PERMISSIVE_PROTECTION);
 }
+// Provider-contract tests repeat the same question; keep limits and cache out of the way.
+const PERMISSIVE_PROTECTION = {
+  ASSISTANT_RATE_LIMIT_IP_PER_MINUTE: '100000', ASSISTANT_RATE_LIMIT_IP_PER_HOUR: '100000',
+  ASSISTANT_RATE_LIMIT_SLUG_PER_HOUR: '100000', ASSISTANT_GLOBAL_DAILY_LIMIT: '100000',
+  ASSISTANT_RESPONSE_CACHE_TTL_SECONDS: '0',
+};
 const context = () => ({ params: Promise.resolve({ slug: 'test-church' }) });
 async function output(response) {
   return { status: response.status, body: await response.json(), cache: response.headers.get('cache-control') };

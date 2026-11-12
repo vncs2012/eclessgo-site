@@ -54,7 +54,7 @@ const stubs = {
 };
 const aliases = new Set([
   '@/lib/public-information-assistant', '@/lib/public-information-assistant-provider',
-  '@/lib/public-information-assistant-resolver',
+  '@/lib/public-information-assistant-resolver', '@/lib/public-assistant-protection',
 ]);
 const originalLoad = Module._load;
 Module._load = function (request, parent, isMain) {
@@ -85,10 +85,10 @@ for (const extension of ['.ts', '.tsx']) {
   };
 }
 function moduleAt(relative) { return require(path.join(scratch, relative)); }
-function request(body = { question: 'When?', locale: 'en' }, raw = false) {
+function request(body = { question: 'When?', locale: 'en' }, raw = false, extraHeaders = {}) {
   return new Request('https://local.invalid/assistant', {
     method: 'POST', headers: { 'content-type': 'application/json', 'cookie': 'synthetic-cookie',
-      'authorization': 'synthetic-visitor' },
+      'authorization': 'synthetic-visitor', 'origin': 'https://local.invalid', ...extraHeaders },
     body: raw ? body : JSON.stringify(body),
   });
 }

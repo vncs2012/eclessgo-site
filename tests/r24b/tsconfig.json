@@ -16,6 +16,7 @@
     "../../src/lib/public-information-assistant-provider.ts",
     "../../src/lib/public-information-assistant-resolver.ts",
     "../../src/lib/public-information-assistant.ts",
+    "../../src/lib/public-assistant-protection.ts",
     "../../src/lib/generated-api.ts",
     "../../src/app/api/public/churches/slug/[slug]/assistant/route.ts",
     "./type-stubs.d.ts"

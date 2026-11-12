@@ -1,3 +1,5 @@
+import type { AssistantProtection } from "./public-assistant-protection";
+
 export type PublicInformationLocale = "pt-BR" | "en";
 
 export interface PublicInformationFact {
@@ -32,6 +34,8 @@ export interface PublicInformationAssistantDependencies {
   adapter?: PublicInformationAssistantAdapter | null;
   resolveAdapter?: () => Promise<PublicInformationAssistantResolution> | PublicInformationAssistantResolution;
   timer?: PublicInformationAssistantTimer;
+  /** Origin check, rate limits, global ceiling and answer cache; runs before the resolver. */
+  protection?: AssistantProtection;
 }
 
 const REQUEST_BODY_LIMIT_BYTES = 4096;
@@ -233,12 +237,17 @@ function selectFacts(
   }
 }
 
-function jsonResponse(status: number, payload: Record<string, unknown>): Response {
+function jsonResponse(
+  status: number,
+  payload: Record<string, unknown>,
+  extraHeaders: Record<string, string> = {},
+): Response {
   return new Response(JSON.stringify(payload), {
     status,
     headers: {
       "Cache-Control": "no-store",
       "Content-Type": "application/json; charset=utf-8",
+      ...extraHeaders,
     },
   });
 }
@@ -266,6 +275,9 @@ export function createPublicInformationAssistantHandler(
   return async (request, slug) => {
     if (!isValidSlug(slug)) return failure(400, "INVALID_REQUEST");
 
+    const protection = dependencies.protection;
+    if (protection && !protection.isAllowedOrigin(request)) return failure(403, "FORBIDDEN_ORIGIN");
+
     let body: unknown;
     try {
       body = await readJsonBody(request);
@@ -276,6 +288,19 @@ export function createPublicInformationAssistantHandler(
 
     const input = parseAssistantRequest(body);
     if (!input) return failure(400, "INVALID_REQUEST");
+
+    if (protection) {
+      const cached = await protection.readCached(slug, input.locale, input.question);
+      if (cached) return jsonResponse(200, cached);
+
+      const admission = await protection.admit(request, slug);
+      if (admission.kind === "rate-limited") {
+        return jsonResponse(429, { code: "RATE_LIMITED" }, {
+          "Retry-After": String(admission.retryAfterSeconds),
+        });
+      }
+      if (admission.kind !== "allowed") return failure(503, "ASSISTANT_UNAVAILABLE");
+    }
 
     let adapter = dependencies.adapter;
     if (dependencies.resolveAdapter) {
@@ -351,15 +376,15 @@ export function createPublicInformationAssistantHandler(
 
     const selectedFacts = selectFacts(selection, factsById);
     if (!selectedFacts) return failure(502, "INVALID_PROVIDER_RESPONSE");
-    if (selectedFacts.length === 0) {
-      return jsonResponse(200, { slug, status: "no_information", answer: [], sources: [] });
-    }
-
-    return jsonResponse(200, {
-      slug,
-      status: "answered",
-      answer: selectedFacts.map((fact) => fact.text),
-      sources: selectedFacts.map((fact) => ({ factId: fact.id, href: SOURCE_PATH(slug) })),
-    });
+    const payload = selectedFacts.length === 0
+      ? { slug, status: "no_information", answer: [], sources: [] }
+      : {
+        slug,
+        status: "answered",
+        answer: selectedFacts.map((fact) => fact.text),
+        sources: selectedFacts.map((fact) => ({ factId: fact.id, href: SOURCE_PATH(slug) })),
+      };
+    if (protection) await protection.writeCached(slug, input.locale, input.question, payload);
+    return jsonResponse(200, payload);
   };
 }
