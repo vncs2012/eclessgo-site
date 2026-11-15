@@ -59,8 +59,8 @@ export function FileUpload({
   return (
     <div className="space-y-3">
       <div>
-        <p className="text-sm font-semibold text-zinc-100">{label}</p>
-        <p className="mt-1 text-xs leading-5 text-zinc-500">{description}</p>
+        <p className="text-sm font-semibold text-eg-strong">{label}</p>
+        <p className="mt-1 text-xs leading-5 text-eg-muted">{description}</p>
       </div>
 
       <label
@@ -76,8 +76,8 @@ export function FileUpload({
           selectFile(event.dataTransfer.files.item(0));
         }}
         className={[
-          "flex min-h-52 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-dashed p-4 text-center transition",
-          isDragging ? "border-emerald-300 bg-emerald-400/10" : "border-white/12 bg-zinc-950/55 hover:border-emerald-400/35",
+          "flex min-h-52 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-dashed p-4 text-center transition has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-solid has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-eg-focus",
+          isDragging ? "border-eg-primary bg-eg-primary-soft" : "border-eg-border-strong bg-eg-subtle hover:bg-eg-hover",
         ].join(" ")}
       >
         <input
@@ -99,11 +99,11 @@ export function FileUpload({
           />
         ) : (
           <span className="flex flex-col items-center">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-400/12 text-emerald-200">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-eg-primary-soft text-eg-primary-text">
               <ImageUp className="h-5 w-5" />
             </span>
-            <span className="mt-3 text-sm font-medium text-zinc-200">{t("prompt")}</span>
-            <span className="mt-1 text-xs text-zinc-500">
+            <span className="mt-3 text-sm font-medium text-eg-strong">{t("prompt")}</span>
+            <span className="mt-1 text-xs text-eg-muted">
               {recommendedSize ? `${recommendedSize} · ` : ""}
               {t("hint", { max: maxSizeMb })}
             </span>
@@ -112,14 +112,14 @@ export function FileUpload({
       </label>
 
       <div className="flex min-h-6 items-center justify-between gap-3 text-xs">
-        <p className={error ? "text-red-300" : "text-zinc-500"} aria-live="polite">
+        <p className={error ? "text-eg-danger-text" : "text-eg-muted"} aria-live="polite">
           {error || (value ? value.name : t("empty"))}
         </p>
         {value ? (
           <button
             type="button"
             onClick={() => selectFile(null)}
-            className="inline-flex items-center gap-1 rounded-full border border-white/10 px-2.5 py-1 font-medium text-zinc-300 transition hover:border-red-400/40 hover:text-red-200"
+            className="inline-flex items-center gap-1 rounded-full border border-eg-border px-2.5 py-1 font-medium text-eg-text transition hover:border-eg-danger hover:text-eg-danger-text"
           >
             <Trash2 className="h-3.5 w-3.5" />
             {t("remove")}

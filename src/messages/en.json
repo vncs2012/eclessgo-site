@@ -23,9 +23,7 @@
   "finder": {
     "search": {
       "aria": "Search communities",
-      "label": "Address, neighborhood or name",
-      "placeholder": "Address, neighborhood or community name",
-      "submit": "Search"
+      "placeholder": "Address, neighborhood or community name"
     },
     "filters": {
       "title": "Filters",
@@ -110,42 +108,10 @@
       "permissionDenied": "Location permission was denied."
     },
     "directory": {
-      "eyebrow": "Public map",
       "title": "Discover communities listed on EclessGO",
-      "description": "This directory lists communities with valid latitude and longitude. Search by name, filter by tradition, use your location, and open each community’s public page.",
       "loadError": "The public directory could not be loaded because the EclessGO API did not respond."
     },
     "detail": {
-      "backToDirectory": "Back to the communities map",
-      "pageLabel": "Public page",
-      "liveNow": "Live now",
-      "descriptionFallback": "This community is published in the EclessGO directory.",
-      "publicLink": "Public link:",
-      "plan": "Plan",
-      "members": "Members",
-      "donations": "Donations",
-      "donationsAvailable": "Available",
-      "donationsNotConfigured": "Not configured",
-      "address": "Address",
-      "coordinates": "Coordinates",
-      "coordinatesUnavailable": "This community does not have public map coordinates yet.",
-      "localMap": "Local map",
-      "mapDescription": "The marker shows the community’s public location on the web platform.",
-      "mapUnavailable": "Without valid latitude and longitude, this community cannot be shown on the web map.",
-      "schedule": {
-        "heading": "Schedule",
-        "fallbackTitle": "Schedule {number}",
-        "empty": "This community has not published a schedule visible in the public directory yet.",
-        "weekdays": {
-          "monday": "Monday",
-          "tuesday": "Tuesday",
-          "wednesday": "Wednesday",
-          "thursday": "Thursday",
-          "friday": "Friday",
-          "saturday": "Saturday",
-          "sunday": "Sunday"
-        }
-      },
       "unavailable": {
         "eyebrow": "Public directory",
         "title": "This page is temporarily unavailable",
@@ -165,18 +131,6 @@
       "pixMissing": "Donations are enabled, but this community has not configured a PIX key yet.",
       "donationsDisabled": "Donations are not enabled for this community right now.",
       "noChannels": "This community has not published any public contact channels yet."
-    },
-    "pix": {
-      "title": "Contribute with PIX",
-      "description": "QR code for the PIX key configured by {name}. Scan it with your bank app or copy the key below.",
-      "qrLabel": "PIX key QR code for {name}",
-      "qrUnavailable": "The QR code could not be generated locally. The key is still available to copy.",
-      "key": "PIX key",
-      "copied": "Key copied",
-      "copy": "Copy PIX key",
-      "copyError": "The key could not be copied automatically. Select it manually.",
-      "liability": "EclessGO only displays the PIX key. We do not process payments, issue receipts, or confirm transfers.",
-      "qrError": "Error generating the local PIX key QR code."
     },
     "results": {
       "headingNear": "{count, plural, =0 {No communities within 2 km} one {# community within 2 km} other {# communities within 2 km}}",
@@ -586,9 +540,7 @@
       "home": "Home"
     },
     "hero": {
-      "photoAlt": "Photo of {name}",
       "seePhotos": "See all {count} photos",
-      "seePhotosShort": "See photos",
       "share": "Share",
       "shareCopied": "Link copied",
       "shareText": "Meet {name} on EclessGO",

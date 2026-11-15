@@ -27,14 +27,14 @@ export function PublicActivityCatalogueView({ result, locale, panelOrigin }: {
   return (
     <main lang={locale === "en" ? "en" : "pt-BR"} className="site-shell min-h-screen bg-background px-4 py-14 text-foreground">
       <div className="mx-auto max-w-4xl">
-        <a className="text-sm text-emerald-300" href="/comunidades">{t.back}</a>
+        <a className="text-sm font-semibold text-eg-primary-text underline underline-offset-4" href="/comunidades">{t.back}</a>
         <h1 className="mt-6 text-4xl font-semibold">{t.title}</h1>
-        <p className="mt-4 text-zinc-300">{t.introduction}</p>
+        <p className="mt-4 text-eg-text">{t.introduction}</p>
         {result.status !== "invalid" && result.query.church_id ? <p className="mt-4">{t.filtered}</p> : null}
         {result.status === "invalid" ? <p className="mt-8" role="alert">{t.invalid}</p> :
           result.status === "error" ? (
             <div className="mt-8" role="alert"><p>{t.error}</p>
-              <a className="mt-4 inline-block text-emerald-300" href={activityCatalogueHref(result.query)}>{t.retry}</a>
+              <a className="mt-4 inline-block font-semibold text-eg-primary-text underline underline-offset-4" href={activityCatalogueHref(result.query)}>{t.retry}</a>
             </div>
           ) : (
             <>
@@ -43,12 +43,12 @@ export function PublicActivityCatalogueView({ result, locale, panelOrigin }: {
                   {result.page.data.map(activity => {
                     const href = panelActivityHref(panelOrigin, activity.event_id);
                     return (
-                      <li key={activity.event_id} className="glass-card rounded-3xl p-6">
+                      <li key={activity.event_id} className="border border-eg-border bg-eg-surface shadow-[var(--eg-shadow-web)] rounded-3xl p-6">
                         <h2 className="text-xl font-semibold">{activity.title}</h2>
-                        <p className="mt-2 text-zinc-300">{activity.church_name}</p>
+                        <p className="mt-2 text-eg-text">{activity.church_name}</p>
                         <p className="mt-4">{t.starts}: <time dateTime={activity.start_at}>{activity.start_at}</time></p>
                         {activity.end_at ? <p>{t.ends}: <time dateTime={activity.end_at}>{activity.end_at}</time></p> : null}
-                        {href ? <a className="mt-5 inline-flex min-h-11 items-center rounded-full bg-emerald-500 px-5 py-3 font-semibold text-emerald-950"
+                        {href ? <a className="mt-5 inline-flex min-h-11 items-center rounded-full bg-eg-primary px-5 py-3 font-semibold text-eg-inverse hover:bg-eg-primary-hover"
                           href={href}>{t.signIn}</a> : <p className="mt-5" role="status">{t.panelUnavailable}</p>}
                       </li>
                     );

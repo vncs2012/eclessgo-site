@@ -99,16 +99,16 @@ export function LocationStep({
     <section className="space-y-4">
       <StepTitle number={3}>{t("steps.location.title")}</StepTitle>
 
-      <div className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-zinc-950/70 p-3">
+      <div className="overflow-hidden rounded-[1.75rem] border border-eg-border bg-eg-subtle p-3">
         <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold text-zinc-100">{t("location.publicTitle")}</p>
-            <p className="text-xs text-zinc-500">{t("location.publicHint")}</p>
+            <p className="text-sm font-semibold text-eg-strong">{t("location.publicTitle")}</p>
+            <p className="text-xs text-eg-muted">{t("location.publicHint")}</p>
           </div>
           <button
             type="button"
             onClick={onUseCurrentLocation}
-            className="inline-flex items-center justify-center rounded-full border border-emerald-400/25 px-4 py-2 text-sm font-medium text-emerald-200 transition hover:border-emerald-300 hover:text-white"
+            className="inline-flex items-center justify-center rounded-full border border-eg-border-strong px-4 py-2 text-sm font-medium text-eg-primary-text transition hover:bg-eg-hover"
           >
             <LocateFixed className="mr-2 h-4 w-4" />
             {t("location.useCurrent")}
@@ -119,11 +119,11 @@ export function LocationStep({
           selectedLocation={selectedLocation}
           onSelectLocation={onSelectLocation}
         />
-        <p className="mt-3 text-xs leading-5 text-zinc-400" aria-live="polite">
+        <p className="mt-3 text-xs leading-5 text-eg-muted" aria-live="polite">
           {locationStatus || t("location.editableHint")}
         </p>
         {isResolvingAddress ? (
-          <p className="mt-1 text-xs text-emerald-300" aria-live="polite">
+          <p className="mt-1 text-xs text-eg-primary-text" aria-live="polite">
             {t("location.resolving")}
           </p>
         ) : null}
@@ -182,7 +182,7 @@ export function MediaStep({ logoFile, coverFile, onLogoChange, onCoverChange }: 
   return (
     <section className="space-y-4">
       <StepTitle number={4}>{t("steps.media.title")}</StepTitle>
-      <div className="rounded-[1.5rem] border border-emerald-400/20 bg-emerald-400/10 px-4 py-3 text-sm leading-6 text-emerald-100">
+      <div className="rounded-[1.5rem] border border-eg-success/30 bg-eg-success-soft px-4 py-3 text-sm leading-6 text-eg-success-text">
         {t("media.banner")}
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
@@ -207,8 +207,8 @@ export function MediaStep({ logoFile, coverFile, onLogoChange, onCoverChange }: 
 
 function StepTitle({ number, children }: { number: number; children: string }) {
   return (
-    <div className="flex items-center gap-2 text-sm font-semibold text-zinc-200">
-      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-zinc-950/80 text-xs">
+    <div className="flex items-center gap-2 text-sm font-semibold text-eg-strong">
+      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-eg-border bg-eg-subtle text-xs">
         {number}
       </span>
       {children}

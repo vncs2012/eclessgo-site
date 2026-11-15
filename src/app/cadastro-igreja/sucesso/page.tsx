@@ -27,39 +27,39 @@ export default async function RegisterChurchSuccessPage({
       <SiteHeader />
 
       <main className="relative z-10 mx-auto flex max-w-4xl flex-1 items-center px-4 py-16 sm:px-6 lg:px-8">
-        <section className="glass-card w-full rounded-[2rem] p-8 text-center sm:p-10">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/12 text-emerald-300 ring-1 ring-emerald-400/15">
+        <section className="border border-eg-border bg-eg-surface shadow-[var(--eg-shadow-web)] w-full rounded-[2rem] p-8 text-center sm:p-10">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-eg-primary-soft text-eg-primary-text">
             <CheckCircle2 className="h-7 w-7" />
           </div>
 
-          <p className="mt-6 text-xs uppercase tracking-[0.24em] text-zinc-500">
+          <p className="mt-6 text-xs uppercase tracking-[0.24em] text-eg-muted">
             {t("eyebrow")}
           </p>
-          <h1 className="section-title mt-4 text-4xl font-semibold text-zinc-50 sm:text-5xl">
+          <h1 className="section-title mt-4 text-4xl font-semibold text-eg-strong sm:text-5xl">
             {t("title", { name: churchName })}
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-zinc-400">
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-eg-muted">
             {t.rich("description", {
-              email: () => <span className="text-zinc-200">{email}</span>,
+              email: () => <span className="text-eg-strong">{email}</span>,
             })}
           </p>
 
           <div className="mt-10 grid gap-4 text-left sm:grid-cols-2">
-            <div className="rounded-[1.5rem] border border-white/8 bg-zinc-950/70 p-5">
+            <div className="rounded-[1.5rem] border border-eg-border bg-eg-subtle p-5">
               <div className="flex items-center gap-3">
-                <LayoutDashboard className="h-5 w-5 text-emerald-300" />
-                <p className="font-semibold text-zinc-50">{t("panelStepTitle")}</p>
+                <LayoutDashboard className="h-5 w-5 text-eg-primary-text" />
+                <p className="font-semibold text-eg-strong">{t("panelStepTitle")}</p>
               </div>
-              <p className="mt-3 text-sm leading-7 text-zinc-400">
+              <p className="mt-3 text-sm leading-7 text-eg-muted">
                 {t("panelStepDesc")}
               </p>
             </div>
-            <div className="rounded-[1.5rem] border border-white/8 bg-zinc-950/70 p-5">
+            <div className="rounded-[1.5rem] border border-eg-border bg-eg-subtle p-5">
               <div className="flex items-center gap-3">
-                <MapPinned className="h-5 w-5 text-emerald-300" />
-                <p className="font-semibold text-zinc-50">{t("mapStepTitle")}</p>
+                <MapPinned className="h-5 w-5 text-eg-primary-text" />
+                <p className="font-semibold text-eg-strong">{t("mapStepTitle")}</p>
               </div>
-              <p className="mt-3 text-sm leading-7 text-zinc-400">
+              <p className="mt-3 text-sm leading-7 text-eg-muted">
                 {t("mapStepDesc")}
               </p>
             </div>
@@ -68,13 +68,13 @@ export default async function RegisterChurchSuccessPage({
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <a
               href={PANEL_URL}
-              className="inline-flex rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400"
+              className="inline-flex rounded-full bg-eg-primary px-5 py-3 text-sm font-semibold text-eg-inverse transition hover:bg-eg-primary-hover"
             >
               {t("panelCta")}
             </a>
             <Link
               href="/comunidades"
-              className="inline-flex rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
+              className="inline-flex rounded-full border border-eg-border px-5 py-3 text-sm font-semibold text-eg-strong transition hover:bg-eg-hover"
             >
               {t("mapCta")}
             </Link>

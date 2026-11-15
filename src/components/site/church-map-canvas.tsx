@@ -246,7 +246,7 @@ export default function ChurchMapCanvas({
             type="button"
             aria-label={t("zoomIn")}
             onClick={() => map?.zoomIn()}
-            className={cn(OVERLAY_BUTTON, "h-11 w-11 shadow-none")}
+            className={cn(OVERLAY_BUTTON, "h-11 w-11 shadow-none focus-visible:outline-solid focus-visible:-outline-offset-2")}
           >
             <Plus className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -254,7 +254,7 @@ export default function ChurchMapCanvas({
             type="button"
             aria-label={t("zoomOut")}
             onClick={() => map?.zoomOut()}
-            className={cn(OVERLAY_BUTTON, "h-11 w-11 border-t border-eg-border shadow-none")}
+            className={cn(OVERLAY_BUTTON, "h-11 w-11 border-t border-eg-border shadow-none focus-visible:outline-solid focus-visible:-outline-offset-2")}
           >
             <Minus className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -263,7 +263,7 @@ export default function ChurchMapCanvas({
               type="button"
               aria-label={t("locate")}
               onClick={onLocate}
-              className={cn(OVERLAY_BUTTON, "h-11 w-11 border-t border-eg-border shadow-none")}
+              className={cn(OVERLAY_BUTTON, "h-11 w-11 border-t border-eg-border shadow-none focus-visible:outline-solid focus-visible:-outline-offset-2")}
             >
               <LocateFixed className="h-4 w-4" aria-hidden="true" />
             </button>

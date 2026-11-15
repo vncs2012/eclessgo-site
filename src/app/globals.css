@@ -1,4 +1,5 @@
-@import "tailwindcss";
+/* Raiz da varredura = eclessgo-web/, independente do cwd e de onde o Turbopack roda o PostCSS. */
+@import "tailwindcss" source("../..");
 @import "./tokens.css";
 
 :root {
@@ -41,6 +42,14 @@
   --color-eg-warm: var(--eg-accent-warm);
   --color-eg-warm-soft: var(--eg-accent-warm-soft);
   --color-eg-on-photo: var(--eg-text-on-photo);
+  --color-eg-success: var(--eg-feedback-success);
+  --color-eg-success-soft: var(--eg-feedback-success-soft);
+  --color-eg-success-text: var(--eg-feedback-success-text);
+  --color-eg-warning-soft: var(--eg-feedback-warning-soft);
+  --color-eg-warning-text: var(--eg-feedback-warning-text);
+  --color-eg-danger: var(--eg-feedback-danger);
+  --color-eg-danger-soft: var(--eg-feedback-danger-soft);
+  --color-eg-danger-text: var(--eg-feedback-danger-text);
 }
 
 * {
@@ -65,6 +74,14 @@ body {
     color: inherit;
     text-decoration: none;
   }
+
+  /* Rede de segurança do foco por teclado: contorno sólido de 2 px do projeto. Especificidade
+     zero (:where) e na camada base, então qualquer classe do componente (ou outline-hidden
+     com foco próprio) continua valendo por cima. */
+  :where(a[href], button, summary, select, textarea, input, [tabindex]):focus-visible {
+    outline: 2px solid var(--eg-action-focus);
+    outline-offset: 2px;
+  }
 }
 
 button,
@@ -75,8 +92,8 @@ select {
 }
 
 ::selection {
-  background: rgba(16, 185, 129, 0.35);
-  color: #f8fafc;
+  background: color-mix(in srgb, var(--eg-action-primary) 35%, transparent);
+  color: var(--eg-text-strong);
 }
 
 .site-shell {
@@ -88,30 +105,20 @@ select {
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at top left, rgba(16, 185, 129, 0.22), transparent 28%),
-    radial-gradient(circle at right 20%, rgba(52, 211, 153, 0.12), transparent 22%),
-    linear-gradient(180deg, rgba(9, 9, 11, 0.96), rgba(9, 9, 11, 1));
+  background: radial-gradient(
+    circle at top left,
+    color-mix(in srgb, var(--eg-action-primary) 14%, transparent),
+    transparent 32%
+  );
   pointer-events: none;
 }
 
 .grid-noise {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--eg-text-strong) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--eg-text-strong) 5%, transparent) 1px, transparent 1px);
   background-size: 26px 26px;
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 85%);
-}
-
-/* Legado: as páginas ainda não migradas desenham texto claro sobre este cartão escuro.
-   Valores fixos até a migração para os tokens do Modelo 8 (evita texto claro sobre fundo claro
-   quando o tema claro é escolhido). */
-.glass-card {
-  background: rgba(24, 24, 27, 0.88);
-  color: #f4f4f5;
-  border: 1px solid rgba(63, 63, 70, 0.75);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
-  backdrop-filter: blur(16px);
 }
 
 .section-title {
@@ -178,18 +185,53 @@ select {
 }
 
 .input-surface {
-  background: rgba(24, 24, 27, 0.92);
-  border: 1px solid rgba(63, 63, 70, 0.85);
-  color: #fafafa;
+  background: var(--eg-input-bg);
+  border: 1px solid var(--eg-input-border);
+  color: var(--eg-input-text);
 }
 
 .input-surface::placeholder {
-  color: #71717a;
+  color: var(--eg-input-placeholder);
 }
 
-.input-surface:focus {
-  outline: 2px solid rgba(16, 185, 129, 0.45);
-  outline-offset: 1px;
+.input-surface:focus-visible {
+  outline: 2px solid var(--eg-action-focus);
+  outline-offset: 2px;
+}
+
+/* Controles do Leaflet (zoom +/−, localizar): contorno sólido de 2 px do projeto. */
+.leaflet-bar a:focus-visible,
+.leaflet-control a:focus-visible,
+.leaflet-container a:focus-visible,
+.leaflet-container button:focus-visible {
+  outline: 2px solid var(--eg-action-focus);
+  outline-offset: 2px;
+}
+
+/* Aviso de cookies no celular: fica acima da barra fixa de baixo (Busca ou Comunidade),
+   sem cobri-la, e respeita a área segura. Em md+ as barras não existem. */
+.eg-consent-banner {
+  bottom: 0;
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 640px) {
+  .eg-consent-banner {
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 767px) {
+  /* As barras já somam a área segura à própria altura. */
+  body:has(nav.fixed.bottom-0) .eg-consent-banner {
+    bottom: calc(4rem + env(safe-area-inset-bottom));
+    padding-bottom: 0.5rem;
+  }
+
+  body:has([role="group"].fixed.bottom-0) .eg-consent-banner {
+    bottom: calc(4.75rem + env(safe-area-inset-bottom));
+    padding-bottom: 0.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -204,38 +246,5 @@ select {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
-  }
-}
-
-/* Rodapé: ConsentPreferences (componente fora do escopo da base visual) ainda usa cores
-   zinc fixas. Estas regras o adaptam aos tokens do Modelo 8 sem alterar o componente. */
-.eg-footer-consent > div > button {
-  display: inline-flex;
-  min-height: 2.25rem;
-  align-items: center;
-  border-radius: 0.375rem;
-  color: var(--eg-text-default);
-  font-size: 0.875rem;
-  text-decoration: none;
-}
-
-.eg-footer-consent > div > button:hover {
-  color: var(--eg-text-strong);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.eg-footer-consent > div > button:focus-visible {
-  outline: 2px solid var(--eg-action-focus);
-  outline-offset: 2px;
-}
-
-@media (max-width: 639px) {
-  /* Coluna do meio/esquerda no celular: o painel abre fixo, centrado, sem cortar a tela. */
-  .eg-footer-consent [role="dialog"] {
-    position: fixed;
-    inset: auto 1rem 1rem 1rem;
-    width: auto;
-    margin: 0;
   }
 }

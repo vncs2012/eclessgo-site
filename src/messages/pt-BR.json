@@ -23,9 +23,7 @@
   "finder": {
     "search": {
       "aria": "Buscar comunidades",
-      "label": "Endereço, bairro ou nome",
-      "placeholder": "Endereço, bairro ou nome da comunidade",
-      "submit": "Buscar"
+      "placeholder": "Endereço, bairro ou nome da comunidade"
     },
     "filters": {
       "title": "Filtros",
@@ -110,42 +108,10 @@
       "permissionDenied": "A permissão de localização foi negada."
     },
     "directory": {
-      "eyebrow": "Mapa público",
       "title": "Descubra comunidades cadastradas no EclessGO",
-      "description": "Este diretório mostra apenas comunidades com latitude e longitude válidas. A pessoa pode buscar por nome, filtrar por tradição, usar a própria localização e abrir a página pública de cada espaço.",
       "loadError": "Não foi possível carregar o diretório público agora porque a API do EclessGO não respondeu."
     },
     "detail": {
-      "backToDirectory": "Voltar ao mapa de comunidades",
-      "pageLabel": "Página pública",
-      "liveNow": "Ao vivo agora",
-      "descriptionFallback": "Esta comunidade já está publicada no diretório do EclessGO.",
-      "publicLink": "Link público:",
-      "plan": "Plano",
-      "members": "Membros",
-      "donations": "Doações",
-      "donationsAvailable": "Disponíveis",
-      "donationsNotConfigured": "Não configuradas",
-      "address": "Endereço",
-      "coordinates": "Coordenadas",
-      "coordinatesUnavailable": "Esta comunidade ainda não possui coordenadas públicas para o mapa.",
-      "localMap": "Mapa local",
-      "mapDescription": "O marcador destaca a localização pública da comunidade na plataforma web.",
-      "mapUnavailable": "Sem latitude e longitude válidas, a comunidade não pode ser exibida no mapa web.",
-      "schedule": {
-        "heading": "Programação",
-        "fallbackTitle": "Programação {number}",
-        "empty": "A comunidade ainda não publicou uma programação visível no diretório público.",
-        "weekdays": {
-          "monday": "Segunda-feira",
-          "tuesday": "Terça-feira",
-          "wednesday": "Quarta-feira",
-          "thursday": "Quinta-feira",
-          "friday": "Sexta-feira",
-          "saturday": "Sábado",
-          "sunday": "Domingo"
-        }
-      },
       "unavailable": {
         "eyebrow": "Diretório público",
         "title": "Esta página está temporariamente indisponível",
@@ -165,18 +131,6 @@
       "pixMissing": "Doações estão habilitadas, mas a chave PIX da comunidade ainda não foi configurada.",
       "donationsDisabled": "Doações não estão habilitadas para esta comunidade no momento.",
       "noChannels": "Esta comunidade ainda não publicou canais públicos de contato."
-    },
-    "pix": {
-      "title": "Contribua por PIX",
-      "description": "QR da chave PIX configurada por {name}. Escaneie com o app do seu banco ou copie a chave abaixo.",
-      "qrLabel": "QR da chave PIX de {name}",
-      "qrUnavailable": "Não foi possível gerar o QR localmente agora. A chave continua disponível para cópia.",
-      "key": "Chave PIX",
-      "copied": "Chave copiada",
-      "copy": "Copiar chave PIX",
-      "copyError": "Não foi possível copiar automaticamente. Selecione a chave manualmente.",
-      "liability": "O EclessGO apenas exibe a chave PIX. Não processamos o pagamento, emitimos recibo nem confirmamos a transferência.",
-      "qrError": "Erro ao gerar o QR local da chave PIX."
     },
     "results": {
       "headingNear": "{count, plural, =0 {Nenhuma comunidade até 2 km} one {# comunidade até 2 km} other {# comunidades até 2 km}}",
@@ -457,8 +411,8 @@
       "legalUnavailable": "Não foi possível confirmar a vigência dos documentos legais.",
       "legalNotPublished": "O cadastro fica indisponível até que Termos e Privacidade estejam publicados.",
       "legalUpdated": "Os documentos legais foram atualizados. Confira e aceite a nova versão antes de enviar novamente.",
-      "uploadFailed": "Nao foi possivel enviar a imagem. Verifique a configuracao de storage e tente novamente.",
-      "storageNoData": "O storage nao retornou os dados da imagem enviada.",
+      "uploadFailed": "Não foi possível enviar a imagem. Verifique a configuração de storage e tente novamente.",
+      "storageNoData": "O storage não retornou os dados da imagem enviada.",
       "submitFailed": "Não foi possível concluir o cadastro da comunidade."
     }
   },
@@ -491,8 +445,8 @@
     "mapCta": "Ver mapa público"
   },
   "consent": {
-    "title": "Voce aceita o uso de cookies de medicao?",
-    "description": "Usamos sinais anonimos (sem identificacao pessoal) para entender como as comunidades sao encontradas e melhorar o produto. Voce pode mudar de ideia depois nas <link>configuracoes de privacidade</link>.",
+    "title": "Você aceita o uso de cookies de medição?",
+    "description": "Usamos sinais anônimos (sem identificação pessoal) para entender como as comunidades são encontradas e melhorar o produto. Você pode mudar de ideia depois nas <link>configurações de privacidade</link>.",
     "decline": "Recusar",
     "accept": "Aceitar",
     "manage": "Preferências de privacidade",
@@ -586,9 +540,7 @@
       "home": "Início"
     },
     "hero": {
-      "photoAlt": "Foto de {name}",
       "seePhotos": "Ver as {count} fotos",
-      "seePhotosShort": "Ver fotos",
       "share": "Compartilhar",
       "shareCopied": "Link copiado",
       "shareText": "Conheça {name} no EclessGO",

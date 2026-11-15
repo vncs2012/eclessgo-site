@@ -7,7 +7,7 @@ import { LocaleList } from "@/components/site/locale-switcher";
 import { APP_CTA_URL, PANEL_URL } from "@/lib/site-config";
 
 const LINK_CLASS =
-  "inline-flex min-h-9 items-center rounded-md text-sm text-eg-text transition-colors hover:text-eg-strong hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus";
+  "inline-flex min-h-9 items-center rounded-md text-sm text-eg-text transition-colors hover:text-eg-strong hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-eg-focus";
 const TITLE_CLASS = "mb-2 text-xs font-semibold uppercase tracking-[0.07em] text-eg-muted";
 
 export async function SiteFooter() {
@@ -20,7 +20,7 @@ export async function SiteFooter() {
           <Link
             href="/"
             aria-label={t("homeLabel")}
-            className="mb-5 inline-flex min-h-11 items-center gap-2.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus"
+            className="mb-5 inline-flex min-h-11 items-center gap-2.5 rounded-lg focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-eg-focus"
           >
             <span
               aria-hidden="true"

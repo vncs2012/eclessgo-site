@@ -4,20 +4,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 
-import { THEME_COOKIE, type Theme } from "@/components/site/theme";
+import { THEME_COOKIE, isTheme, type Theme, type ThemePreference } from "@/components/site/theme";
 
 /** Foco visível: índigo/lilás sobre fundos sólidos, branco sobre a foto da Home. */
 export const HEADER_FOCUS =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus group-data-[variant=overlay]/header:focus-visible:outline-white";
+  "focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-eg-focus group-data-[variant=overlay]/header:focus-visible:outline-white";
 
 /** Botão de ícone/texto discreto do cabeçalho (idioma, tema, menu). */
 export const HEADER_ICON_BUTTON = `inline-flex h-11 min-w-11 cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2.5 text-sm font-semibold text-eg-text transition-colors duration-150 hover:bg-eg-hover group-data-[variant=overlay]/header:text-white group-data-[variant=overlay]/header:hover:bg-white/15 ${HEADER_FOCUS}`;
 
 /** O painel do menu é sempre sólido, então o foco não usa a variante sobre a foto. */
 const MENU_FOCUS =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus";
+  "focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-eg-focus";
 
 type NavLinkProps = {
   href: string;
@@ -45,15 +45,29 @@ export function NavLink({ href, children, variant = "bar" }: NavLinkProps) {
   );
 }
 
-export function ThemeToggle({ initialTheme }: { initialTheme: Theme }) {
+/** O tema vigente é o `data-theme` do <html>: o servidor (cookie) ou o script do <head> o definem. */
+function subscribeToTheme(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  return () => observer.disconnect();
+}
+
+function readTheme(): Theme {
+  const current = document.documentElement.dataset.theme;
+  return isTheme(current) ? current : "dark";
+}
+
+export function ThemeToggle({ initialTheme }: { initialTheme: ThemePreference }) {
   const t = useTranslations("header");
-  const [theme, setTheme] = useState<Theme>(initialTheme);
+  // Sem cookie o servidor não sabe o tema do sistema; o cliente corrige depois da hidratação.
+  const theme = useSyncExternalStore(subscribeToTheme, readTheme, () =>
+    isTheme(initialTheme) ? initialTheme : "dark",
+  );
 
   function handleToggle() {
     const next: Theme = theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
     document.cookie = `${THEME_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
-    setTheme(next);
   }
 
   const Icon = theme === "dark" ? Sun : Moon;
@@ -168,7 +182,7 @@ export function MobileMenuContent() {
       </nav>
       <Link
         href="/cadastro-comunidade"
-        className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-eg-primary px-5 text-base font-bold text-eg-inverse transition-colors hover:bg-eg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus"
+        className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-eg-primary px-5 text-base font-bold text-eg-inverse transition-colors hover:bg-eg-primary-hover focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-eg-focus"
       >
         {t("registerCta")}
       </Link>

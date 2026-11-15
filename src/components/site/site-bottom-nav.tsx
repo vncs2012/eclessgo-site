@@ -12,7 +12,7 @@ import { MobileMenuContent, useMenuDisclosure } from "@/components/site/site-hea
 export const BOTTOM_NAV_HEIGHT = "4rem";
 
 const ITEM =
-  "flex min-h-11 flex-1 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg text-eg-muted transition-colors hover:text-eg-strong aria-[current=page]:text-eg-primary-text aria-expanded:text-eg-primary-text outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-eg-focus";
+  "flex min-h-11 flex-1 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg text-eg-muted transition-colors hover:text-eg-strong aria-[current=page]:text-eg-primary-text aria-expanded:text-eg-primary-text focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-eg-focus";
 
 type Icon = ComponentType<SVGProps<SVGSVGElement>>;
 

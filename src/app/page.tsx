@@ -81,7 +81,7 @@ export default async function HomePage() {
     <div className="min-h-screen bg-eg-app text-eg-text">
       <section
         aria-label={t("hero.label")}
-        className="relative isolate flex min-h-[660px] items-end overflow-hidden text-white"
+        className="relative isolate flex min-h-[660px] items-end overflow-hidden bg-eg-nav text-white"
       >
         <HomeArt photo={1} className="absolute inset-0 -z-20" />
         {/* Escurecimento para o texto branco (contraste AA): véu uniforme + degradê de token. */}

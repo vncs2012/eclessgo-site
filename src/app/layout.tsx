@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
 import { ConsentBanner } from "@/components/site/consent-banner";
-import { THEME_COOKIE, resolveTheme } from "@/components/site/theme";
+import { DEFAULT_THEME, THEME_COOKIE, THEME_INIT_SCRIPT, resolveTheme } from "@/components/site/theme";
 import { SITE_URL } from "@/lib/site-config";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
@@ -59,10 +59,14 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      data-theme={theme}
+      data-theme={theme === DEFAULT_THEME ? undefined : theme}
+      suppressHydrationWarning
       className={`${geist.variable} ${jakarta.variable} ${geistMono.variable} h-full antialiased`}
       data-scroll-behavior="smooth"
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           {children}

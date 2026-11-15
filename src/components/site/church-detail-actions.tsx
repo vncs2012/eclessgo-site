@@ -43,14 +43,14 @@ export function ChurchDetailActions({
             },
           })
         }
-        className="inline-flex rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400"
+        className="inline-flex rounded-full bg-eg-primary px-5 py-3 text-sm font-semibold text-eg-inverse transition hover:bg-eg-primary-hover"
       >
         {t("actions.openApp")}
         <ArrowRight className="ml-2 h-4 w-4" />
       </a>
       <Link
         href="/cadastro-comunidade"
-        className="inline-flex rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
+        className="inline-flex rounded-full border border-eg-border px-5 py-3 text-sm font-semibold text-eg-strong transition hover:bg-eg-hover"
       >
         {t("actions.registerAnother")}
       </Link>
@@ -69,7 +69,7 @@ export function ChurchDetailActions({
             },
           })
         }
-        className="inline-flex rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
+        className="inline-flex rounded-full border border-eg-border px-5 py-3 text-sm font-semibold text-eg-strong transition hover:bg-eg-hover"
       >
         {t("actions.share")}
       </a>

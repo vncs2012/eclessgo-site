@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 
+import { FOCUS_RING } from "@/components/site/theme";
 import { getConsent, setConsent, subscribeToConsent, type ConsentValue } from "@/lib/consent";
 
 export function ConsentPreferences() {
@@ -52,7 +53,7 @@ export function ConsentPreferences() {
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         aria-controls="consent-preferences-dialog"
-        className="text-left text-zinc-300 underline decoration-zinc-600 underline-offset-4 transition hover:text-white"
+        className={`inline-flex min-h-9 cursor-pointer items-center rounded-md text-left text-sm! text-eg-text transition-colors hover:text-eg-strong hover:underline hover:underline-offset-4 ${FOCUS_RING}`}
       >
         {t("manage")}
       </button>
@@ -63,21 +64,21 @@ export function ConsentPreferences() {
           role="dialog"
           aria-modal="false"
           aria-labelledby="consent-preferences-title"
-          className="absolute bottom-full right-0 z-50 mb-3 w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-white/10 bg-zinc-900 p-4 text-left text-sm text-zinc-100 shadow-2xl"
+          className="fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-[60] rounded-2xl border border-eg-border bg-eg-surface p-4 text-left text-sm text-eg-text shadow-[var(--eg-shadow-lg)] sm:absolute sm:inset-x-auto sm:bottom-full sm:right-0 sm:mb-3 sm:w-[22rem]"
         >
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p id="consent-preferences-title" className="font-semibold text-white">
+              <p id="consent-preferences-title" className="font-semibold text-eg-strong">
                 {t("dialogTitle")}
               </p>
-              <p className="mt-1 text-xs leading-relaxed text-zinc-400">{status}</p>
+              <p className="mt-1 text-xs leading-relaxed text-eg-muted">{status}</p>
             </div>
             <button
               type="button"
               ref={closeRef}
               onClick={() => setIsOpen(false)}
               aria-label={t("close")}
-              className="min-h-11 min-w-11 rounded-full text-lg text-zinc-400 transition hover:bg-white/10 hover:text-white"
+              className={`min-h-11 min-w-11 cursor-pointer rounded-full text-lg! text-eg-muted transition-colors hover:bg-eg-hover hover:text-eg-strong ${FOCUS_RING}`}
             >
               <span aria-hidden="true">×</span>
             </button>
@@ -86,14 +87,14 @@ export function ConsentPreferences() {
             <button
               type="button"
               onClick={() => handleChoice("denied")}
-              className="min-h-11 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-zinc-100 transition hover:border-white/40"
+              className={`min-h-11 cursor-pointer rounded-full border-[1.5px] border-eg-border-strong px-4 py-2 text-xs! font-bold! text-eg-strong transition-colors hover:bg-eg-hover ${FOCUS_RING}`}
             >
               {t("decline")}
             </button>
             <button
               type="button"
               onClick={() => handleChoice("granted")}
-              className="min-h-11 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-emerald-950 transition hover:bg-emerald-400"
+              className={`min-h-11 cursor-pointer rounded-full bg-eg-primary px-4 py-2 text-xs! font-bold! text-eg-inverse transition-colors hover:bg-eg-primary-hover ${FOCUS_RING}`}
             >
               {t("accept")}
             </button>

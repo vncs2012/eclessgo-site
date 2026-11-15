@@ -264,7 +264,7 @@ export function RegisterChurchForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="glass-card rounded-[2rem] p-6 sm:p-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="border border-eg-border bg-eg-surface shadow-[var(--eg-shadow-web)] rounded-[2rem] p-6 sm:p-8">
       <RegisterChurchIntro />
 
       <RegisterChurchStepper
@@ -299,45 +299,45 @@ export function RegisterChurchForm() {
         {currentStep === 4 ? <ContactStep register={register} errors={errors} /> : null}
       </div>
 
-      <fieldset className="mt-8 rounded-2xl border border-white/10 bg-black/20 p-4">
+      <fieldset className="mt-8 rounded-2xl border border-eg-border bg-eg-subtle p-4">
         <legend className="sr-only">{t("legal.legend")}</legend>
-        <label className="flex items-start gap-3 text-sm leading-6 text-zinc-300">
+        <label className="flex items-start gap-3 text-sm leading-6 text-eg-text">
           <input
             type="checkbox"
             {...register("acceptTerms")}
             disabled={!legalReady || legalLoading}
-            className="mt-1 h-4 w-4 rounded border-white/20 bg-zinc-950 text-emerald-500 focus:ring-emerald-400"
+            className="mt-1 h-4 w-4 rounded border-eg-border-strong bg-eg-subtle accent-[var(--eg-action-primary)]"
           />
           <span>
             {t("legal.prefix")} {" "}
-            <Link href={LEGAL_TERMS_PATH} target="_blank" className="font-semibold text-emerald-300 underline underline-offset-2">
+            <Link href={LEGAL_TERMS_PATH} target="_blank" className="font-semibold text-eg-primary-text underline underline-offset-2">
               {t("legal.terms")}
             </Link>{" "}
             {t("legal.connector")} {" "}
-            <Link href={LEGAL_PRIVACY_PATH} target="_blank" className="font-semibold text-emerald-300 underline underline-offset-2">
+            <Link href={LEGAL_PRIVACY_PATH} target="_blank" className="font-semibold text-eg-primary-text underline underline-offset-2">
               {t("legal.privacy")}
             </Link>.
           </span>
         </label>
         {errors.acceptTerms?.message ? (
-          <p className="mt-2 text-xs text-red-300">{t(errors.acceptTerms.message)}</p>
+          <p className="mt-2 text-xs text-eg-danger-text">{t(errors.acceptTerms.message)}</p>
         ) : null}
-        <div className="mt-3 rounded-xl border border-white/8 bg-zinc-950/50 px-3 py-2 text-xs leading-5 text-zinc-400" aria-live="polite">
+        <div className="mt-3 rounded-xl border border-eg-border bg-eg-subtle px-3 py-2 text-xs leading-5 text-eg-muted" aria-live="polite">
           {legalLoading ? <p>{t("status.loadingLegal")}</p> : null}
           {!legalLoading && legalError ? (
             <div className="flex flex-wrap items-center gap-2">
-              <p className="flex-1 text-red-200">{legalError}</p>
+              <p className="flex-1 text-eg-danger-text">{legalError}</p>
               <button
                 type="button"
                 onClick={() => void loadLegalDocuments()}
-                className="rounded-full border border-white/15 px-3 py-1.5 font-semibold text-zinc-100 transition hover:border-emerald-400/40 hover:text-white"
+                className="rounded-full border border-eg-border px-3 py-1.5 font-semibold text-eg-strong transition hover:bg-eg-hover"
               >
                 {t("status.retryLegal")}
               </button>
             </div>
           ) : null}
           {!legalLoading && !legalError && legalDocuments && !legalReady ? (
-            <p className="text-amber-200">
+            <p className="text-eg-warning-text">
               {t("errors.legalNotPublished")} ({legalStatusText})
             </p>
           ) : null}
@@ -348,13 +348,13 @@ export function RegisterChurchForm() {
       </fieldset>
 
       {serverError ? (
-        <div className="mt-6 rounded-[1.5rem] border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+        <div className="mt-6 rounded-[1.5rem] border border-eg-danger/30 bg-eg-danger-soft px-4 py-3 text-sm text-eg-danger-text">
           {serverError}
         </div>
       ) : null}
 
       {uploadStatus ? (
-        <div className="mt-6 rounded-[1.5rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100" aria-live="polite">
+        <div className="mt-6 rounded-[1.5rem] border border-eg-success/30 bg-eg-success-soft px-4 py-3 text-sm text-eg-success-text" aria-live="polite">
           {uploadStatus}
         </div>
       ) : null}

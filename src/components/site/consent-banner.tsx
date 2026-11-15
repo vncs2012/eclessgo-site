@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
+import { FOCUS_RING } from "@/components/site/theme";
 import { getConsent, setConsent, subscribeToConsent } from "@/lib/consent";
 
 export function ConsentBanner() {
@@ -19,17 +20,20 @@ export function ConsentBanner() {
       aria-modal="false"
       aria-labelledby="consent-banner-title"
       aria-describedby="consent-banner-description"
-      className="fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:px-6 sm:pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
+      className="eg-consent-banner fixed inset-x-0 z-[45] px-3 sm:px-6"
     >
-      <div className="glass-card mx-auto flex max-w-3xl flex-col gap-3 rounded-2xl border border-white/10 bg-zinc-900/90 p-4 text-sm text-zinc-100 shadow-2xl backdrop-blur-xl sm:flex-row sm:items-center sm:gap-6 sm:p-5">
+      <div className="mx-auto flex max-w-3xl flex-col gap-2.5 rounded-2xl border border-eg-border bg-eg-surface p-3.5 text-sm text-eg-text shadow-[var(--eg-shadow-lg)] sm:flex-row sm:items-center sm:gap-6 sm:p-5">
         <div className="flex-1 space-y-1">
-          <p id="consent-banner-title" className="text-sm font-semibold text-white">
+          <p id="consent-banner-title" className="text-sm font-semibold text-eg-strong">
             {t("title")}
           </p>
-          <p id="consent-banner-description" className="text-xs leading-relaxed text-zinc-300">
+          <p id="consent-banner-description" className="text-xs leading-relaxed text-eg-text">
             {t.rich("description", {
               link: (chunks) => (
-                <Link href="/privacidade" className="text-emerald-300 underline-offset-4 hover:underline">
+                <Link
+                  href="/privacidade"
+                  className={`rounded-sm font-semibold text-eg-primary-text underline underline-offset-4 ${FOCUS_RING}`}
+                >
                   {chunks}
                 </Link>
               ),
@@ -40,14 +44,14 @@ export function ConsentBanner() {
           <button
             type="button"
             onClick={() => setConsent("denied")}
-            className="min-h-11 flex-1 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-zinc-100 transition hover:border-white/40 sm:flex-none"
+            className={`min-h-11 flex-1 cursor-pointer rounded-full border-[1.5px] border-eg-border-strong px-4 py-2 text-xs! font-bold! text-eg-strong transition-colors hover:bg-eg-hover sm:flex-none ${FOCUS_RING}`}
           >
             {t("decline")}
           </button>
           <button
             type="button"
             onClick={() => setConsent("granted")}
-            className="min-h-11 flex-1 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-emerald-950 transition hover:bg-emerald-400 sm:flex-none"
+            className={`min-h-11 flex-1 cursor-pointer rounded-full bg-eg-primary px-4 py-2 text-xs! font-bold! text-eg-inverse transition-colors hover:bg-eg-primary-hover sm:flex-none ${FOCUS_RING}`}
           >
             {t("accept")}
           </button>

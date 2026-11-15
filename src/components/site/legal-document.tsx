@@ -18,25 +18,25 @@ type LegalDocumentProps = {
 
 export function LegalDocument({ title, documentKey, intro, sections }: LegalDocumentProps) {
   return (
-    <div className="min-h-screen bg-black text-zinc-100">
+    <div className="min-h-screen bg-eg-app text-eg-strong">
       <SiteHeader />
       <main className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <Link href="/" className="text-sm text-emerald-300 underline-offset-4 hover:underline">
+        <Link href="/" className="text-sm text-eg-primary-text underline-offset-4 hover:underline">
           ← Voltar para EclessGO
         </Link>
-        <header className="mt-8 border-b border-white/10 pb-8">
-          <p className="text-xs uppercase tracking-[0.24em] text-emerald-300">Documento legal</p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white">{title}</h1>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-300">{intro}</p>
+        <header className="mt-8 border-b border-eg-border pb-8">
+          <p className="text-xs uppercase tracking-[0.24em] text-eg-primary-text">Documento legal</p>
+          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-eg-strong">{title}</h1>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-eg-text">{intro}</p>
           <LegalDocumentStatus documentKey={documentKey} />
         </header>
 
         <div className="space-y-10 py-10">
           {sections.map((section) => (
             <section key={section.title} className="space-y-3">
-              <h2 className="text-xl font-semibold text-white">{section.title}</h2>
+              <h2 className="text-xl font-semibold text-eg-strong">{section.title}</h2>
               {section.paragraphs.map((paragraph) => (
-                <p key={paragraph} className="text-sm leading-7 text-zinc-300">
+                <p key={paragraph} className="text-sm leading-7 text-eg-text">
                   {paragraph}
                 </p>
               ))}
@@ -44,7 +44,7 @@ export function LegalDocument({ title, documentKey, intro, sections }: LegalDocu
           ))}
         </div>
 
-        <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/5 p-5 text-sm leading-6 text-zinc-300">
+        <div className="rounded-2xl border border-eg-border bg-eg-primary-soft p-5 text-sm leading-6 text-eg-text">
           Dúvidas sobre estes documentos? Entre em contato pelo canal de suporte informado no produto antes de criar ou utilizar uma conta.
         </div>
       </main>

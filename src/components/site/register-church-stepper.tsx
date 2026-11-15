@@ -19,23 +19,23 @@ export function RegisterChurchStepper({
   const progressValue = ((currentStep + 1) / steps.length) * 100;
 
   return (
-    <div className="mb-8 rounded-[1.75rem] border border-white/10 bg-zinc-950/55 p-4">
+    <div className="mb-8 rounded-[1.75rem] border border-eg-border bg-eg-subtle p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-eg-primary-text">
             {t("stepOf", { current: currentStep + 1, total: steps.length })}
           </p>
-          <h3 className="mt-1 text-lg font-semibold text-zinc-50">{tSteps(activeStep.title)}</h3>
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-zinc-400">{tSteps(activeStep.description)}</p>
+          <h3 className="mt-1 text-lg font-semibold text-eg-strong">{tSteps(activeStep.title)}</h3>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-eg-muted">{tSteps(activeStep.description)}</p>
         </div>
-        <span className="w-fit rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-200">
+        <span className="w-fit rounded-full border border-eg-border bg-eg-primary-soft px-3 py-1 text-xs font-semibold text-eg-primary-text">
           {t("percent", { percent: Math.round(progressValue) })}
         </span>
       </div>
 
-      <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/8" aria-hidden="true">
+      <div className="mt-4 h-2 overflow-hidden rounded-full bg-eg-border" aria-hidden="true">
         <div
-          className="h-full rounded-full bg-emerald-400 transition-all duration-300"
+          className="h-full rounded-full bg-eg-primary transition-all duration-300"
           style={{ width: `${progressValue}%` }}
         />
       </div>
@@ -56,23 +56,23 @@ export function RegisterChurchStepper({
                 className={[
                   "flex min-h-16 w-full items-center gap-3 rounded-2xl border px-3 py-2 text-left transition",
                   isActive
-                    ? "border-emerald-300/60 bg-emerald-400/12 text-white"
-                    : "border-white/10 bg-zinc-950/40 text-zinc-300",
-                  isComplete ? "hover:border-emerald-400/35 hover:bg-emerald-400/8" : "",
+                    ? "border-eg-primary bg-eg-primary-soft text-eg-strong"
+                    : "border-eg-border bg-eg-subtle text-eg-text",
+                  isComplete ? "hover:bg-eg-hover" : "",
                   isDisabled ? "cursor-not-allowed opacity-45" : "",
                 ].join(" ")}
               >
                 <span
                   className={[
                     "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold",
-                    isActive || isComplete ? "bg-emerald-400 text-emerald-950" : "bg-white/8 text-zinc-400",
+                    isActive || isComplete ? "bg-eg-primary text-eg-inverse" : "bg-eg-border text-eg-muted",
                   ].join(" ")}
                 >
                   {index + 1}
                 </span>
                 <span>
                   <span className="block text-sm font-semibold">{tSteps(step.label)}</span>
-                  <span className="block text-xs text-zinc-500">
+                  <span className="block text-xs text-eg-muted">
                     {isComplete ? t("review") : isActive ? t("inProgress") : t("locked")}
                   </span>
                 </span>

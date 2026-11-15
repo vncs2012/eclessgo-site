@@ -116,7 +116,7 @@ export async function SiteHeader({ variant = "solid", search }: SiteHeaderProps)
             </nav>
             <Link
               href={REGISTER_HREF}
-              className={`mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-eg-primary px-5 text-base font-bold text-eg-inverse transition-colors hover:bg-eg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus`}
+              className={`mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-eg-primary px-5 text-base font-bold text-eg-inverse transition-colors hover:bg-eg-primary-hover focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-eg-focus`}
             >
               {t("registerCta")}
             </Link>
