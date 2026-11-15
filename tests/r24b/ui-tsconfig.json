@@ -15,7 +15,6 @@
   },
   "files": [
     "../../src/components/site/public-information-assistant.tsx",
-    "../../src/app/igrejas/[slug]/page.tsx",
     "../../src/app/comunidades/[slug]/page.tsx",
     "../../src/types/public.ts",
     "../../src/lib/generated-api.ts",

@@ -326,4 +326,149 @@ test.describe("estados do diretório público", () => {
       )
       .toEqual(["1. Area Um", "2. Area Dois"]);
   });
+
+  test("?q= preenche o campo e dispara a busca de texto", async ({ page }) => {
+    const searches: Array<string | null> = [];
+    await page.route("**/api/public/churches**", async (route) => {
+      searches.push(new URL(route.request().url()).searchParams.get("search"));
+      await route.fulfill({ json: { data: [responseChurch("Aurora Viva")] } });
+    });
+
+    await page.goto("/comunidades?q=Aurora");
+
+    await expect(page.getByRole("textbox", { name: "Buscar comunidades" }).first()).toHaveValue(
+      "Aurora",
+    );
+    await expect(
+      page.getByRole("heading", { name: "Aurora Viva", exact: true }).first(),
+    ).toBeVisible();
+    expect(searches).toContain("Aurora");
+    // A URL não ganha nem perde parâmetros por causa da busca.
+    expect(new URL(page.url()).search).toBe("?q=Aurora");
+  });
+
+  test("?tradicao= repetido marca as tradições no filtro e restringe a lista", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const churches = [
+      { ...responseChurch("Batista Um"), id: "b1", slug: "b1", denomination: "BATISTA" },
+      { ...responseChurch("Católica Um"), id: "c1", slug: "c1", denomination: "CATOLICA" },
+      { ...responseChurch("Espírita Um"), id: "e1", slug: "e1", denomination: "ESPIRITA" },
+    ];
+    await page.route("**/api/public/churches**", async (route) => {
+      await route.fulfill({ json: { data: churches } });
+    });
+
+    await page.goto("/comunidades?tradicao=BATISTA&tradicao=CATOLICA");
+
+    await expect(page.getByRole("checkbox", { name: /Batista/ })).toBeChecked();
+    await expect(page.getByRole("checkbox", { name: /Católica/ })).toBeChecked();
+
+    // Depois de uma busca, o filtro de tradição continua valendo sobre o resultado.
+    await page.getByRole("textbox", { name: "Buscar comunidades" }).fill("todas");
+    await page.locator('form[role="search"] button[type="submit"]:visible').click();
+    await expect(page.getByRole("heading", { name: "2 comunidades" })).toBeVisible();
+    await expect(page.locator("ol > li h3")).toHaveText(["Batista Um", "Católica Um"]);
+    await expect(page.getByRole("checkbox", { name: /Espírita/ })).not.toBeChecked();
+  });
+
+  test("?localizar=1 aciona 'Usar minha localização' e segue a permissão negada", async ({
+    page,
+  }) => {
+    await page.goto("/comunidades?localizar=1");
+
+    await expect(
+      page.getByText("A permissão de localização foi negada.", { exact: true }),
+    ).toBeVisible();
+  });
+
+  test("?localizar=1 com q prioriza a busca de texto", async ({ page }) => {
+    await page.route("**/api/public/churches**", async (route) => {
+      await route.fulfill({ json: { data: [responseChurch("Aurora Viva")] } });
+    });
+
+    await page.goto("/comunidades?q=Aurora&localizar=1");
+
+    await expect(
+      page.getByRole("heading", { name: "Aurora Viva", exact: true }).first(),
+    ).toBeVisible();
+    await expect(
+      page.getByText("A permissão de localização foi negada.", { exact: true }),
+    ).toHaveCount(0);
+  });
+
+  test("o foco por teclado é visível em campo, botões e cards (outline sólido)", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.route("**/api/public/churches**", async (route) => {
+      await route.fulfill({ json: { data: [responseChurch("Foco Um"), { ...responseChurch("Foco Dois"), id: "f2", slug: "f2" }] } });
+    });
+
+    await page.goto("/comunidades?q=foco");
+    await expect(page.getByRole("heading", { name: "Foco Um", exact: true })).toBeVisible();
+    await page.getByRole("textbox", { name: "Buscar comunidades" }).focus();
+
+    const seen = new Set<string>();
+    for (let step = 0; step < 40; step += 1) {
+      const info = await page.evaluate(() => {
+        const el = document.activeElement as HTMLElement | null;
+        if (!el || !el.matches(":focus-visible") || !el.closest("main, form[role=search]")) return null;
+        // Checkbox/radio têm contorno no rótulo (has-[:focus-visible]).
+        const target = el instanceof HTMLInputElement && el.type !== "text" ? el.closest("label") ?? el : el;
+        const targetStyle = getComputedStyle(target);
+        return {
+          label: `${el.tagName.toLowerCase()} "${el.getAttribute("aria-label") ?? el.textContent?.trim().slice(0, 30) ?? ""}" .${String(el.className).slice(0, 60)}`,
+          style: targetStyle.outlineStyle,
+          width: targetStyle.outlineWidth,
+        };
+      });
+      if (info) {
+        // "auto" é o contorno nativo (ex.: contêiner do mapa); o resto deve ser o nosso, sólido de 2 px.
+        expect(["solid", "auto"], `sem contorno de foco em ${info.label}`).toContain(info.style);
+        if (info.style === "solid") expect(info.width, info.label).toBe("2px");
+        seen.add(info.label);
+      }
+      await page.keyboard.press("Tab");
+    }
+    // Campo, "Minha localização", "Atualizar", pins e links dos cards e controles do mapa.
+    expect(seen.size).toBeGreaterThanOrEqual(6);
+  });
+
+  test("em 390 px o selo 'Ao vivo' fica na mesma linha do nome e não estoura o card", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.route("**/api/public/churches**", async (route) => {
+      await route.fulfill({
+        json: {
+          data: [
+            {
+              ...responseChurch("Comunidade Evangélica Aurora Viva do Setor Central"),
+              id: "live1",
+              slug: "live1",
+              isLive: true,
+            },
+          ],
+        },
+      });
+    });
+
+    await page.goto("/comunidades?q=aurora");
+    const link = page.getByRole("link", { name: /Aurora Viva do Setor Central/ }).first();
+    await expect(link).toBeVisible();
+    const badge = page.getByRole("img", { name: "Transmitindo ao vivo agora" }).first();
+    await expect(badge).toBeVisible();
+
+    const linkBox = await link.boundingBox();
+    const badgeBox = await badge.boundingBox();
+    if (!linkBox || !badgeBox) throw new Error("sem caixa");
+    // O selo alinha com a primeira linha do nome (não cai para a linha de baixo).
+    expect(badgeBox.y).toBeLessThan(linkBox.y + 28);
+    expect(badgeBox.x).toBeGreaterThan(linkBox.x);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+    expect(badgeBox.x + badgeBox.width).toBeLessThanOrEqual(390);
+  });
 });

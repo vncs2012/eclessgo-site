@@ -6,7 +6,7 @@ type AxeViolations = Awaited<ReturnType<AxeBuilder["analyze"]>>["violations"];
 const PUBLIC_ROUTES = [
   {
     path: "/",
-    heading: /presença digital para comunidades/i,
+    heading: /toda comunidade merece ser encontrada/i,
     // Mapa Leaflet e widget de terceiros; nao avaliamos seu DOM interno.
     exclude: ".leaflet-container",
   },

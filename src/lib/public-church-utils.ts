@@ -13,6 +13,9 @@ type RawChurch = Omit<Partial<PublicChurchResponse & ChurchResponse>, "address" 
   location?: Record<string, unknown> | null;
 };
 
+/** Texto que normalizeAddress devolve quando a API não traz endereço. */
+export const ADDRESS_NOT_INFORMED = "Endereço não informado";
+
 function toNumber(value: unknown): number | null {
   if (typeof value === "number" && Number.isFinite(value)) return value;
   if (typeof value === "string" && value.trim()) {
@@ -36,7 +39,7 @@ function normalizeAddressPart(value: unknown): string | null {
 }
 
 export function normalizeAddress(address: RawChurch["address"]): string {
-  if (!address) return "Endereço não informado";
+  if (!address) return ADDRESS_NOT_INFORMED;
   if (typeof address === "string") return address;
 
   const record = getAddressRecord(address);
@@ -53,7 +56,7 @@ export function normalizeAddress(address: RawChurch["address"]): string {
     .map(normalizeAddressPart)
     .filter((part): part is string => part !== null);
 
-  return parts.length > 0 ? parts.join(", ") : "Endereço não informado";
+  return parts.length > 0 ? parts.join(", ") : ADDRESS_NOT_INFORMED;
 }
 
 export function normalizeLocation(location: RawChurch["location"]) {
@@ -252,6 +255,16 @@ export function summarizeSchedule(
   return lines;
 }
 
+/** Link da transmissão e data de atualização só entram quando a API os envia. */
+function mapOptionalDetailFields(raw: Record<string, unknown>): Partial<PublicChurchDetails> {
+  const extra: Partial<PublicChurchDetails> = {};
+  const liveUrl = normalizeOptionalText(raw.live_url);
+  if (liveUrl) extra.liveUrl = liveUrl;
+  const updatedAt = normalizeOptionalText(raw.updated_at);
+  if (updatedAt && !Number.isNaN(Date.parse(updatedAt))) extra.updatedAt = updatedAt;
+  return extra;
+}
+
 export function mapPublicChurchDetails(church: RawChurch): PublicChurchDetails {
   const addressRecord = getAddressRecord(church.address);
   return {
@@ -276,6 +289,7 @@ export function mapPublicChurchDetails(church: RawChurch): PublicChurchDetails {
     thumbnail: church.thumbnail ?? null,
     photos: Array.isArray(church.photos) ? church.photos : [],
     features: Array.isArray(church.features) ? church.features.filter((item): item is string => typeof item === "string") : [],
+    ...mapOptionalDetailFields(church as Record<string, unknown>),
   };
 }
 

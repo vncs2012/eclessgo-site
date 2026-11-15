@@ -504,108 +504,190 @@
   },
   "home": {
     "hero": {
-      "badge": "Comunidades locais mais fáceis de encontrar",
-      "title": "Presença digital para comunidades que querem ser encontradas.",
-      "description": "O EclessGO transforma cadastro, localização e informações públicas em uma jornada simples: a comunidade organiza sua presença, e as pessoas entendem onde ir, quando visitar e como entrar em contato.",
-      "registerCta": "Cadastrar minha comunidade",
-      "exploreCta": "Conhecer comunidades",
-      "appCta": "Baixar o app"
-    },
-    "stats": {
-      "visible": {
-        "label": "Comunidades visíveis",
-        "description": "Espaços publicados com informação suficiente para serem descobertos."
+      "label": "Apresentação",
+      "eyebrow": "Goiânia e região",
+      "eyebrowCount": "Goiânia e região · {count, plural, one {# comunidade} other {# comunidades}}",
+      "title": "Toda comunidade merece ser encontrada.",
+      "subtitle": "Igrejas, templos e centros perto de você: onde ficam, quando costumam se encontrar e como chegar.",
+      "search": {
+        "aria": "Buscar comunidades",
+        "label": "Endereço, bairro ou CEP",
+        "placeholder": "Endereço, bairro ou CEP",
+        "locate": "Usar minha localização",
+        "submit": "Buscar"
       },
-      "live": {
-        "label": "Ao vivo",
-        "description": "Comunidades com atividade destacada para quem procura algo acontecendo agora."
-      },
-      "ecosystem": {
-        "label": "Ecossistema",
-        "value": "1 fluxo",
-        "description": "Uma base para cadastro, painel, descoberta pública e experiência mobile."
-      }
+      "traditionsLabel": "Ou escolha uma tradição:",
+      "traditionsAria": "Tradições",
+      "traditionLink": "{label}, {count, plural, one {# comunidade} other {# comunidades}}",
+      "others": "Outras"
     },
-    "mapPreview": {
-      "eyebrow": "Prévia do mapa",
-      "description": "Comunidades próximas, publicadas e prontas para receber pessoas",
-      "badge": "Descoberta local",
-      "apiError": "A API pública do EclessGO não respondeu agora. A prévia do mapa volta a carregar assim que o backend estiver ativo.",
-      "empty": "Nenhuma comunidade com coordenadas válidas foi encontrada para a prévia. O site segue funcional e o cadastro público já está pronto para abastecer o mapa."
+    "nearby": {
+      "eyebrow": "Perto do centro",
+      "title": "Comunidades em Goiânia",
+      "description": "A partir do centro da cidade. O número de cada uma é o mesmo no mapa.",
+      "seeAll": "Ver todas com filtros",
+      "openMap": "Abrir o mapa com filtros",
+      "listLabel": "Comunidades em Goiânia"
     },
-    "pillars": {
-      "findable": {
-        "title": "Comunidades encontráveis",
-        "description": "Ajude pessoas a encontrarem espaços reais perto de casa, com endereço claro e página pública confiável."
-      },
-      "operation": {
-        "title": "Operação em um só lugar",
-        "description": "Atualize dados públicos, agenda, membros e presença digital sem espalhar informações em várias ferramentas."
-      },
-      "mobile": {
-        "title": "Continuidade no mobile",
-        "description": "O mesmo cadastro prepara a comunidade para ser descoberta no site, no mapa e no app."
-      }
+    "features": {
+      "eyebrow": "Para a primeira visita",
+      "title": "Encontre pelo que importa para você",
+      "description": "Informações que a própria comunidade marca no cadastro.",
+      "listLabel": "Instalações e acessibilidade"
     },
-    "howItWorks": {
+    "how": {
       "eyebrow": "Como funciona",
-      "title": "Do cadastro à visita, sem perder o contexto da comunidade.",
-      "description": "A plataforma organiza o que normalmente fica espalhado: endereço, agenda, contatos, página pública e operação interna. Assim, a comunidade fica apresentável para quem chega pela primeira vez e administrável para quem cuida dela todos os dias.",
-      "panelCta": "Entrar no painel"
-    },
-    "steps": {
-      "first": "Cadastre a comunidade com nome, identidade, endereço, contatos e localização pública.",
-      "second": "Complete as informações essenciais no painel para deixar a página pronta para visitantes.",
-      "third": "Pessoas próximas descobrem a comunidade, entendem quando visitar e sabem como entrar em contato."
+      "title": "Do primeiro cadastro à primeira visita",
+      "steps": {
+        "first": {
+          "title": "A comunidade se apresenta",
+          "description": "Em cinco passos, informa nome, tradição, horários habituais, endereço e contatos, e marca o ponto no mapa."
+        },
+        "second": {
+          "title": "Aparece na busca e no app",
+          "description": "O mesmo cadastro alimenta a lista, o mapa, uma página própria e o app."
+        },
+        "third": {
+          "title": "Pessoas chegam",
+          "description": "Quem procura vê onde é, quando costuma ter encontro, como chegar e com quem falar."
+        }
+      }
     },
     "forCommunities": {
       "eyebrow": "Para comunidades",
-      "title": "O que sua comunidade precisa ter para aparecer bem no mapa",
-      "description": "O EclessGO pode atender igrejas, templos, centros e outros espaços de encontro. Para o produto funcionar com confiança, o cadastro precisa nascer claro e completo."
+      "title": "Como colocar a sua comunidade no mapa",
+      "lead": "É gratuito e leva poucos minutos. Para aparecer bem, o cadastro precisa de:",
+      "requirements": {
+        "address": {
+          "title": "Endereço de onde as pessoas entram",
+          "description": "Rua, número, bairro e cidade."
+        },
+        "point": {
+          "title": "Ponto no mapa",
+          "description": "Sem isso, a comunidade não aparece."
+        },
+        "schedule": {
+          "title": "Horários habituais",
+          "description": "Os encontros que se repetem toda semana."
+        },
+        "contact": {
+          "title": "Um contato público",
+          "description": "WhatsApp, telefone ou rede social."
+        }
+      },
+      "register": "Cadastrar minha comunidade",
+      "panel": "Entrar no painel"
+    }
+  },
+  "communityPage": {
+    "back": "Voltar aos resultados",
+    "breadcrumb": {
+      "label": "Você está em",
+      "home": "Início"
     },
-    "requirements": {
-      "address": {
-        "title": "Endereço legível",
-        "description": "Rua, cidade e estado precisam existir para a página pública fazer sentido."
-      },
-      "coordinates": {
-        "title": "Latitude e longitude",
-        "description": "Sem coordenadas válidas, a comunidade não entra no mapa web nem na listagem pública."
-      },
-      "identity": {
-        "title": "Identidade do espaço",
-        "description": "Nome, tradição, categoria ou descrição curta ajudam a conversão de visitantes."
-      },
-      "contact": {
-        "title": "Contato público",
-        "description": "Telefone e e-mail não são obrigatórios, mas tornam a página muito mais útil."
-      }
+    "hero": {
+      "photoAlt": "Foto de {name}",
+      "seePhotos": "Ver as {count} fotos",
+      "seePhotosShort": "Ver fotos",
+      "share": "Compartilhar",
+      "shareCopied": "Link copiado",
+      "shareText": "Conheça {name} no EclessGO",
+      "photosTitle": "Fotos de {name}",
+      "galleryAlt": "Foto {index} de {name}",
+      "close": "Fechar",
+      "live": "Ao vivo",
+      "liveAria": "Transmissão ao vivo de {name} (abre em nova aba)",
+      "liveStatic": "Transmitindo ao vivo"
     },
-    "forPeople": {
-      "eyebrow": "Para pessoas",
-      "title": "Descoberta pública hoje, jornada completa no app.",
-      "description": "O site é a vitrine. O app é a continuidade. A pessoa encontra a comunidade no mapa, abre a página pública e segue para a experiência móvel quando quiser se aprofundar.",
-      "mapCta": "Ver mapa público"
+    "summary": {
+      "label": "Resumo da comunidade",
+      "address": "Endereço",
+      "schedule": "Horários habituais",
+      "contact": "Contato",
+      "directions": "Como chegar",
+      "message": "Mandar mensagem",
+      "messageShort": "Mensagem",
+      "call": "Ligar",
+      "callShort": "Ligar",
+      "whatsapp": "WhatsApp {value}",
+      "phone": "Telefone {value}",
+      "instagram": "{value} no Instagram"
     },
-    "appJourney": {
-      "map": {
-        "title": "Mapa web leve para descoberta",
-        "description": "A pessoa encontra comunidades próximas, compara informações essenciais e segue para a página pública sem atrito."
-      },
-      "publicPage": {
-        "title": "Página pública por comunidade",
-        "description": "Cada espaço ganha uma rota própria pensada para compartilhamento e SEO."
-      },
-      "appCta": {
-        "title": "CTA direto para o app",
-        "description": "Quando a pessoa quiser ir além do site, a transição para o app já está prevista."
-      }
+    "nav": {
+      "label": "Nesta página",
+      "sobre": "Sobre",
+      "horarios": "Horários",
+      "como-chegar": "Como chegar",
+      "instalacoes": "Instalações",
+      "quem-e-quem": "Quem é quem",
+      "contato": "Contato",
+      "contribuir": "Contribuir",
+      "perto": "Perto daqui",
+      "updated": "Atualizada pela comunidade em {date}",
+      "suggest": "Sugerir correção"
     },
-    "finalCta": {
-      "eyebrow": "Próximo passo",
-      "title": "Site público, painel e mobile falando a mesma língua.",
-      "description": "A plataforma já nasce com uma base coerente: cadastro público de comunidade, listagem real, rota pública por slug e descoberta baseada somente em espaços publicados no EclessGO.",
-      "exploreCta": "Explorar diretório"
+    "about": {
+      "title": "Sobre"
+    },
+    "schedule": {
+      "title": "Horários habituais",
+      "everyWeek": "toda semana",
+      "noteWhatsapp": "Horários informados pela comunidade{dated, select, yes { em {date}} other {}}. Em feriados e datas especiais eles podem mudar: <link>confirme pelo WhatsApp</link> antes de ir.",
+      "notePlain": "Horários informados pela comunidade{dated, select, yes { em {date}} other {}}. Em feriados e datas especiais eles podem mudar: confirme antes de ir.",
+      "noteShortWhatsapp": "Informados pela comunidade{dated, select, yes { em {date}} other {}}. Em feriados podem mudar: <link>confirme pelo WhatsApp</link> antes de ir.",
+      "noteShortPlain": "Informados pela comunidade{dated, select, yes { em {date}} other {}}. Em feriados podem mudar: confirme antes de ir.",
+      "join": " e "
+    },
+    "directions": {
+      "title": "Como chegar",
+      "mapLabel": "Mapa com a localização de {name}",
+      "entrance": "Entrada",
+      "bus": "Ônibus",
+      "parking": "Estacionamento",
+      "googleMaps": "Abrir no Google Maps",
+      "waze": "Abrir no Waze",
+      "copy": "Copiar endereço",
+      "copied": "Endereço copiado",
+      "copyError": "Não foi possível copiar. Selecione o endereço manualmente."
+    },
+    "facilities": {
+      "title": "Instalações e acessibilidade",
+      "accessibility": "Acessibilidade",
+      "children": "Crianças",
+      "structure": "Estrutura"
+    },
+    "people": {
+      "title": "Quem é quem"
+    },
+    "contact": {
+      "title": "Contato",
+      "whatsapp": "WhatsApp",
+      "phone": "Telefone",
+      "email": "E-mail",
+      "openAria": "Abrir {channel} de {name}",
+      "openExternalAria": "Abrir {channel} de {name} (abre em nova aba)"
+    },
+    "contribute": {
+      "title": "Contribuir"
+    },
+    "pix": {
+      "title": "PIX de {name}",
+      "description": "Escaneie o QR com o app do seu banco ou copie a chave.",
+      "qrLabel": "QR da chave PIX de {name}",
+      "qrUnavailable": "Não foi possível gerar o QR agora. A chave continua disponível para cópia.",
+      "key": "Chave PIX",
+      "copy": "Copiar chave",
+      "copied": "Chave copiada",
+      "copyError": "Não foi possível copiar automaticamente. Selecione a chave manualmente.",
+      "liability": "A contribuição vai direto para a comunidade. O EclessGO apenas exibe a chave: não processamos o pagamento, emitimos recibo nem confirmamos a transferência.",
+      "qrError": "Erro ao gerar o QR local da chave PIX."
+    },
+    "nearby": {
+      "title": "Outras comunidades perto",
+      "listLabel": "Comunidades perto de {name}"
+    },
+    "mobileBar": {
+      "label": "Ações rápidas"
     }
   }
 }

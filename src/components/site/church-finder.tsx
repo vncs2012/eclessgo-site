@@ -54,6 +54,19 @@ const CHIP = cn(
   FINDER_FOCUS,
 );
 
+const URL_MAX_QUERY_LENGTH = 100;
+const URL_MAX_TRADITIONS = 20;
+
+/** Parâmetros aceitos na entrada (vindos da Home): `q`, `tradicao` (repetível) e `localizar=1`. */
+function readEntryParams(search: string) {
+  const params = new URLSearchParams(search);
+  const q = (params.get("q") ?? "").trim().slice(0, URL_MAX_QUERY_LENGTH);
+  const traditions = Array.from(
+    new Set(params.getAll("tradicao").map((value) => value.trim().slice(0, 60)).filter(Boolean)),
+  ).slice(0, URL_MAX_TRADITIONS);
+  return { q, traditions, locate: !q && params.get("localizar") === "1" };
+}
+
 function subscribeToLargeScreen(callback: () => void) {
   const query = window.matchMedia("(min-width: 1024px)");
   query.addEventListener("change", callback);
@@ -105,6 +118,21 @@ export function ChurchFinder() {
   const drawerRef = useRef<HTMLElement>(null);
   const dragRef = useRef<{ startY: number; startHeight: number; moved: boolean } | null>(null);
   const suppressClickRef = useRef(false);
+
+  // Entrada pela URL (Home): lê uma vez na montagem, no cliente, para a página continuar estática.
+  // Sem trava de "já executou": no StrictMode o cleanup do hook de dados aborta a 1ª requisição
+  // e a 2ª execução deste efeito a refaz.
+  useEffect(() => {
+    const entry = readEntryParams(window.location.search);
+    if (entry.traditions.length > 0) setTraditions(entry.traditions);
+    if (entry.q) {
+      setSearch(entry.q);
+      void searchChurches({ filters: { search: entry.q } });
+    } else if (entry.locate) {
+      void requestMyLocation();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Nova resposta da API: volta para a primeira página (ajuste durante o render, sem efeito).
   if (loadedChurches !== churches) {

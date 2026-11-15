@@ -198,27 +198,27 @@ export function PublicInformationAssistant({ slug, available = false }: { slug: 
 
   return (
     <section
-      className="glass-card mt-8 rounded-[1.9rem] border border-white/10 p-6 sm:p-8"
+      className="mt-8 rounded-3xl border border-eg-border bg-eg-surface p-5 text-eg-text sm:p-8"
       aria-labelledby="public-information-assistant-title"
     >
       <div className="max-w-3xl">
-        <h2 id="public-information-assistant-title" className="text-xl font-semibold text-zinc-50">
+        <h2 id="public-information-assistant-title" className="font-display text-xl font-extrabold tracking-[-0.02em] text-eg-strong">
           {translations("title")}
         </h2>
-        <p className="mt-2 text-sm leading-7 text-zinc-300">{translations("description")}</p>
+        <p className="mt-2 text-sm leading-7 text-eg-text">{translations("description")}</p>
         <p className={available
-          ? "mt-3 rounded-xl border border-emerald-300/20 bg-emerald-400/5 px-4 py-3 text-sm text-emerald-100"
-          : "mt-3 rounded-xl border border-amber-300/20 bg-amber-400/5 px-4 py-3 text-sm text-amber-100"}>
+          ? "mt-3 rounded-xl bg-[var(--eg-feedback-success-soft)] px-4 py-3 text-sm text-[var(--eg-feedback-success-text)]"
+          : "mt-3 rounded-xl bg-eg-warm-soft px-4 py-3 text-sm text-eg-strong"}>
           {translations(available ? "availabilityReady" : "availability")}
         </p>
 
         <form className="mt-6 space-y-4" onSubmit={handleSubmit} aria-busy={viewState.pending}>
-          <label htmlFor={questionId} className="block text-sm font-semibold text-zinc-100">
+          <label htmlFor={questionId} className="block text-sm font-semibold text-eg-strong">
             {translations("questionLabel")}
           </label>
           <textarea
             id={questionId}
-            className="min-h-28 w-full rounded-2xl border border-white/15 bg-zinc-950/70 px-4 py-3 text-sm leading-6 text-zinc-50 outline-none transition focus:border-emerald-300 focus:ring-2 focus:ring-emerald-300/30 disabled:opacity-60"
+            className="min-h-28 w-full rounded-2xl border border-eg-border-strong/70 bg-eg-app px-4 py-3 text-sm leading-6 text-eg-strong placeholder:text-eg-muted outline-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-eg-focus disabled:opacity-60"
             value={viewState.question}
             onChange={(event) => {
               const question = event.target.value;
@@ -232,24 +232,24 @@ export function PublicInformationAssistant({ slug, available = false }: { slug: 
             rows={3}
             disabled={viewState.pending}
           />
-          <p id={`${questionId}-count`} className="text-right text-xs text-zinc-400">
+          <p id={`${questionId}-count`} className="text-right text-xs text-eg-muted">
             {translations("characterCount", { count: questionLength, max: MAX_QUESTION_CODE_POINTS })}
           </p>
-          <p id={`${questionId}-privacy`} className="text-xs leading-6 text-zinc-400">
+          <p id={`${questionId}-privacy`} className="text-xs leading-6 text-eg-muted">
             {translations("privacyNotice")}
           </p>
           {viewState.pending ? (
-            <p role="status" aria-live="polite" className="text-sm text-emerald-200">
+            <p role="status" aria-live="polite" className="text-sm text-[var(--eg-feedback-success-text)]">
               {translations("pending")}
             </p>
           ) : null}
           {viewState.error ? (
-            <p role="alert" className="text-sm text-amber-200">
+            <p role="alert" className="text-sm text-eg-warm">
               {translations(viewState.error)}
             </p>
           ) : null}
           <button
-            className="inline-flex min-h-11 items-center justify-center rounded-full bg-emerald-300 px-5 py-2 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-200 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full bg-eg-primary px-5 py-2 text-sm font-bold text-eg-inverse transition-colors hover:bg-eg-primary-hover outline-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-eg-focus disabled:cursor-not-allowed disabled:opacity-50"
             type="submit"
             disabled={!canSubmit}
           >
@@ -260,25 +260,25 @@ export function PublicInformationAssistant({ slug, available = false }: { slug: 
         {viewState.turns.length > 0 ? (
           <ol className="mt-8 space-y-5" aria-label={translations("conversationLabel")}>
             {viewState.turns.map((turn, index) => (
-              <li key={`${index}-${turn.question}`} className="rounded-2xl border border-white/10 bg-zinc-950/50 p-5">
-                <p className="text-sm font-semibold text-zinc-100">
+              <li key={`${index}-${turn.question}`} className="rounded-2xl border border-eg-border bg-eg-app p-5">
+                <p className="text-sm font-semibold text-eg-strong">
                   {translations("you")}: {turn.question}
                 </p>
                 {turn.result.status === "no_information" ? (
-                  <p className="mt-4 text-sm leading-7 text-zinc-300">{translations("noInformation")}</p>
+                  <p className="mt-4 text-sm leading-7 text-eg-text">{translations("noInformation")}</p>
                 ) : (
                   <div className="mt-4 space-y-3">
-                    <p className="text-sm font-medium text-zinc-200">{translations("answerHeading")}</p>
+                    <p className="text-sm font-medium text-eg-strong">{translations("answerHeading")}</p>
                     <ul className="space-y-3">
                       {turn.result.answer.map((answer, answerIndex) => {
                         const source = turn.result.status === "answered"
                           ? turn.result.sources[answerIndex]
                           : undefined;
                         return (
-                          <li key={`${answerIndex}-${source?.factId || "answer"}`} className="rounded-xl bg-white/5 p-4">
-                            <p className="whitespace-pre-wrap text-sm leading-7 text-zinc-200">{answer}</p>
+                          <li key={`${answerIndex}-${source?.factId || "answer"}`} className="rounded-xl bg-eg-surface p-4">
+                            <p className="whitespace-pre-wrap text-sm leading-7 text-eg-text">{answer}</p>
                             {source ? (
-                              <a className="mt-2 inline-flex text-sm font-semibold text-emerald-200 underline underline-offset-4" href={source.href}>
+                              <a className="mt-2 inline-flex rounded-sm text-sm font-semibold text-eg-primary-text underline underline-offset-4 outline-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-eg-focus" href={source.href}>
                                 {translations("sourceLink")}
                               </a>
                             ) : null}

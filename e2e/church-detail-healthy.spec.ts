@@ -22,4 +22,11 @@ test("renderiza o detalhe público completo contra uma API saudável", async ({ 
   await expect(page).toHaveTitle(new RegExp(payload.data.name));
   await expect(page.getByRole("heading", { name: payload.data.name, exact: true }).first()).toBeVisible();
   await expect(page.locator("main")).toContainText(payload.data.name);
+  // Modelo 8: um único h1, "Voltar aos resultados" e sem rolagem lateral.
+  await expect(page.locator("h1")).toHaveCount(1);
+  await expect(page.getByRole("link", { name: "Voltar aos resultados" }).first()).toBeAttached();
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - window.innerWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
 });

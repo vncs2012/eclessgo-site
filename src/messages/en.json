@@ -504,108 +504,190 @@
   },
   "home": {
     "hero": {
-      "badge": "Local communities made easier to find",
-      "title": "Digital presence for communities that want to be found.",
-      "description": "EclessGO turns registration, location and public information into a simple journey: the community organizes its presence, and people understand where to go, when to visit and how to get in touch.",
-      "registerCta": "Register my community",
-      "exploreCta": "Discover communities",
-      "appCta": "Download the app"
-    },
-    "stats": {
-      "visible": {
-        "label": "Visible communities",
-        "description": "Published spaces with enough information to be discovered."
+      "label": "Introduction",
+      "eyebrow": "Goiânia and region",
+      "eyebrowCount": "Goiânia and region · {count, plural, one {# community} other {# communities}}",
+      "title": "Every community deserves to be found.",
+      "subtitle": "Churches, temples and centers near you: where they are, when they usually meet and how to get there.",
+      "search": {
+        "aria": "Search communities",
+        "label": "Address, neighborhood or postal code",
+        "placeholder": "Address, neighborhood or postal code",
+        "locate": "Use my location",
+        "submit": "Search"
       },
-      "live": {
-        "label": "Live now",
-        "description": "Communities with highlighted activity for people looking for something happening now."
-      },
-      "ecosystem": {
-        "label": "Ecosystem",
-        "value": "1 flow",
-        "description": "One base for registration, panel, public discovery and mobile experience."
-      }
+      "traditionsLabel": "Or pick a tradition:",
+      "traditionsAria": "Traditions",
+      "traditionLink": "{label}, {count, plural, one {# community} other {# communities}}",
+      "others": "Others"
     },
-    "mapPreview": {
-      "eyebrow": "Map preview",
-      "description": "Nearby communities, published and ready to welcome people",
-      "badge": "Local discovery",
-      "apiError": "The EclessGO public API is not responding right now. The map preview will load again as soon as the backend is active.",
-      "empty": "No community with valid coordinates was found for the preview. The site remains functional and public registration is ready to feed the map."
+    "nearby": {
+      "eyebrow": "Near the center",
+      "title": "Communities in Goiânia",
+      "description": "Starting from the city center. Each one has the same number on the map.",
+      "seeAll": "See all with filters",
+      "openMap": "Open the map with filters",
+      "listLabel": "Communities in Goiânia"
     },
-    "pillars": {
-      "findable": {
-        "title": "Findable communities",
-        "description": "Help people find real spaces near home, with a clear address and a trustworthy public page."
-      },
-      "operation": {
-        "title": "Operations in one place",
-        "description": "Update public data, schedule, members and digital presence without spreading information across several tools."
-      },
-      "mobile": {
-        "title": "Continuity on mobile",
-        "description": "The same registration prepares the community to be discovered on the site, map and app."
-      }
+    "features": {
+      "eyebrow": "For a first visit",
+      "title": "Find what matters to you",
+      "description": "Information the community itself marks in its listing.",
+      "listLabel": "Facilities and accessibility"
     },
-    "howItWorks": {
+    "how": {
       "eyebrow": "How it works",
-      "title": "From registration to visit, without losing community context.",
-      "description": "The platform organizes what is usually scattered: address, schedule, contacts, public page and internal operation. That way, the community is presentable to first-time visitors and manageable for the people who care for it every day.",
-      "panelCta": "Open the panel"
-    },
-    "steps": {
-      "first": "Register the community with name, identity, address, contacts and public location.",
-      "second": "Complete the essential information in the panel to make the page ready for visitors.",
-      "third": "Nearby people discover the community, understand when to visit and know how to get in touch."
+      "title": "From the first listing to the first visit",
+      "steps": {
+        "first": {
+          "title": "The community introduces itself",
+          "description": "In five steps, it adds its name, tradition, usual meeting times, address and contacts, and marks its spot on the map."
+        },
+        "second": {
+          "title": "It shows up in search and in the app",
+          "description": "The same listing feeds the list, the map, a page of its own and the app."
+        },
+        "third": {
+          "title": "People arrive",
+          "description": "Anyone looking can see where it is, when it usually meets, how to get there and who to talk to."
+        }
+      }
     },
     "forCommunities": {
       "eyebrow": "For communities",
-      "title": "What your community needs to show up well on the map",
-      "description": "EclessGO can support churches, temples, centers and other meeting spaces. For the product to work reliably, registration needs to start clear and complete."
+      "title": "How to put your community on the map",
+      "lead": "It is free and takes a few minutes. To show up well, the listing needs:",
+      "requirements": {
+        "address": {
+          "title": "The address where people come in",
+          "description": "Street, number, neighborhood and city."
+        },
+        "point": {
+          "title": "A spot on the map",
+          "description": "Without it, the community does not appear."
+        },
+        "schedule": {
+          "title": "Usual meeting times",
+          "description": "The meetings that repeat every week."
+        },
+        "contact": {
+          "title": "A public contact",
+          "description": "WhatsApp, phone or social network."
+        }
+      },
+      "register": "Register my community",
+      "panel": "Go to the panel"
+    }
+  },
+  "communityPage": {
+    "back": "Back to results",
+    "breadcrumb": {
+      "label": "You are here",
+      "home": "Home"
     },
-    "requirements": {
-      "address": {
-        "title": "Readable address",
-        "description": "Street, city and state need to exist for the public page to make sense."
-      },
-      "coordinates": {
-        "title": "Latitude and longitude",
-        "description": "Without valid coordinates, the community does not enter the web map or public listing."
-      },
-      "identity": {
-        "title": "Space identity",
-        "description": "Name, tradition, category or short description help visitor conversion."
-      },
-      "contact": {
-        "title": "Public contact",
-        "description": "Phone and email are not mandatory, but they make the page much more useful."
-      }
+    "hero": {
+      "photoAlt": "Photo of {name}",
+      "seePhotos": "See all {count} photos",
+      "seePhotosShort": "See photos",
+      "share": "Share",
+      "shareCopied": "Link copied",
+      "shareText": "Meet {name} on EclessGO",
+      "photosTitle": "Photos of {name}",
+      "galleryAlt": "Photo {index} of {name}",
+      "close": "Close",
+      "live": "Live",
+      "liveAria": "Live stream of {name} (opens in a new tab)",
+      "liveStatic": "Streaming live"
     },
-    "forPeople": {
-      "eyebrow": "For people",
-      "title": "Public discovery today, complete journey in the app.",
-      "description": "The site is the showcase. The app is continuity. People find the community on the map, open the public page and move to the mobile experience when they want to go deeper.",
-      "mapCta": "View public map"
+    "summary": {
+      "label": "Community summary",
+      "address": "Address",
+      "schedule": "Usual times",
+      "contact": "Contact",
+      "directions": "Get directions",
+      "message": "Send a message",
+      "messageShort": "Message",
+      "call": "Call",
+      "callShort": "Call",
+      "whatsapp": "WhatsApp {value}",
+      "phone": "Phone {value}",
+      "instagram": "{value} on Instagram"
     },
-    "appJourney": {
-      "map": {
-        "title": "Lightweight web map for discovery",
-        "description": "People find nearby communities, compare essential information and move to the public page without friction."
-      },
-      "publicPage": {
-        "title": "Public page per community",
-        "description": "Each space gets its own route designed for sharing and SEO."
-      },
-      "appCta": {
-        "title": "Direct CTA to the app",
-        "description": "When people want to go beyond the site, the transition to the app is already planned."
-      }
+    "nav": {
+      "label": "On this page",
+      "sobre": "About",
+      "horarios": "Times",
+      "como-chegar": "Getting there",
+      "instalacoes": "Facilities",
+      "quem-e-quem": "Who is who",
+      "contato": "Contact",
+      "contribuir": "Give",
+      "perto": "Nearby",
+      "updated": "Updated by the community on {date}",
+      "suggest": "Suggest a correction"
     },
-    "finalCta": {
-      "eyebrow": "Next step",
-      "title": "Public site, panel and mobile speaking the same language.",
-      "description": "The platform starts with a coherent base: public community registration, real listing, public slug route and discovery based only on spaces published in EclessGO.",
-      "exploreCta": "Explore directory"
+    "about": {
+      "title": "About"
+    },
+    "schedule": {
+      "title": "Usual times",
+      "everyWeek": "every week",
+      "noteWhatsapp": "Times reported by the community{dated, select, yes { on {date}} other {}}. On holidays and special dates they may change: <link>confirm on WhatsApp</link> before you go.",
+      "notePlain": "Times reported by the community{dated, select, yes { on {date}} other {}}. On holidays and special dates they may change: please confirm before you go.",
+      "noteShortWhatsapp": "Reported by the community{dated, select, yes { on {date}} other {}}. They may change on holidays: <link>confirm on WhatsApp</link> before you go.",
+      "noteShortPlain": "Reported by the community{dated, select, yes { on {date}} other {}}. They may change on holidays: confirm before you go.",
+      "join": " and "
+    },
+    "directions": {
+      "title": "Getting there",
+      "mapLabel": "Map showing the location of {name}",
+      "entrance": "Entrance",
+      "bus": "Bus",
+      "parking": "Parking",
+      "googleMaps": "Open in Google Maps",
+      "waze": "Open in Waze",
+      "copy": "Copy address",
+      "copied": "Address copied",
+      "copyError": "Could not copy. Please select the address manually."
+    },
+    "facilities": {
+      "title": "Facilities and accessibility",
+      "accessibility": "Accessibility",
+      "children": "Children",
+      "structure": "Building"
+    },
+    "people": {
+      "title": "Who is who"
+    },
+    "contact": {
+      "title": "Contact",
+      "whatsapp": "WhatsApp",
+      "phone": "Phone",
+      "email": "Email",
+      "openAria": "Open {channel} of {name}",
+      "openExternalAria": "Open {channel} of {name} (opens in a new tab)"
+    },
+    "contribute": {
+      "title": "Give"
+    },
+    "pix": {
+      "title": "PIX for {name}",
+      "description": "Scan the QR code with your bank app or copy the key.",
+      "qrLabel": "PIX key QR code for {name}",
+      "qrUnavailable": "The QR code could not be generated right now. The key is still available to copy.",
+      "key": "PIX key",
+      "copy": "Copy key",
+      "copied": "Key copied",
+      "copyError": "Could not copy automatically. Please select the key manually.",
+      "liability": "Your gift goes straight to the community. EclessGO only shows the key: we do not process the payment, issue receipts or confirm the transfer.",
+      "qrError": "Error generating the local PIX key QR code."
+    },
+    "nearby": {
+      "title": "Other communities nearby",
+      "listLabel": "Communities near {name}"
+    },
+    "mobileBar": {
+      "label": "Quick actions"
     }
   }
 }

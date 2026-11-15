@@ -24,7 +24,7 @@ const ASSISTANT_IMPORT = "@/lib/public-information-assistant";
 const PROVIDER_IMPORT = "@/lib/public-information-assistant-provider";
 const ROUTE_SOURCE = "src/app/api/public/churches/slug/[slug]/assistant/route.ts";
 const COMPONENT_SOURCE = "src/components/site/public-information-assistant.tsx";
-const PAGE_SOURCE = "src/app/igrejas/[slug]/page.tsx";
+const PAGE_SOURCE = "src/app/comunidades/[slug]/page.tsx";
 const ALIAS_PAGE_SOURCE = "src/app/comunidades/[slug]/page.tsx";
 const MESSAGE_SOURCES = Object.freeze({
   "pt-BR": "src/messages/pt-BR.json",

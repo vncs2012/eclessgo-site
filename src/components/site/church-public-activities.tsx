@@ -11,10 +11,10 @@ function messages(locale: string) {
 // This wrapper obtains its own locale; the mixed profile needs only import + JSX.
 export async function ChurchPublicActivities({ churchId }: { churchId: string }) {
   const t = messages(await getLocale());
-  if (!isCanonicalUuid(churchId)) return <p role="status">{t.profileUnavailable}</p>;
+  if (!isCanonicalUuid(churchId)) return <p role="status" className="mt-6 text-sm text-eg-muted">{t.profileUnavailable}</p>;
   return (
     <p className="mt-6">
-      <a className="inline-flex min-h-11 items-center rounded-full border border-emerald-400/30 px-5 py-3 text-sm font-semibold text-emerald-300"
+      <a className="inline-flex min-h-11 items-center rounded-full border-[1.5px] border-eg-border-strong px-5 text-sm font-bold text-eg-strong outline-hidden transition-colors hover:bg-eg-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-eg-focus"
         href={"/atividades?church_id=" + churchId}>{t.profileLink}</a>
     </p>
   );

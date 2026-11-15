@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Check, Copy, HeartHandshake } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 
 import { createPixQrMatrix } from "@/lib/pix-qr";
+import { COMMUNITY_FOCUS } from "@/components/site/community-section";
 import { trackPublicEvent } from "@/lib/public-analytics";
+import { cn } from "@/lib/utils";
 
 type PixKeyDonationCardProps = {
   churchId: string;
@@ -55,7 +57,8 @@ function PixQrSvg({ matrix, label }: { matrix: ReturnType<typeof createPixQrMatr
 }
 
 export function PixKeyDonationCard({ churchId, churchName, slug, pixKey }: PixKeyDonationCardProps) {
-  const t = useTranslations("finder");
+  const t = useTranslations("communityPage.pix");
+  const titleId = useId();
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
   const qrResult = useMemo(() => {
@@ -86,48 +89,47 @@ export function PixKeyDonationCard({ churchId, churchName, slug, pixKey }: PixKe
   };
 
   return (
-    <section
-      aria-labelledby="pix-donation-title"
-      className="mt-5 rounded-[1.5rem] border border-emerald-400/15 bg-emerald-500/[0.06] p-5"
+    <div
+      role="group"
+      aria-labelledby={titleId}
+      className="grid max-w-[640px] items-center gap-5 rounded-[18px] border border-eg-border bg-eg-surface p-5 sm:grid-cols-[132px_minmax(0,1fr)] sm:gap-6"
     >
-      <div className="flex items-center gap-2">
-        <HeartHandshake className="h-4 w-4 text-emerald-300" aria-hidden="true" />
-        <h3 id="pix-donation-title" className="text-sm font-semibold text-emerald-100">
-          {t("pix.title")}
-        </h3>
-      </div>
-      <p className="mt-3 text-sm leading-6 text-zinc-300">
-        {t("pix.description", { name: churchName })}
-      </p>
-
       {matrix ? (
-        <div className="mx-auto mt-5 w-full max-w-[232px] rounded-2xl bg-white p-4 shadow-sm">
-          <PixQrSvg matrix={matrix} label={t("pix.qrLabel", { name: churchName })} />
+        <div className="w-[132px] max-w-full rounded-xl bg-white p-2 shadow-[var(--eg-shadow-1)] max-sm:mx-auto">
+          <PixQrSvg matrix={matrix} label={t("qrLabel", { name: churchName })} />
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-amber-300/20 bg-amber-400/10 p-3 text-xs leading-5 text-amber-100">
-          {t("pix.qrUnavailable")}
+        <p className="rounded-xl bg-eg-warm-soft p-3 text-xs leading-5 text-eg-strong sm:col-span-2">
+          {t("qrUnavailable")}
         </p>
       )}
 
-      <div className="mt-5 rounded-xl border border-white/10 bg-zinc-950/50 p-3">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-500">{t("pix.key")}</p>
-        <code className="mt-2 block break-all text-sm leading-6 text-zinc-200">{pixKey}</code>
+      <div className="min-w-0">
+        <h3 id={titleId} className="font-display text-base font-extrabold text-eg-strong">
+          {t("title", { name: churchName })}
+        </h3>
+        <p className="mt-1 text-sm text-eg-muted">{t("description")}</p>
+        <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.08em] text-eg-muted">{t("key")}</p>
+        <code className="mt-1 block break-all rounded-[10px] bg-eg-subtle px-3 py-2.5 font-mono text-sm text-eg-strong">
+          {pixKey}
+        </code>
         <button
           type="button"
           onClick={() => void handleCopy()}
-          className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300/70"
+          className={cn(
+            "mt-3 inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-[1.5px] border-eg-border-strong px-[18px] text-sm font-bold text-eg-strong transition-colors hover:bg-eg-hover",
+            COMMUNITY_FOCUS,
+          )}
         >
           {copied ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
-          {copied ? t("pix.copied") : t("pix.copy")}
+          <span className="font-bold">{copied ? t("copied") : t("copy")}</span>
         </button>
-        {copyError ? <p className="mt-2 text-xs text-amber-200">{t("pix.copyError")}</p> : null}
+        <p role="status" aria-live="polite" className={copyError ? "mt-2 text-xs text-eg-warm" : "sr-only"}>
+          {copyError ? t("copyError") : ""}
+        </p>
+        <p className="mt-3 text-xs leading-5 text-eg-muted">{t("liability")}</p>
       </div>
-
-      <p className="mt-4 text-xs leading-5 text-zinc-500">
-        {t("pix.liability")}
-      </p>
-      {qrResult.error ? <span className="sr-only">{t("pix.qrError")}</span> : null}
-    </section>
+      {qrResult.error ? <span className="sr-only">{t("qrError")}</span> : null}
+    </div>
   );
 }

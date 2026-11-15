@@ -7,9 +7,14 @@ import { useTranslations } from "next-intl";
 import { useChurchFinder } from "@/components/site/church-finder-context";
 import { cn } from "@/lib/utils";
 
-/** Foco visível padrão da Busca. */
+/**
+ * Foco visível padrão da Busca. Sem `outline-none`/`outline-hidden`: no Tailwind 4 os dois
+ * definem `outline-style: none` e anulam o `focus-visible:outline-2` (que precisa do estilo
+ * padrão `solid`). O navegador só desenha contorno em `:focus-visible`, então o clique com
+ * mouse continua sem anel.
+ */
 export const FINDER_FOCUS =
-  "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus";
 
 type ChurchFinderSearchProps = {
   /**

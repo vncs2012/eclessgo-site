@@ -1,395 +1,302 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  Church,
-  LayoutDashboard,
-  MapPinned,
-  Radio,
-  Route,
-  ShieldCheck,
-  Smartphone,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, LocateFixed, MapPin } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
-import { ChurchMap } from "@/components/site/church-map";
+import { HomeArt } from "@/components/site/home-art";
+import { HomeFeatures, type HomeFeatureOption } from "@/components/site/home-features";
+import { HomeNearby } from "@/components/site/home-nearby";
+import { buildTraditionShortcuts, traditionHref } from "@/components/site/home-shortcuts";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
+import { getPublicChurchesPage } from "@/lib/public-api";
 import { PUBLIC_CACHE_TTL_SECONDS } from "@/lib/public-cache";
-import { APP_CTA_URL, GOIANIA_CENTER, PANEL_URL } from "@/lib/site-config";
-import { getPublicChurches } from "@/lib/public-api";
+import { formatTradition, numberResults } from "@/lib/public-church-utils";
+import { GOIANIA_CENTER, PANEL_URL } from "@/lib/site-config";
 import type { PublicChurchListItem } from "@/types/public";
 
 export const revalidate = 300;
 
-type FeaturedChurchesResult = {
+/** Quantas comunidades a Home carrega para contar tradições e montar a prévia. */
+const HOME_CHURCH_LIMIT = 100;
+const NEARBY_COUNT = 4;
+
+type HomeChurches = {
   churches: PublicChurchListItem[];
-  hasLoadError: boolean;
+  /** Total de comunidades que casam com o filtro (da API); null quando a API não informa. */
+  total: number | null;
 };
 
-async function loadFeaturedChurches(): Promise<FeaturedChurchesResult> {
+async function loadHomeChurches(): Promise<HomeChurches> {
   try {
-    const churches = await getPublicChurches(
-      {
-        lat: GOIANIA_CENTER.lat,
-        lng: GOIANIA_CENTER.lng,
-        limit: 6,
-      },
-      {
-        next: { revalidate: PUBLIC_CACHE_TTL_SECONDS.landingFeaturedChurches },
-      },
+    const page = await getPublicChurchesPage(
+      { lat: GOIANIA_CENTER.lat, lng: GOIANIA_CENTER.lng, limit: HOME_CHURCH_LIMIT },
+      { next: { revalidate: PUBLIC_CACHE_TTL_SECONDS.landingFeaturedChurches } },
     );
     return {
-      churches,
-      hasLoadError: false,
+      churches: page.churches,
+      total: page.total,
     };
   } catch (error) {
-    console.warn("[home] API publica indisponivel:", error instanceof Error ? error.message : error);
-    return {
-      churches: [],
-      hasLoadError: true,
-    };
+    console.warn(
+      "[home] API publica indisponivel:",
+      error instanceof Error ? error.message : error,
+    );
+    return { churches: [], total: null };
   }
 }
 
+const FOCUS_ON_PHOTO =
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+const FOCUS =
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus";
+const WRAP = "mx-auto w-full max-w-[var(--eg-content-max)] px-4 sm:px-6 lg:px-10";
+const KICKER = "text-xs font-bold uppercase tracking-[0.08em] text-eg-warm";
+const SECTION_TITLE =
+  "mt-2 font-display text-[clamp(1.75rem,3.4vw,2.25rem)] font-extrabold leading-tight tracking-[-0.03em] text-eg-strong";
+
 export default async function HomePage() {
   const t = await getTranslations("home");
-  const { churches: featuredChurches, hasLoadError } = await loadFeaturedChurches();
-  const mapPreview = featuredChurches.slice(0, 4);
-  const liveCount = featuredChurches.filter((church) => church.isLive).length;
-  const pillars = [
-    {
-      icon: MapPinned,
-      title: t("pillars.findable.title"),
-      description: t("pillars.findable.description"),
-    },
-    {
-      icon: LayoutDashboard,
-      title: t("pillars.operation.title"),
-      description: t("pillars.operation.description"),
-    },
-    {
-      icon: Smartphone,
-      title: t("pillars.mobile.title"),
-      description: t("pillars.mobile.description"),
-    },
+  const tf = await getTranslations("finder");
+  const { churches, total } = await loadHomeChurches();
+
+  const labels = tf.raw("traditions") as Record<string, string>;
+  const shortcuts = buildTraditionShortcuts(churches, (value) => formatTradition(value, labels));
+  // Sem localização da pessoa, a distância seria a do centro da cidade: não mostramos.
+  const nearby = numberResults(
+    churches.slice(0, NEARBY_COUNT).map((church) => ({ ...church, distanceKm: null })),
+  );
+
+  // Etapa 2: a lista da API ainda não manda `features`. Quando mandar, preencher com
+  // { id, label, description, count, href, icon } (contagem real); sem opções a seção some.
+  const featureOptions: HomeFeatureOption[] = [];
+
+  const steps = [
+    { number: "01", photo: 4 as const, key: "first" as const },
+    { number: "02", photo: 3 as const, key: "second" as const },
+    { number: "03", photo: 2 as const, key: "third" as const },
   ];
-  const steps = [t("steps.first"), t("steps.second"), t("steps.third")];
-  const requirements = [
-    {
-      icon: Route,
-      title: t("requirements.address.title"),
-      description: t("requirements.address.description"),
-    },
-    {
-      icon: MapPinned,
-      title: t("requirements.coordinates.title"),
-      description: t("requirements.coordinates.description"),
-    },
-    {
-      icon: Church,
-      title: t("requirements.identity.title"),
-      description: t("requirements.identity.description"),
-    },
-    {
-      icon: ShieldCheck,
-      title: t("requirements.contact.title"),
-      description: t("requirements.contact.description"),
-    },
-  ];
-  const appJourney = [
-    {
-      title: t("appJourney.map.title"),
-      description: t("appJourney.map.description"),
-    },
-    {
-      title: t("appJourney.publicPage.title"),
-      description: t("appJourney.publicPage.description"),
-    },
-    {
-      title: t("appJourney.appCta.title"),
-      description: t("appJourney.appCta.description"),
-    },
-  ];
+  const requirements = ["address", "point", "schedule", "contact"] as const;
 
   return (
-    <div className="site-shell min-h-screen bg-background text-foreground">
-      <div className="grid-noise absolute inset-0 opacity-35" aria-hidden="true" />
-      <SiteHeader />
+    <div className="min-h-screen bg-eg-app text-eg-text">
+      <section
+        aria-label={t("hero.label")}
+        className="relative isolate flex min-h-[660px] items-end overflow-hidden text-white"
+      >
+        <HomeArt photo={1} className="absolute inset-0 -z-20" />
+        {/* Escurecimento para o texto branco (contraste AA): véu uniforme + degradê de token. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-[var(--eg-scrim)] opacity-60"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10"
+          style={{ backgroundImage: "var(--eg-photo-scrim-strong)" }}
+        />
+        <SiteHeader variant="overlay" />
 
-      <main className="relative z-10">
-        <section className="mx-auto max-w-7xl px-4 pb-20 pt-14 sm:px-6 lg:px-8 lg:pb-24 lg:pt-20">
-          <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-200">
-                <Sparkles className="h-3.5 w-3.5" />
-                {t("hero.badge")}
-              </div>
+        <div className={`${WRAP} pb-14 pt-36 lg:pb-16`}>
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-white">
+            {total !== null && total > 0
+              ? t("hero.eyebrowCount", { count: total })
+              : t("hero.eyebrow")}
+          </p>
+          <h1 className="mt-3 max-w-[13ch] font-display text-[clamp(2.5rem,5.4vw,4.75rem)] font-extrabold leading-[1.04] tracking-[-0.04em] text-white">
+            {t("hero.title")}
+          </h1>
+          <p className="mb-6 mt-4 max-w-[50ch] text-[clamp(1.0625rem,1rem+0.3vw,1.25rem)] leading-relaxed text-white">
+            {t("hero.subtitle")}
+          </p>
 
-              <h1 className="section-title mt-6 max-w-4xl text-5xl font-semibold tracking-tight text-zinc-50 sm:text-6xl">
-                {t("hero.title")}
-              </h1>
+          <form
+            role="search"
+            action="/comunidades"
+            method="get"
+            aria-label={t("hero.search.aria")}
+            className="flex max-w-[780px] flex-wrap items-center gap-2 rounded-[20px] bg-eg-surface p-2 pl-4 text-eg-muted shadow-[var(--eg-shadow-lg)] sm:flex-nowrap sm:pl-5"
+          >
+            <MapPin className="hidden h-5 w-5 shrink-0 sm:block" aria-hidden="true" />
+            <label htmlFor="home-search" className="sr-only">
+              {t("hero.search.label")}
+            </label>
+            <input
+              id="home-search"
+              type="search"
+              name="q"
+              enterKeyHint="search"
+              autoComplete="off"
+              placeholder={t("hero.search.placeholder")}
+              className={`h-12 min-w-0 flex-1 basis-full rounded-md bg-transparent px-1 text-base text-eg-strong placeholder:text-eg-muted sm:h-14 sm:basis-auto sm:text-lg ${FOCUS}`}
+            />
+            <Link
+              href="/comunidades?localizar=1"
+              className={`inline-flex min-h-12 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-eg-primary-soft px-3.5 text-sm font-semibold text-eg-primary-text transition-colors hover:bg-eg-hover sm:flex-none ${FOCUS}`}
+            >
+              <LocateFixed className="h-4 w-4" aria-hidden="true" />
+              {t("hero.search.locate")}
+            </Link>
+            <button
+              type="submit"
+              className={`inline-flex min-h-12 flex-1 cursor-pointer items-center justify-center whitespace-nowrap rounded-[14px] bg-eg-primary px-7 text-base font-bold text-eg-inverse transition-colors hover:bg-eg-primary-hover sm:h-14 sm:flex-none ${FOCUS}`}
+            >
+              <span className="font-bold">{t("hero.search.submit")}</span>
+            </button>
+          </form>
 
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-300">
-                {t("hero.description")}
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href="/cadastro-comunidade"
-                  className="inline-flex rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400"
-                >
-                  {t("hero.registerCta")}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-                <Link
-                  href="/comunidades"
-                  className="inline-flex rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
-                >
-                  {t("hero.exploreCta")}
-                </Link>
-                <a
-                  href={APP_CTA_URL}
-                  className="inline-flex rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-zinc-200 transition hover:border-emerald-400/30 hover:text-white"
-                >
-                  {t("hero.appCta")}
-                </a>
-              </div>
-
-              <div className="mt-10 grid gap-4 sm:grid-cols-3">
-                <div className="glass-card rounded-[1.6rem] p-5">
-                  <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">
-                    {t("stats.visible.label")}
-                  </p>
-                  <p className="mt-3 font-display text-3xl font-semibold text-zinc-50">
-                    {featuredChurches.length}
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-zinc-400">
-                    {t("stats.visible.description")}
-                  </p>
-                </div>
-                <div className="glass-card rounded-[1.6rem] p-5">
-                  <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">
-                    {t("stats.live.label")}
-                  </p>
-                  <p className="mt-3 font-display text-3xl font-semibold text-zinc-50">{liveCount}</p>
-                  <p className="mt-2 text-sm leading-6 text-zinc-400">
-                    {t("stats.live.description")}
-                  </p>
-                </div>
-                <div className="glass-card rounded-[1.6rem] p-5">
-                  <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">
-                    {t("stats.ecosystem.label")}
-                  </p>
-                  <p className="mt-3 font-display text-3xl font-semibold text-zinc-50">
-                    {t("stats.ecosystem.value")}
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-zinc-400">
-                    {t("stats.ecosystem.description")}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="glass-card rounded-[2rem] p-4 sm:p-5">
-              <div className="mb-4 flex items-center justify-between gap-4 px-2">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.26em] text-zinc-500">
-                    {t("mapPreview.eyebrow")}
-                  </p>
-                  <p className="text-sm text-zinc-300">{t("mapPreview.description")}</p>
-                </div>
-                <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
-                  {t("mapPreview.badge")}
-                </span>
-              </div>
-
-              {mapPreview.length > 0 ? (
-                <ChurchMap
-                  churches={mapPreview}
-                  center={GOIANIA_CENTER}
-                  selectedChurchId={mapPreview[0]?.id}
-                />
-              ) : hasLoadError ? (
-                <div className="flex min-h-[340px] items-center justify-center rounded-[1.6rem] border border-amber-500/20 bg-amber-500/10 px-6 text-center text-sm leading-7 text-amber-100">
-                  {t("mapPreview.apiError")}
-                </div>
-              ) : (
-                <div className="flex min-h-[340px] items-center justify-center rounded-[1.6rem] border border-white/8 bg-zinc-950/80 px-6 text-center text-sm leading-7 text-zinc-400">
-                  {t("mapPreview.empty")}
-                </div>
-              )}
-
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {featuredChurches.slice(0, 2).map((church) => (
-                  <Link
-                    key={church.id}
-                    href={`/comunidades/${church.slug}`}
-                    className="rounded-[1.4rem] border border-white/8 bg-zinc-950/75 p-4 transition hover:border-emerald-400/25"
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <p className="font-semibold text-zinc-50">{church.name}</p>
-                        <p className="mt-1 text-sm text-zinc-400">{church.addressLine}</p>
-                      </div>
-                      {church.isLive ? (
-                        <Radio className="h-4 w-4 text-red-300" />
-                      ) : (
-                        <MapPinned className="h-4 w-4 text-zinc-500" />
-                      )}
-                    </div>
-                  </Link>
+          {shortcuts.items.length > 0 ? (
+            <div className="mt-[18px] flex flex-wrap items-center gap-x-3 gap-y-2.5 text-[15px]">
+              <span className="font-semibold text-white">{t("hero.traditionsLabel")}</span>
+              <ul aria-label={t("hero.traditionsAria")} className="flex flex-wrap gap-2.5">
+                {shortcuts.items.map((item) => (
+                  <li key={item.label}>
+                    <TraditionChip
+                      href={traditionHref(item.values)}
+                      label={item.label}
+                      count={item.count}
+                      ariaLabel={t("hero.traditionLink", { label: item.label, count: item.count })}
+                    />
+                  </li>
                 ))}
-              </div>
+                {shortcuts.others ? (
+                  <li>
+                    <TraditionChip
+                      href={traditionHref(shortcuts.others.values)}
+                      label={t("hero.others")}
+                      count={shortcuts.others.count}
+                      ariaLabel={t("hero.traditionLink", {
+                        label: t("hero.others"),
+                        count: shortcuts.others.count,
+                      })}
+                    />
+                  </li>
+                ) : null}
+              </ul>
             </div>
-          </div>
-        </section>
+          ) : null}
+        </div>
+      </section>
 
-        <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <div className="grid gap-5 lg:grid-cols-3">
-            {pillars.map((pillar) => (
-              <div key={pillar.title} className="glass-card rounded-[1.9rem] p-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/12 text-emerald-300 ring-1 ring-emerald-400/15">
-                  <pillar.icon className="h-5 w-5" />
-                </div>
-                <h2 className="section-title mt-5 text-2xl font-semibold text-zinc-50">
-                  {pillar.title}
-                </h2>
-                <p className="mt-3 text-sm leading-7 text-zinc-400">{pillar.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+      <main>
+        {nearby.length > 0 ? <HomeNearby items={nearby} center={GOIANIA_CENTER} /> : null}
+
+        <HomeFeatures options={featureOptions} />
 
         <section
           id="como-funciona"
-          className="mx-auto grid max-w-7xl gap-8 px-4 py-20 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-24"
+          aria-labelledby="home-how-title"
+          className="mt-20 scroll-mt-20 bg-eg-alt py-14 lg:mt-24 lg:py-24"
         >
-          <div className="max-w-xl">
-            <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">{t("howItWorks.eyebrow")}</p>
-            <h2 className="section-title mt-4 text-4xl font-semibold text-zinc-50">
-              {t("howItWorks.title")}
+          <div className={WRAP}>
+            <p className={KICKER}>{t("how.eyebrow")}</p>
+            <h2 id="home-how-title" className={SECTION_TITLE}>
+              {t("how.title")}
             </h2>
-            <p className="mt-4 text-base leading-8 text-zinc-400">
-              {t("howItWorks.description")}
-            </p>
-            <div className="mt-8 space-y-3">
-              <a
-                href={PANEL_URL}
-                className="inline-flex rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
-              >
-                {t("howItWorks.panelCta")}
-              </a>
-            </div>
-          </div>
-
-          <div className="grid gap-4">
-            {steps.map((step, index) => (
-              <div key={step} className="glass-card rounded-[1.7rem] p-5 sm:p-6">
-                <div className="flex items-start gap-4">
-                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-zinc-950/90 text-sm font-semibold text-zinc-50">
-                    0{index + 1}
+            <ol className="mt-9 grid gap-9 md:grid-cols-3 md:gap-7">
+              {steps.map((step) => (
+                // O app aparece no passo 2 ("Aparece na busca e no app"): âncora do rodapé (/#app).
+                <li
+                  key={step.number}
+                  id={step.key === "second" ? "app" : undefined}
+                  className="scroll-mt-20"
+                >
+                  <HomeArt photo={step.photo} className="aspect-[4/3] rounded-3xl" />
+                  <span
+                    aria-hidden="true"
+                    className="mb-2 mt-[18px] block font-display text-[44px] font-extrabold leading-none tracking-[-0.04em] text-eg-warm"
+                  >
+                    {step.number}
                   </span>
-                  <p className="pt-1 text-sm leading-7 text-zinc-300">{step}</p>
-                </div>
-              </div>
-            ))}
+                  <h3 className="font-display text-[22px] font-extrabold leading-snug text-eg-strong">
+                    {t(`how.steps.${step.key}.title`)}
+                  </h3>
+                  <p className="mt-2 text-eg-text">{t(`how.steps.${step.key}.description`)}</p>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
         <section
           id="para-comunidades"
-          className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14"
+          aria-labelledby="home-for-title"
+          className={`${WRAP} grid scroll-mt-20 items-center gap-10 py-16 lg:grid-cols-2 lg:gap-16 lg:py-24`}
         >
-          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="glass-card rounded-[2rem] p-7 sm:p-8">
-              <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">
-                {t("forCommunities.eyebrow")}
-              </p>
-              <h2 className="section-title mt-4 text-4xl font-semibold text-zinc-50">
-                {t("forCommunities.title")}
-              </h2>
-              <p className="mt-4 text-base leading-8 text-zinc-400">
-                {t("forCommunities.description")}
-              </p>
-
-              <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                {requirements.map((requirement) => (
-                  <div key={requirement.title} className="rounded-[1.5rem] border border-white/8 bg-zinc-950/70 p-5">
-                    <requirement.icon className="h-5 w-5 text-emerald-300" />
-                    <p className="mt-4 font-semibold text-zinc-50">{requirement.title}</p>
-                    <p className="mt-2 text-sm leading-6 text-zinc-400">{requirement.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div id="app" className="glass-card rounded-[2rem] p-7 sm:p-8">
-              <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">
-                {t("forPeople.eyebrow")}
-              </p>
-              <h2 className="section-title mt-4 text-4xl font-semibold text-zinc-50">
-                {t("forPeople.title")}
-              </h2>
-              <p className="mt-4 text-base leading-8 text-zinc-400">
-                {t("forPeople.description")}
-              </p>
-
-              <div className="mt-8 space-y-4">
-                {appJourney.map((item) => (
-                  <div key={item.title} className="rounded-[1.5rem] border border-white/8 bg-zinc-950/70 p-5">
-                    <p className="font-semibold text-zinc-50">{item.title}</p>
-                    <p className="mt-2 text-sm leading-6 text-zinc-400">{item.description}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href={APP_CTA_URL}
-                  className="inline-flex rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400"
-                >
-                  {t("hero.appCta")}
-                </a>
-                <Link
-                  href="/comunidades"
-                  className="inline-flex rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
-                >
-                  {t("forPeople.mapCta")}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-          <div className="glass-card rounded-[2rem] p-8 text-center sm:p-10">
-            <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">{t("finalCta.eyebrow")}</p>
-            <h2 className="section-title mt-4 text-4xl font-semibold text-zinc-50">
-              {t("finalCta.title")}
+          <div>
+            <p className={KICKER}>{t("forCommunities.eyebrow")}</p>
+            <h2 id="home-for-title" className={SECTION_TITLE}>
+              {t("forCommunities.title")}
             </h2>
-            <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-zinc-400">
-              {t("finalCta.description")}
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <p className="mt-3 text-lg text-eg-text">{t("forCommunities.lead")}</p>
+            <ul className="mb-7 mt-5 grid gap-x-6 gap-y-[18px] sm:grid-cols-2">
+              {requirements.map((key, index) => (
+                <li key={key} className="flex items-start gap-3.5">
+                  <span
+                    aria-hidden="true"
+                    className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-eg-warm-soft font-bold text-eg-warm"
+                  >
+                    {index + 1}
+                  </span>
+                  <div>
+                    <b className="block text-eg-strong">
+                      {t(`forCommunities.requirements.${key}.title`)}
+                    </b>
+                    <span className="text-[15px] text-eg-muted">
+                      {t(`forCommunities.requirements.${key}.description`)}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap gap-3">
               <Link
                 href="/cadastro-comunidade"
-                className="inline-flex rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400"
+                className={`inline-flex min-h-12 items-center gap-2 rounded-full bg-eg-primary px-6 text-base font-bold text-eg-inverse transition-colors hover:bg-eg-primary-hover ${FOCUS}`}
               >
-                {t("hero.registerCta")}
+                {t("forCommunities.register")}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
-              <Link
-                href="/comunidades"
-                className="inline-flex rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
+              <a
+                href={PANEL_URL}
+                className={`inline-flex min-h-12 items-center rounded-full border border-eg-border-strong px-6 text-base font-bold text-eg-strong transition-colors hover:bg-eg-hover ${FOCUS}`}
               >
-                {t("finalCta.exploreCta")}
-              </Link>
+                {t("forCommunities.panel")}
+              </a>
             </div>
           </div>
+          <HomeArt
+            photo={3}
+            className="aspect-[4/3] rounded-3xl shadow-[var(--eg-shadow-md)] lg:aspect-auto lg:min-h-[420px]"
+          />
         </section>
       </main>
 
       <SiteFooter />
     </div>
+  );
+}
+
+function TraditionChip({
+  href,
+  label,
+  count,
+  ariaLabel,
+}: {
+  href: string;
+  label: string;
+  count: number;
+  ariaLabel: string;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-label={ariaLabel}
+      className={`inline-flex min-h-11 items-center gap-2 rounded-full border-[1.5px] border-white/55 bg-white/15 px-4 font-semibold text-white transition-colors hover:bg-white/25 ${FOCUS_ON_PHOTO}`}
+    >
+      <span aria-hidden="true">{label}</span>
+      <span aria-hidden="true" className="font-mono text-[12.5px] font-normal opacity-90">
+        {count}
+      </span>
+    </Link>
   );
 }

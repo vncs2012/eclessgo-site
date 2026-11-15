@@ -1,148 +1,171 @@
+import { AtSign, ChevronRight, Check, Globe, Mail, MessageSquare, Phone, Play, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
+import type { ComponentType, SVGProps } from "react";
 
+import { COMMUNITY_FOCUS, CommunitySection } from "@/components/site/community-section";
 import {
   EXTERNAL_LINK_REL,
   EXTERNAL_LINK_TARGET,
-  PROFILE_IMAGE_DECODING,
-  PROFILE_IMAGE_LOADING,
-  PROFILE_IMAGE_REFERRER_POLICY,
   type NetworkKey,
 } from "@/lib/public-church-profile";
+import {
+  groupFeatures,
+  networkDisplay,
+  type CommunityContact,
+} from "@/lib/public-community-page";
 
-type ChurchProfileAttributesProps = {
-  features: string[];
-};
+/** Instalações e acessibilidade (de `features`), em grupos por palavra-chave. Sem dado, não renderiza. */
+export function ChurchProfileAttributes({ features }: { features: string[] }) {
+  const t = useTranslations("communityPage.facilities");
+  const groups = groupFeatures(features);
 
-export function ChurchProfileAttributes({ features }: ChurchProfileAttributesProps) {
-  const t = useTranslations("publicChurchProfile");
-
-  if (features.length === 0) {
-    return null;
-  }
+  if (groups.length === 0) return null;
 
   return (
-    <section className="glass-card rounded-[1.9rem] p-6">
-      <h2 className="text-xs uppercase tracking-[0.24em] text-zinc-500">
-        {t("attributes.title")}
-      </h2>
-      <ul className="mt-4 flex flex-wrap gap-2">
-        {features.map((feature, index) => (
-          <li
-            key={`${index}-${feature}`}
-            className="rounded-full border border-white/10 px-3 py-1 text-sm text-zinc-300"
-          >
-            {feature}
-          </li>
+    <CommunitySection id="instalacoes" title={t("title")}>
+      <div className="grid gap-4 md:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))]">
+        {groups.map((group) => (
+          <div key={group.key} className="rounded-2xl border border-eg-border bg-eg-surface p-[18px]">
+            <h3 className="mb-2.5 text-xs font-bold uppercase tracking-[0.07em] text-eg-muted">
+              {t(group.key)}
+            </h3>
+            <ul className="grid gap-2.5">
+              {group.items.map((item) => (
+                <li key={item} className="flex items-start gap-2.5 text-[15px] text-eg-strong">
+                  <Check
+                    className="mt-0.5 h-4 w-4 shrink-0 text-[var(--eg-feedback-success-text)]"
+                    aria-hidden="true"
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ul>
-    </section>
+      </div>
+    </CommunitySection>
   );
 }
 
-type ChurchProfileLinksProps = {
-  links: Array<{ key: NetworkKey; url: string }>;
-  churchName: string;
+type Icon = ComponentType<SVGProps<SVGSVGElement>>;
+
+const NETWORK_ICONS: Record<NetworkKey, Icon> = {
+  website: Globe,
+  instagram: AtSign,
+  facebook: Users,
+  youtube: Play,
 };
 
-export function ChurchProfileLinks({ links, churchName }: ChurchProfileLinksProps) {
-  const t = useTranslations("publicChurchProfile");
+const CARD =
+  "flex min-h-16 items-center gap-3.5 rounded-2xl border border-eg-border bg-eg-surface py-2.5 pl-2.5 pr-4 font-semibold text-eg-strong transition-colors hover:border-eg-border-strong";
 
-  if (links.length === 0) {
-    return null;
-  }
+function ChannelCard({
+  icon: IconComponent,
+  label,
+  value,
+  href,
+  external,
+  track,
+  ariaLabel,
+}: {
+  icon: Icon;
+  label: string;
+  value: string;
+  href: string;
+  external: boolean;
+  track: string;
+  ariaLabel: string;
+}) {
+  return (
+    <li>
+      <a
+        href={href}
+        data-track={track}
+        aria-label={ariaLabel}
+        {...(external ? { target: EXTERNAL_LINK_TARGET, rel: EXTERNAL_LINK_REL } : {})}
+        className={`${CARD} ${COMMUNITY_FOCUS}`}
+      >
+        <span
+          aria-hidden="true"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-eg-primary-soft text-eg-primary-text"
+        >
+          <IconComponent className="h-5 w-5" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block">{label}</span>
+          <span className="block truncate text-[13.5px] font-medium text-eg-muted">{value}</span>
+        </span>
+        <ChevronRight className="h-4 w-4 shrink-0 text-eg-muted" aria-hidden="true" />
+      </a>
+    </li>
+  );
+}
+
+type ChurchProfileContactProps = {
+  churchName: string;
+  contact: CommunityContact;
+  links: Array<{ key: NetworkKey; url: string }>;
+};
+
+/** Contato: WhatsApp, telefone, e-mail e redes que existirem. Sem nenhum, não renderiza. */
+export function ChurchProfileContact({ churchName, contact, links }: ChurchProfileContactProps) {
+  const t = useTranslations("communityPage.contact");
+  const tNetworks = useTranslations("publicChurchProfile.networks");
+
+  if (!contact.whatsapp && !contact.phone && !contact.email && links.length === 0) return null;
 
   return (
-    <section className="glass-card rounded-[1.9rem] p-6">
-      <h2 className="text-xs uppercase tracking-[0.24em] text-zinc-500">
-        {t("networks.title")}
-      </h2>
-      <ul className="mt-4 flex flex-wrap gap-3">
+    <CommunitySection id="contato" title={t("title")}>
+      <ul className="grid gap-3 sm:grid-cols-2">
+        {contact.whatsapp ? (
+          <ChannelCard
+            icon={MessageSquare}
+            label={t("whatsapp")}
+            value={contact.whatsapp.display}
+            href={contact.whatsapp.href}
+            external
+            track="whatsapp"
+            ariaLabel={t("openExternalAria", { channel: t("whatsapp"), name: churchName })}
+          />
+        ) : null}
         {links.map(({ key, url }) => {
-          const network = t(`networks.${key}`);
-
+          const network = tNetworks(key);
           return (
-            <li key={key}>
-              <a
-                href={url}
-                target={EXTERNAL_LINK_TARGET}
-                rel={EXTERNAL_LINK_REL}
-                aria-label={t("networks.openAria", { network, name: churchName })}
-                className="inline-flex rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
-              >
-                {network}
-              </a>
-            </li>
+            <ChannelCard
+              key={key}
+              icon={NETWORK_ICONS[key]}
+              label={network}
+              value={networkDisplay(key, url)}
+              href={url}
+              external
+              track={key}
+              ariaLabel={tNetworks("openAria", { network, name: churchName })}
+            />
           );
         })}
+        {contact.phone ? (
+          <ChannelCard
+            icon={Phone}
+            label={t("phone")}
+            value={contact.phone.display}
+            href={contact.phone.href}
+            external={false}
+            track="phone"
+            ariaLabel={t("openAria", { channel: t("phone"), name: churchName })}
+          />
+        ) : null}
+        {contact.email ? (
+          <ChannelCard
+            icon={Mail}
+            label={t("email")}
+            value={contact.email}
+            href={`mailto:${contact.email}`}
+            external={false}
+            track="email"
+            ariaLabel={t("openAria", { channel: t("email"), name: churchName })}
+          />
+        ) : null}
       </ul>
-    </section>
-  );
-}
-
-type ChurchProfileMediaProps = {
-  name: string;
-  logo: string | null;
-  cover: string | null;
-  gallery: string[];
-};
-
-export function ChurchProfileMedia({ name, logo, cover, gallery }: ChurchProfileMediaProps) {
-  const t = useTranslations("publicChurchProfile");
-
-  if (!logo && !cover && gallery.length === 0) {
-    return null;
-  }
-
-  return (
-    <section className="glass-card space-y-6 rounded-[1.9rem] p-6">
-      {cover ? (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={cover}
-            alt={t("media.coverAlt", { name })}
-            loading={PROFILE_IMAGE_LOADING}
-            decoding={PROFILE_IMAGE_DECODING}
-            referrerPolicy={PROFILE_IMAGE_REFERRER_POLICY}
-            className="h-48 w-full rounded-2xl object-cover"
-          />
-        </>
-      ) : null}
-      {logo ? (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={logo}
-            alt={t("media.logoAlt", { name })}
-            loading={PROFILE_IMAGE_LOADING}
-            decoding={PROFILE_IMAGE_DECODING}
-            referrerPolicy={PROFILE_IMAGE_REFERRER_POLICY}
-            className="h-20 w-20 rounded-2xl object-cover"
-          />
-        </>
-      ) : null}
-      {gallery.length > 0 ? (
-        <div>
-          <h2 className="text-xs uppercase tracking-[0.24em] text-zinc-500">
-            {t("gallery.title")}
-          </h2>
-          <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {gallery.map((url, index) => (
-              <li key={`${index}-${url}`}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={url}
-                  alt={t("media.galleryAlt", { index: index + 1, name })}
-                  loading={PROFILE_IMAGE_LOADING}
-                  decoding={PROFILE_IMAGE_DECODING}
-                  referrerPolicy={PROFILE_IMAGE_REFERRER_POLICY}
-                  className="aspect-square w-full rounded-2xl object-cover"
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-    </section>
+    </CommunitySection>
   );
 }

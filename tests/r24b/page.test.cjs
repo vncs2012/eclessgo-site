@@ -1,7 +1,7 @@
 'use strict';
 const test = require('node:test');
 const { assert, React, state, ApiRequestError, moduleAt, church, PublicInformationAssistant } = require('./ui-isolation.cjs');
-const pageModule = moduleAt('src/app/igrejas/[slug]/page.tsx');
+const pageModule = moduleAt('src/app/comunidades/[slug]/page.tsx');
 const ChurchDetailPage = pageModule.default;
 const CommunityDetailPage = moduleAt('src/app/comunidades/[slug]/page.tsx').default;
 

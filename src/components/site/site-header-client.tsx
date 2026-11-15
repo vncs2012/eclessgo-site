@@ -10,14 +10,14 @@ import { THEME_COOKIE, type Theme } from "@/components/site/theme";
 
 /** Foco visível: índigo/lilás sobre fundos sólidos, branco sobre a foto da Home. */
 export const HEADER_FOCUS =
-  "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus group-data-[variant=overlay]/header:focus-visible:outline-white";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus group-data-[variant=overlay]/header:focus-visible:outline-white";
 
 /** Botão de ícone/texto discreto do cabeçalho (idioma, tema, menu). */
 export const HEADER_ICON_BUTTON = `inline-flex h-11 min-w-11 cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2.5 text-sm font-semibold text-eg-text transition-colors duration-150 hover:bg-eg-hover group-data-[variant=overlay]/header:text-white group-data-[variant=overlay]/header:hover:bg-white/15 ${HEADER_FOCUS}`;
 
 /** O painel do menu é sempre sólido, então o foco não usa a variante sobre a foto. */
 const MENU_FOCUS =
-  "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus";
 
 type NavLinkProps = {
   href: string;

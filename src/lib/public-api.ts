@@ -55,6 +55,8 @@ export type PublicChurchesPage = {
   churches: PublicChurchListItem[];
   page: number;
   totalPages: number;
+  /** Total de comunidades que casam com o filtro, em todas as páginas (`meta.total` da API). */
+  total: number | null;
 };
 
 export class ApiRequestError extends Error {
@@ -190,6 +192,7 @@ export async function getPublicChurchesPage(
       .filter((church): church is PublicChurchListItem => church !== null),
     page: response.meta.page,
     totalPages: response.meta.total_pages,
+    total: typeof response.meta.total === "number" ? response.meta.total : null,
   };
 }
 

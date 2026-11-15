@@ -141,8 +141,8 @@ export function ResultCard({
 
         <div className="min-w-0">
           <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <h3 className="inline font-display text-[17px] font-extrabold leading-snug text-eg-strong">
+            <div className="flex min-w-0 items-start gap-2">
+              <h3 className="min-w-0 font-display text-[17px] font-extrabold leading-snug text-eg-strong">
                 <Link
                   href={href}
                   className={cn(
@@ -156,7 +156,7 @@ export function ResultCard({
               {church.isLive ? (
                 <span
                   role="img"
-                  className="ml-2 inline-flex translate-y-[-2px] items-center gap-1 rounded-full bg-[var(--eg-feedback-danger-soft)] px-2 py-0.5 align-middle text-[11px] font-bold text-[var(--eg-feedback-danger-text)]"
+                  className="mt-[3px] inline-flex shrink-0 items-center gap-1 rounded-full bg-[var(--eg-feedback-danger-soft)] px-2 py-0.5 text-[11px] font-bold leading-4 text-[var(--eg-feedback-danger-text)]"
                   aria-label={t("card.liveAria")}
                   title={t("card.liveAria")}
                 >

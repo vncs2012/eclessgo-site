@@ -59,6 +59,10 @@ export interface PublicChurchDetails {
   thumbnail: string | null;
   photos: unknown[];
   features: string[];
+  /** URL https da transmissão, quando a comunidade a ligou (is_live). */
+  liveUrl?: string | null;
+  /** ISO 8601 da última atualização feita pela comunidade; a API ainda não envia. */
+  updatedAt?: string | null;
 }
 
 export type RegisterChurchRequest = GeneratedRegisterChurchRequest;

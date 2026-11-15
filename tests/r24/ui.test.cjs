@@ -1,4 +1,6 @@
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
 const { after, afterEach, test } = require("node:test");
 
 const { JSDOM } = require("/home/vncs/Documentos/Particular/comunidade/eclessGO/eclessgo-painel/node_modules/jsdom");
@@ -18,7 +20,6 @@ const ts = require("typescript");
 const {
   loadR24Component,
   loadR24Messages,
-  readR24AliasPageSource,
   readR24PageSource,
 } = require("./harness.cjs");
 
@@ -42,6 +43,7 @@ const TRANSLATION_KEYS = [
   "notConfigured",
   "unavailable",
   "invalidResponse",
+  "availabilityReady",
 ];
 
 const messages = loadR24Messages({ root: SOURCE_ROOT });
@@ -467,11 +469,9 @@ test("only the latest ten completed question and answer pairs remain in memory",
   }
 });
 
-test("canonical community page renders the assistant and the alias delegates to that page", () => {
+test("community page renders the assistant, unavailable state does not, and /igrejas/:slug redirects", () => {
   const pageSource = readR24PageSource({ root: SOURCE_ROOT });
-  const aliasSource = readR24AliasPageSource({ root: SOURCE_ROOT });
-  const pageAst = ts.createSourceFile("canonical-page.tsx", pageSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-  const aliasAst = ts.createSourceFile("alias-page.tsx", aliasSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const pageAst = ts.createSourceFile("community-page.tsx", pageSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 
   const assistantImportExists = pageAst.statements.some((statement) => {
     if (!ts.isImportDeclaration(statement) || statement.moduleSpecifier.text !== "@/components/site/public-information-assistant") {
@@ -516,7 +516,7 @@ test("canonical community page renders the assistant and the alias delegates to 
     return found;
   };
   const detailPage = pageAst.statements.find((statement) =>
-    ts.isFunctionDeclaration(statement) && statement.name?.text === "ChurchDetailPage",
+    ts.isFunctionDeclaration(statement) && statement.name?.text === "CommunityDetailPage",
   );
   const exportDefaultDetailPage = Boolean(
     detailPage?.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword) &&
@@ -530,32 +530,26 @@ test("canonical community page renders the assistant and the alias delegates to 
   );
   const assistantInUnavailablePage = Boolean(unavailablePage && hasAssistantRender(unavailablePage, pageAst));
 
-  const aliasImportExists = aliasAst.statements.some((statement) =>
-    ts.isImportDeclaration(statement) &&
-    statement.moduleSpecifier.text === "../../igrejas/[slug]/page" &&
-    statement.importClause?.name?.text === "ChurchDetailPage",
-  );
-  let aliasDelegates = false;
-  const visitAlias = (node) => {
-    if (
-      ts.isFunctionDeclaration(node) &&
-      node.name?.text === "CommunityDetailPage" &&
-      node.body?.statements.some((statement) => {
-        if (!ts.isReturnStatement(statement) || !statement.expression || !ts.isJsxSelfClosingElement(statement.expression)) return false;
-        return statement.expression.tagName.getText(aliasAst) === "ChurchDetailPage" &&
-          statement.expression.attributes.properties.some((attribute) =>
-            ts.isJsxSpreadAttribute(attribute) && attribute.expression.getText(aliasAst) === "props",
-          );
-      })
-    ) aliasDelegates = true;
-    ts.forEachChild(node, visitAlias);
+  const nextConfigPath = path.join(SOURCE_ROOT ? path.resolve(SOURCE_ROOT) : path.resolve(__dirname, "../.."), "next.config.ts");
+  const nextConfigAst = ts.createSourceFile("next.config.ts", fs.readFileSync(nextConfigPath, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  let igrejasRedirectExists = false;
+  const visitNextConfig = (node) => {
+    if (ts.isObjectLiteralExpression(node)) {
+      const field = (name) => {
+        const property = node.properties.find((item) => ts.isPropertyAssignment(item) && item.name.getText(nextConfigAst) === name);
+        return property?.initializer.getText(nextConfigAst).replace(/^["']|["']$/g, "");
+      };
+      if (field("source") === "/igrejas/:slug" && field("destination") === "/comunidades/:slug" && field("statusCode") === "301") {
+        igrejasRedirectExists = true;
+      }
+    }
+    ts.forEachChild(node, visitNextConfig);
   };
-  visitAlias(aliasAst);
+  visitNextConfig(nextConfigAst);
 
   assert.equal(assistantImportExists, true);
   assert.equal(assistantRenderExists, true);
   assert.equal(assistantInDetailPage, true);
   assert.equal(assistantInUnavailablePage, false);
-  assert.equal(aliasImportExists, true);
-  assert.equal(aliasDelegates, true);
+  assert.equal(igrejasRedirectExists, true);
 });
