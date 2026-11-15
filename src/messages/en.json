@@ -272,43 +272,12 @@
     "languageEn": "English"
   },
   "register": {
-    "page": {
-      "eyebrow": "Public registration",
-      "title": "Put your community on the EclessGO map",
-      "intro": "This flow is meant to be direct: fewer steps, clear data and no detour to the panel before the initial registration. Once done, the responsible person can move on to the community's operation.",
-      "requirements": {
-        "responsible": "Responsible person with name, email and password for initial access.",
-        "identity": "Community name and tradition, line or denomination for the public page and the app.",
-        "address": "Readable address with street, city and state.",
-        "coordinates": "Valid latitude and longitude to enter the map."
-      },
-      "usableEyebrow": "How the proposal becomes usable",
-      "mapCoherent": {
-        "title": "Coherent map",
-        "description": "The site only shows communities with valid latitude and longitude, avoiding invented markers and reinforcing trust in the product."
-      },
-      "panelEntry": {
-        "title": "Entry into the panel",
-        "description": "After registration, the community enters the panel's operational flow for adjustments, schedule and management."
-      },
-      "moreChannels": {
-        "title": "Same data, more channels",
-        "description": "The same registration feeds the community's public page, the web directory and the app."
-      },
-      "seePublished": "See already published communities"
-    },
-    "intro": {
-      "eyebrow": "Public onboarding",
-      "title": "Register your community",
-      "description": "Community name, readable address and latitude/longitude are required for your space to appear correctly on the map."
-    },
     "footer": {
-      "note": "After registration, your community enters the panel flow and can appear on the public map and the app.",
-      "publicMap": "View public map",
       "back": "Back",
       "submitting": "Registering...",
       "submit": "Register my community",
-      "continue": "Continue"
+      "continue": "Continue",
+      "requiredNote": "Fields marked * are required"
     },
     "legal": {
       "legend": "Legal document acceptance",
@@ -319,37 +288,44 @@
     },
     "stepper": {
       "stepOf": "Step {current} of {total}",
-      "percent": "{percent}% complete",
-      "review": "Review",
-      "inProgress": "In progress",
-      "locked": "Locked",
-      "ariaSteps": "Registration steps"
+      "ariaSteps": "Registration steps",
+      "completed": "Done"
     },
     "steps": {
       "responsible": {
         "label": "Responsible",
         "title": "Community responsible",
-        "description": "Create the access for whoever will follow the registration and manage the community afterwards."
+        "description": "Create the access for whoever will follow the registration and manage the community afterwards.",
+        "summary": "Name, email and password",
+        "headline": "Start with whoever will manage the registration"
       },
       "community": {
         "label": "Community",
-        "title": "Public community data",
-        "description": "This information appears in the public directory, on the map and in discovery cards."
+        "title": "About the community",
+        "description": "Shown in the list, on the map and on the public page.",
+        "summary": "Name, tradition, times",
+        "headline": "Tell us about the community and when you usually meet"
       },
       "location": {
         "label": "Location",
         "title": "Address and map",
-        "description": "Confirm the point on the map and review the address to avoid communities that are hard to find."
+        "description": "Confirm the point on the map and review the address to avoid communities that are hard to find.",
+        "summary": "Address and map point",
+        "headline": "Show where the community is"
       },
       "media": {
-        "label": "Media",
+        "label": "Images",
         "title": "Logo and cover photo",
-        "description": "Add the images that help visitors recognize the community in public cards."
+        "description": "Add the images that help visitors recognize the community in public cards.",
+        "summary": "Logo and cover photo",
+        "headline": "Show the face of the community"
       },
       "contact": {
         "label": "Contact",
         "title": "Public contact",
-        "description": "Provide the channels visitors can use to reach the community directly."
+        "description": "Provide the channels visitors can use to reach the community directly.",
+        "summary": "Email and phone",
+        "headline": "Tell people how to reach you"
       }
     },
     "fields": {
@@ -358,8 +334,11 @@
       "userPassword": "Access password",
       "userPhone": "Responsible phone",
       "churchName": "Community name",
-      "churchDenomination": "Tradition, line or denomination",
-      "churchDescription": "Description",
+      "churchTradition": "Tradition",
+      "churchTraditionPlaceholder": "Select the tradition",
+      "churchLine": "Line or denomination",
+      "churchDescription": "Short description",
+      "churchDescriptionHint": "Up to {max} characters. Shown at the top of the page.",
       "street": "Street",
       "number": "Number",
       "neighborhood": "Neighborhood",
@@ -392,14 +371,23 @@
       "userEmail": "Enter a valid email.",
       "userPasswordMin": "The password must be at least 8 characters.",
       "churchNameMin": "Enter the community name.",
-      "churchDenominationMin": "Enter the tradition, line or denomination.",
+      "churchTraditionRequired": "Choose the tradition.",
+      "churchLineMax": "The line can have up to 80 characters.",
+      "churchDescriptionMax": "The description can have up to 280 characters.",
       "streetMin": "Enter the street.",
       "cityMin": "Enter the city.",
       "stateMin": "Enter the state.",
       "latitudeInvalid": "Invalid latitude.",
       "longitudeInvalid": "Invalid longitude.",
       "contactEmail": "Invalid community email.",
-      "acceptTerms": "Read and accept the Terms of Use and Privacy Policy."
+      "acceptTerms": "Read and accept the Terms of Use and Privacy Policy.",
+      "scheduleDay": "Choose the day.",
+      "scheduleTime": "Enter the time (hour and minute).",
+      "scheduleTitleRequired": "Say what kind of meeting it is (e.g. Service).",
+      "scheduleTitleMax": "The kind of meeting can have up to 120 characters.",
+      "scheduleDescriptionMax": "The time description can have up to 500 characters.",
+      "scheduleMax": "Use at most 30 times.",
+      "featureUnknown": "Unknown facility."
     },
     "status": {
       "loadingLegal": "Confirming the current legal document versions...",
@@ -423,6 +411,41 @@
       "uploadFailed": "Could not upload the image. Check the storage configuration and try again.",
       "storageNoData": "Storage did not return the uploaded image data.",
       "submitFailed": "Could not complete the community registration."
+    },
+    "optional": "optional",
+    "heading": {
+      "eyebrow": "Register a community",
+      "stepLabel": "Step {number} · {label}"
+    },
+    "schedule": {
+      "title": "Usual times",
+      "hint": "Only meetings that repeat every week. Notices and special events are published later, from the panel.",
+      "day": "Day",
+      "time": "Time",
+      "kind": "Kind of meeting",
+      "kindPlaceholder": "E.g. Service",
+      "add": "Add time",
+      "remove": "Remove time {number}",
+      "removeShort": "Remove",
+      "rowLabel": "Time {number}",
+      "added": "Time added. There are now {count}.",
+      "removed": "Time removed. {count} left.",
+      "full": "Limit of {max} times."
+    },
+    "features": {
+      "title": "For your visit",
+      "new": "new",
+      "hint": "Check what is available. This becomes a filter in search."
+    },
+    "preview": {
+      "aria": "Community preview",
+      "toggle": "Show preview",
+      "search": "How it appears in search",
+      "pageTop": "And at the top of the page",
+      "scheduleTitle": "Usual times",
+      "scheduleEmpty": "The times you add appear here.",
+      "namePlaceholder": "Community name",
+      "note": "The page states that the times were provided by the community and shows the date of the last update."
     }
   },
   "notFound": {

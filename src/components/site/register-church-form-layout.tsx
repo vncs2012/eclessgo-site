@@ -1,6 +1,8 @@
-import Link from "next/link";
-import { ArrowRight, Church, MapPinned } from "lucide-react";
+import { ArrowRight, ChevronLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
+
+import { REGISTER_FOCUS } from "@/components/site/register-church-field";
+import type { RegistrationFormStep } from "@/components/site/register-church-form-schema";
 
 type RegisterChurchFooterProps = {
   currentStep: number;
@@ -11,20 +13,31 @@ type RegisterChurchFooterProps = {
   onNext: () => void;
 };
 
-export function RegisterChurchIntro() {
-  const t = useTranslations("register.intro");
+/** Chamada da página: o h1 muda com o passo (cada passo tem sua frase). */
+export function RegisterChurchHeading({ step }: { step: RegistrationFormStep }) {
+  const t = useTranslations("register");
   return (
-    <div className="mb-8 flex items-start gap-4">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-eg-primary-soft text-eg-primary-text">
-        <Church className="h-6 w-6" />
-      </div>
-      <div>
-        <p className="text-xs uppercase tracking-[0.24em] text-eg-muted">{t("eyebrow")}</p>
-        <h2 className="section-title mt-2 text-3xl font-semibold text-eg-strong">{t("title")}</h2>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-eg-muted">
-          {t("description")}
-        </p>
-      </div>
+    <div className="mb-6">
+      <p className="text-xs font-bold uppercase tracking-[0.12em] text-eg-warm">{t("heading.eyebrow")}</p>
+      <h1 className="mt-2 max-w-4xl font-display text-[28px] font-extrabold leading-tight tracking-[-0.03em] text-eg-strong sm:text-[34px] lg:text-[38px]">
+        {t(step.headline)}
+      </h1>
+    </div>
+  );
+}
+
+/** Cabeçalho do cartão do formulário: "Etapa 2 · Comunidade", título e descrição do passo. */
+export function RegisterChurchFormHeader({ step, number }: { step: RegistrationFormStep; number: number }) {
+  const t = useTranslations("register");
+  return (
+    <div className="border-b border-eg-border px-5 pb-4 pt-5 sm:px-6">
+      <p className="text-xs font-bold uppercase tracking-[0.12em] text-eg-muted">
+        {t("heading.stepLabel", { number, label: t(step.label) })}
+      </p>
+      <h2 className="mt-1.5 font-display text-[22px] font-extrabold tracking-[-0.02em] text-eg-strong">
+        {t(step.title)}
+      </h2>
+      <p className="mt-1 text-sm leading-6 text-eg-muted">{t(step.description)}</p>
     </div>
   );
 }
@@ -38,51 +51,33 @@ export function RegisterChurchFooter({
   onNext,
 }: RegisterChurchFooterProps) {
   const t = useTranslations("register.footer");
+  const primary = `inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-eg-primary px-5 text-eg-inverse shadow-[var(--eg-shadow-md)] transition-colors hover:bg-eg-primary-hover disabled:cursor-not-allowed disabled:opacity-70 ${REGISTER_FOCUS}`;
   return (
-    <div className="mt-8 flex flex-col gap-4 border-t border-eg-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-start gap-3 text-sm text-eg-muted">
-        <MapPinned className="mt-0.5 h-4 w-4 text-eg-primary-text" />
-        <p>
-          {t("note")}
-        </p>
-      </div>
-
-      <div className="flex flex-wrap gap-3">
-        <Link
-          href="/comunidades"
-          className="inline-flex rounded-full border border-eg-border px-4 py-2 text-sm font-medium text-eg-strong transition hover:bg-eg-hover"
+    <div className="flex flex-col gap-3 border-t border-eg-border bg-eg-subtle px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      {currentStep > 0 ? (
+        <button
+          type="button"
+          onClick={onPrevious}
+          className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-eg-border-strong bg-eg-surface px-4 text-eg-strong transition-colors hover:bg-eg-hover max-sm:order-2 ${REGISTER_FOCUS}`}
         >
-          {t("publicMap")}
-        </Link>
-        {currentStep > 0 ? (
-          <button
-            type="button"
-            onClick={onPrevious}
-            className="inline-flex rounded-full border border-eg-border px-4 py-2 text-sm font-medium text-eg-strong transition hover:bg-eg-hover"
-          >
-            {t("back")}
-          </button>
-        ) : null}
-        {isLastStep ? (
-          <button
-            type="submit"
-            disabled={isSubmitting || isSubmitDisabled}
-            className="inline-flex rounded-full bg-eg-primary px-5 py-2.5 text-sm font-semibold text-eg-inverse transition hover:bg-eg-primary-hover disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isSubmitting ? t("submitting") : t("submit")}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={onNext}
-            className="inline-flex rounded-full bg-eg-primary px-5 py-2.5 text-sm font-semibold text-eg-inverse transition hover:bg-eg-primary-hover"
-          >
-            {t("continue")}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </button>
-        )}
-      </div>
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          <span className="text-sm font-semibold">{t("back")}</span>
+        </button>
+      ) : (
+        <span aria-hidden="true" className="max-sm:hidden" />
+      )}
+      <p className="text-sm text-eg-muted max-sm:order-3 max-sm:text-center">{t("requiredNote")}</p>
+      {isLastStep ? (
+        <button type="submit" disabled={isSubmitting || isSubmitDisabled} className={`${primary} max-sm:order-1`}>
+          <span className="text-sm font-bold">{isSubmitting ? t("submitting") : t("submit")}</span>
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </button>
+      ) : (
+        <button type="button" onClick={onNext} className={`${primary} max-sm:order-1`}>
+          <span className="text-sm font-bold">{t("continue")}</span>
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </button>
+      )}
     </div>
   );
 }

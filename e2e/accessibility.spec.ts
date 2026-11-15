@@ -12,7 +12,7 @@ const PUBLIC_ROUTES = [
   },
   {
     path: "/cadastro-igreja",
-    heading: /coloque sua comunidade no mapa/i,
+    heading: /comece por quem vai cuidar do cadastro/i,
   },
 ] as const;
 

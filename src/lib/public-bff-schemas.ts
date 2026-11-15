@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { API_DAYS, FEATURE_CODES, type FeatureCode } from "@/lib/church-features";
+import { apiFeaturesSchema, apiScheduleSchema } from "@/lib/church-register";
 
 const nullableText = (maxLength: number) =>
   z.string().trim().max(maxLength).nullable().optional();
@@ -57,6 +58,8 @@ export const registerChurchPublicRequestSchema = z
         logo_key: nullableText(512),
         cover_url: nullableText(2_048),
         cover_key: nullableText(512),
+        schedule: apiScheduleSchema.optional(),
+        features: apiFeaturesSchema.optional(),
       })
       .strict(),
   })

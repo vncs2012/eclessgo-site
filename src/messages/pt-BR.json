@@ -272,43 +272,12 @@
     "languageEn": "Inglês"
   },
   "register": {
-    "page": {
-      "eyebrow": "Cadastro público",
-      "title": "Coloque sua comunidade no mapa do EclessGO",
-      "intro": "Este fluxo foi pensado para ser direto: menos etapas, dados claros e nenhum desvio para o painel antes do cadastro inicial. Depois de concluir, o responsável já pode seguir para a operação da comunidade.",
-      "requirements": {
-        "responsible": "Responsável com nome, e-mail e senha para acesso inicial.",
-        "identity": "Nome da comunidade e tradição, linha ou denominação para a página pública e o app.",
-        "address": "Endereço legível com rua, cidade e estado.",
-        "coordinates": "Latitude e longitude válidas para entrar no mapa."
-      },
-      "usableEyebrow": "Como a proposta fica usável",
-      "mapCoherent": {
-        "title": "Mapa coerente",
-        "description": "O site só mostra comunidades com latitude e longitude válidas, evitando markers inventados e reforçando confiança no produto."
-      },
-      "panelEntry": {
-        "title": "Entrada no painel",
-        "description": "Depois do cadastro, a comunidade entra no fluxo operacional do painel para ajustes, agenda e gestão."
-      },
-      "moreChannels": {
-        "title": "Mesmo dado, mais canais",
-        "description": "O mesmo cadastro abastece a página pública da comunidade, o diretório web e o app."
-      },
-      "seePublished": "Ver comunidades já publicadas"
-    },
-    "intro": {
-      "eyebrow": "Onboarding público",
-      "title": "Cadastre sua comunidade",
-      "description": "Nome da comunidade, endereço legível e latitude/longitude são obrigatórios para o seu espaço aparecer corretamente no mapa."
-    },
     "footer": {
-      "note": "Depois do cadastro, sua comunidade já entra no fluxo do painel e pode aparecer no mapa público e no app.",
-      "publicMap": "Ver mapa público",
       "back": "Voltar",
       "submitting": "Cadastrando...",
       "submit": "Cadastrar minha comunidade",
-      "continue": "Continuar"
+      "continue": "Continuar",
+      "requiredNote": "Campos com * são obrigatórios"
     },
     "legal": {
       "legend": "Aceite dos documentos legais",
@@ -319,37 +288,44 @@
     },
     "stepper": {
       "stepOf": "Etapa {current} de {total}",
-      "percent": "{percent}% completo",
-      "review": "Revisar",
-      "inProgress": "Em preenchimento",
-      "locked": "Bloqueada",
-      "ariaSteps": "Etapas do cadastro"
+      "ariaSteps": "Etapas do cadastro",
+      "completed": "Concluída"
     },
     "steps": {
       "responsible": {
         "label": "Responsável",
         "title": "Responsável pela comunidade",
-        "description": "Crie o acesso de quem vai acompanhar o cadastro e administrar a comunidade depois."
+        "description": "Crie o acesso de quem vai acompanhar o cadastro e administrar a comunidade depois.",
+        "summary": "Nome, e-mail e senha",
+        "headline": "Comece por quem vai cuidar do cadastro"
       },
       "community": {
         "label": "Comunidade",
-        "title": "Dados públicos da comunidade",
-        "description": "Essas informações aparecem no diretório público, no mapa e nos cartões de descoberta."
+        "title": "Sobre a comunidade",
+        "description": "Aparece na lista, no mapa e na página pública.",
+        "summary": "Nome, tradição, horários",
+        "headline": "Conte como é a comunidade e quando vocês costumam se encontrar"
       },
       "location": {
         "label": "Localização",
         "title": "Endereço e mapa",
-        "description": "Confirme o ponto no mapa e revise o endereço para evitar comunidades difíceis de encontrar."
+        "description": "Confirme o ponto no mapa e revise o endereço para evitar comunidades difíceis de encontrar.",
+        "summary": "Endereço e ponto no mapa",
+        "headline": "Mostre onde a comunidade fica"
       },
       "media": {
-        "label": "Mídia",
+        "label": "Imagens",
         "title": "Logo e foto-capa",
-        "description": "Adicione as imagens que ajudam visitantes a reconhecer a comunidade nos cartões públicos."
+        "description": "Adicione as imagens que ajudam visitantes a reconhecer a comunidade nos cartões públicos.",
+        "summary": "Logo e foto-capa",
+        "headline": "Mostre a cara da comunidade"
       },
       "contact": {
         "label": "Contato",
         "title": "Contato público",
-        "description": "Informe os canais que visitantes podem usar para falar diretamente com a comunidade."
+        "description": "Informe os canais que visitantes podem usar para falar diretamente com a comunidade.",
+        "summary": "E-mail e telefone",
+        "headline": "Diga como as pessoas podem falar com vocês"
       }
     },
     "fields": {
@@ -358,8 +334,11 @@
       "userPassword": "Senha de acesso",
       "userPhone": "Telefone do responsável",
       "churchName": "Nome da comunidade",
-      "churchDenomination": "Tradição, linha ou denominação",
-      "churchDescription": "Descrição",
+      "churchTradition": "Tradição",
+      "churchTraditionPlaceholder": "Selecione a tradição",
+      "churchLine": "Linha ou denominação",
+      "churchDescription": "Descrição curta",
+      "churchDescriptionHint": "Até {max} caracteres. Aparece no topo da página.",
       "street": "Rua",
       "number": "Número",
       "neighborhood": "Bairro",
@@ -392,14 +371,23 @@
       "userEmail": "Informe um e-mail válido.",
       "userPasswordMin": "A senha precisa ter pelo menos 8 caracteres.",
       "churchNameMin": "Informe o nome da comunidade.",
-      "churchDenominationMin": "Informe a tradição, linha ou denominação.",
+      "churchTraditionRequired": "Escolha a tradição.",
+      "churchLineMax": "A linha pode ter até 80 caracteres.",
+      "churchDescriptionMax": "A descrição pode ter até 280 caracteres.",
       "streetMin": "Informe a rua.",
       "cityMin": "Informe a cidade.",
       "stateMin": "Informe o estado.",
       "latitudeInvalid": "Latitude inválida.",
       "longitudeInvalid": "Longitude inválida.",
       "contactEmail": "E-mail da comunidade inválido.",
-      "acceptTerms": "Leia e aceite os Termos de Uso e a Política de Privacidade."
+      "acceptTerms": "Leia e aceite os Termos de Uso e a Política de Privacidade.",
+      "scheduleDay": "Escolha o dia.",
+      "scheduleTime": "Informe o horário (hora e minuto).",
+      "scheduleTitleRequired": "Diga que tipo de encontro é (ex.: Celebração).",
+      "scheduleTitleMax": "O tipo de encontro pode ter até 120 caracteres.",
+      "scheduleDescriptionMax": "A descrição do horário pode ter até 500 caracteres.",
+      "scheduleMax": "Use no máximo 30 horários.",
+      "featureUnknown": "Instalação desconhecida."
     },
     "status": {
       "loadingLegal": "Confirmando a versão atual dos documentos legais...",
@@ -423,6 +411,41 @@
       "uploadFailed": "Não foi possível enviar a imagem. Verifique a configuração de storage e tente novamente.",
       "storageNoData": "O storage não retornou os dados da imagem enviada.",
       "submitFailed": "Não foi possível concluir o cadastro da comunidade."
+    },
+    "optional": "opcional",
+    "heading": {
+      "eyebrow": "Cadastrar comunidade",
+      "stepLabel": "Etapa {number} · {label}"
+    },
+    "schedule": {
+      "title": "Horários habituais",
+      "hint": "Só os encontros que se repetem toda semana. Avisos e eventos especiais vocês publicam depois, pelo painel.",
+      "day": "Dia",
+      "time": "Horário",
+      "kind": "Tipo de encontro",
+      "kindPlaceholder": "Ex.: Celebração",
+      "add": "Adicionar horário",
+      "remove": "Remover horário {number}",
+      "removeShort": "Remover",
+      "rowLabel": "Horário {number}",
+      "added": "Horário adicionado. Agora são {count}.",
+      "removed": "Horário removido. Restam {count}.",
+      "full": "Limite de {max} horários."
+    },
+    "features": {
+      "title": "Para a visita",
+      "new": "novo",
+      "hint": "Marque o que existe. Isso vira filtro na busca."
+    },
+    "preview": {
+      "aria": "Prévia da comunidade",
+      "toggle": "Ver prévia",
+      "search": "Assim aparece na busca",
+      "pageTop": "E no topo da página",
+      "scheduleTitle": "Horários habituais",
+      "scheduleEmpty": "Os horários que você adicionar aparecem aqui.",
+      "namePlaceholder": "Nome da comunidade",
+      "note": "A página avisa que os horários foram informados pela comunidade e mostra a data da última atualização."
     }
   },
   "notFound": {

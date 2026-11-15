@@ -78,7 +78,7 @@ test.describe("aceite legal no cadastro web", () => {
     await page.getByRole("button", { name: "Continuar" }).click();
 
     await page.getByLabel("Nome da comunidade", { exact: true }).fill("Comunidade E2E");
-    await page.getByLabel("Tradição, linha ou denominação", { exact: true }).fill("BATISTA");
+    await page.getByLabel("Tradição", { exact: true }).selectOption("BATISTA");
     await page.getByRole("button", { name: "Continuar" }).click();
 
     await page.getByLabel("Rua", { exact: true }).fill("Rua E2E");
@@ -190,7 +190,7 @@ test.describe("aceite legal no cadastro web", () => {
     await page.getByLabel("Senha de acesso", { exact: true }).fill("Secret123!");
     await page.getByRole("button", { name: "Continuar" }).click();
     await page.getByLabel("Nome da comunidade", { exact: true }).fill("Comunidade E2E");
-    await page.getByLabel("Tradição, linha ou denominação", { exact: true }).fill("BATISTA");
+    await page.getByLabel("Tradição", { exact: true }).selectOption("BATISTA");
     await page.getByRole("button", { name: "Continuar" }).click();
     await page.getByLabel("Rua", { exact: true }).fill("Rua E2E");
     await page.getByLabel("Cidade", { exact: true }).fill("Goiânia");

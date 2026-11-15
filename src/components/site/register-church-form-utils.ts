@@ -3,6 +3,7 @@ import type { LegalDocumentsResponse } from "@/lib/generated-api";
 import type { Coordinates, RegisterChurchMediaUploadResponse, RegisterChurchRequest } from "@/types/public";
 import { fetchWithClientTrace } from "@/lib/client-fetch";
 import { parseLegalDocuments } from "@/lib/legal";
+import { buildDenomination, buildFeaturesPayload, buildSchedulePayload } from "@/lib/church-register";
 
 export type ReverseGeocodeAddress = {
   street?: string;
@@ -82,7 +83,12 @@ export function buildRegisterChurchPayload(
   values: SubmitValues,
   media: RegisterChurchUploadedMedia = {},
   legalDocuments: LegalDocumentsResponse,
+  traditionLabels: Readonly<Record<string, string>> = {},
 ): RegisterChurchRequest {
+  // Campos opcionais vazios não vão no corpo: sem horários não há `schedule`, sem instalações não há `features`.
+  const schedule = buildSchedulePayload(values.schedule);
+  const features = buildFeaturesPayload(values.features);
+
   return {
     user: {
       name: values.userName.trim(),
@@ -92,7 +98,7 @@ export function buildRegisterChurchPayload(
     },
     church: {
       name: values.churchName.trim(),
-      denomination: values.churchDenomination.trim(),
+      denomination: buildDenomination(values.churchTradition, values.churchLine, traditionLabels),
       description: values.churchDescription?.trim() || null,
       address: {
         street: values.street.trim(),
@@ -114,6 +120,8 @@ export function buildRegisterChurchPayload(
       logo_key: media.logo?.key ?? null,
       cover_url: media.cover?.url ?? null,
       cover_key: media.cover?.key ?? null,
+      ...(schedule ? { schedule } : {}),
+      ...(features ? { features } : {}),
     },
     legal_acceptance: {
       terms_version: legalDocuments.terms.version,
