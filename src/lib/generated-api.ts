@@ -212,6 +212,14 @@ export interface ChurchContactUpdateRequest {
   youtube?: string | null;
 }
 
+export type ChurchFeatureCode = "ACCESSIBLE_ENTRANCE" | "ACCESSIBLE_RESTROOM" | "ELEVATOR" | "LIBRAS" | "KIDS_AREA" | "NURSERY" | "PARKING";
+
+export interface ChurchFeatureVocabularyItem {
+  code: ChurchFeatureCode;
+  group: "accessibility" | "children" | "structure";
+  label: string;
+}
+
 export interface ChurchLocationUpdateRequest {
   lat: number;
   lng: number;
@@ -242,6 +250,7 @@ export interface ChurchPublicationReviewResponse {
   thumbnail?: string | null;
   photos?: unknown[];
   features?: string[];
+  updated_at?: string | null;
   publication_status: string;
   publication_reviewed_at?: string | null;
   publication_review_reason?: string | null;
@@ -269,6 +278,7 @@ export interface ChurchResponse {
   thumbnail?: string | null;
   photos?: unknown[];
   features?: string[];
+  updated_at?: string | null;
 }
 
 export type ChurchRole = "MEMBER" | "CHURCH_MODERATOR" | "CHURCH_FINANCE" | "CHURCH_ADMIN";
@@ -622,6 +632,11 @@ export interface DataResponse_dict_ {
 
 export interface DataResponse_dict_str__list_PeaceFeelingResponse___ {
   data: Record<string, PeaceFeelingResponse[]>;
+  message?: string | null;
+}
+
+export interface DataResponse_list_ChurchFeatureVocabularyItem__ {
+  data: ChurchFeatureVocabularyItem[];
   message?: string | null;
 }
 
@@ -1950,6 +1965,15 @@ export interface PublicChurchResponse {
   member_count: number;
   plan: string;
   distance?: number | null;
+  schedule?: PublicChurchScheduleEntry[];
+  features?: string[];
+  updated_at?: string | null;
+}
+
+export interface PublicChurchScheduleEntry {
+  title: string;
+  day: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+  time: string;
 }
 
 export interface PublicProviderResponse {
@@ -2044,6 +2068,8 @@ export interface RegisterChurchPayload {
   logo_key?: string | null;
   cover_url?: string | null;
   cover_key?: string | null;
+  schedule?: ChurchScheduleEntryRequest[] | null;
+  features?: string[] | null;
 }
 
 export interface RegisterChurchRequest {
