@@ -8,7 +8,7 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { FINDER_FOCUS } from "@/components/site/church-finder-search";
 import { useTraditionLabel } from "@/components/site/church-finder-context";
-import { featurePills } from "@/lib/church-features";
+import { FEATURE_ICONS, featurePills } from "@/lib/church-features";
 import { summarizeSchedule, type FinderSort } from "@/lib/public-church-utils";
 import { cn } from "@/lib/utils";
 import type { PublicChurchListItem } from "@/types/public";
@@ -94,8 +94,8 @@ export function ResultCard({
     2,
     priorityDays,
   );
-  // Até 3 pílulas, códigos do vocabulário primeiro (traduzidos); texto livre como veio.
-  const features = featurePills(church.features, tv.raw("codes") as Record<string, string>);
+  // Até 3 pílulas, códigos do vocabulário primeiro (rótulo curto, com ícone); texto livre como veio.
+  const features = featurePills(church.features, tv.raw("short") as Record<string, string>);
 
   function handleClick(event: MouseEvent<HTMLElement>) {
     // Clique no card destaca no mapa; links e botões internos seguem o próprio comportamento.
@@ -201,14 +201,18 @@ export function ResultCard({
 
           {features.length > 0 ? (
             <ul className="mt-2.5 hidden flex-wrap gap-1.5 md:flex" aria-label={t("card.features")}>
-              {features.map((feature) => (
-                <li
-                  key={feature}
-                  className="rounded-full bg-eg-subtle px-2.5 py-1 text-xs font-semibold text-eg-text"
-                >
-                  {feature}
-                </li>
-              ))}
+              {features.map((feature) => {
+                const Icon = feature.code ? FEATURE_ICONS[feature.code] : null;
+                return (
+                  <li
+                    key={feature.label}
+                    className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-eg-subtle px-2.5 py-1 text-xs font-semibold text-eg-text"
+                  >
+                    {Icon ? <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" /> : null}
+                    {feature.label}
+                  </li>
+                );
+              })}
             </ul>
           ) : null}
 

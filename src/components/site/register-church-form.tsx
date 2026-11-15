@@ -322,53 +322,56 @@ export function RegisterChurchForm() {
             ) : null}
             {currentStep === 4 ? <ContactStep register={register} errors={errors} /> : null}
 
-            <fieldset className="rounded-xl border border-eg-border bg-eg-subtle p-4">
-              <legend className="sr-only">{t("legal.legend")}</legend>
-              <label className="flex items-start gap-3 text-sm leading-6 text-eg-text">
-                <input
-                  type="checkbox"
-                  {...register("acceptTerms")}
-                  disabled={!legalReady || legalLoading}
-                  className="mt-1 h-4 w-4 rounded border-eg-border-strong bg-eg-subtle accent-[var(--eg-action-primary)]"
-                />
-                <span>
-                  {t("legal.prefix")}{" "}
-                  <Link href={LEGAL_TERMS_PATH} target="_blank" className="font-semibold text-eg-primary-text underline underline-offset-2">
-                    {t("legal.terms")}
-                  </Link>{" "}
-                  {t("legal.connector")}{" "}
-                  <Link href={LEGAL_PRIVACY_PATH} target="_blank" className="font-semibold text-eg-primary-text underline underline-offset-2">
-                    {t("legal.privacy")}
-                  </Link>.
-                </span>
-              </label>
-              {errors.acceptTerms?.message ? (
-                <p className="mt-2 text-xs text-eg-danger-text">{t(errors.acceptTerms.message)}</p>
-              ) : null}
-              <div className="mt-3 rounded-lg border border-eg-border bg-eg-surface px-3 py-2 text-xs leading-5 text-eg-muted" aria-live="polite">
-                {legalLoading ? <p>{t("status.loadingLegal")}</p> : null}
-                {!legalLoading && legalError ? (
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="flex-1 text-eg-danger-text">{legalError}</p>
-                    <button
-                      type="button"
-                      onClick={() => void loadLegalDocuments()}
-                      className={`inline-flex min-h-9 items-center rounded-full border border-eg-border px-3 text-eg-strong transition hover:bg-eg-hover ${REGISTER_FOCUS}`}
-                    >
-                      <span className="text-xs font-semibold">{t("status.retryLegal")}</span>
-                    </button>
-                  </div>
+            {/* Aceite só no último passo (como no protótipo); o envio continua exigindo o aceite e os documentos publicados. */}
+            {isLastStep ? (
+              <fieldset className="rounded-xl border border-eg-border bg-eg-subtle p-4">
+                <legend className="sr-only">{t("legal.legend")}</legend>
+                <label className="flex items-start gap-3 text-sm leading-6 text-eg-text">
+                  <input
+                    type="checkbox"
+                    {...register("acceptTerms")}
+                    disabled={!legalReady || legalLoading}
+                    className="mt-1 h-4 w-4 rounded border-eg-border-strong bg-eg-subtle accent-[var(--eg-action-primary)]"
+                  />
+                  <span>
+                    {t("legal.prefix")}{" "}
+                    <Link href={LEGAL_TERMS_PATH} target="_blank" className="font-semibold text-eg-primary-text underline underline-offset-2">
+                      {t("legal.terms")}
+                    </Link>{" "}
+                    {t("legal.connector")}{" "}
+                    <Link href={LEGAL_PRIVACY_PATH} target="_blank" className="font-semibold text-eg-primary-text underline underline-offset-2">
+                      {t("legal.privacy")}
+                    </Link>.
+                  </span>
+                </label>
+                {errors.acceptTerms?.message ? (
+                  <p className="mt-2 text-xs text-eg-danger-text">{t(errors.acceptTerms.message)}</p>
                 ) : null}
-                {!legalLoading && !legalError && legalDocuments && !legalReady ? (
-                  <p className="text-eg-warning-text">
-                    {t("errors.legalNotPublished")} ({legalStatusText})
-                  </p>
-                ) : null}
-                {!legalLoading && !legalError && legalReady && legalVersionText ? (
-                  <p>{t("status.legalConfirmed", legalVersionText)}</p>
-                ) : null}
-              </div>
-            </fieldset>
+                <div className="mt-3 rounded-lg border border-eg-border bg-eg-surface px-3 py-2 text-xs leading-5 text-eg-muted" aria-live="polite">
+                  {legalLoading ? <p>{t("status.loadingLegal")}</p> : null}
+                  {!legalLoading && legalError ? (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="flex-1 text-eg-danger-text">{legalError}</p>
+                      <button
+                        type="button"
+                        onClick={() => void loadLegalDocuments()}
+                        className={`inline-flex min-h-9 items-center rounded-full border border-eg-border px-3 text-eg-strong transition hover:bg-eg-hover ${REGISTER_FOCUS}`}
+                      >
+                        <span className="text-xs font-semibold">{t("status.retryLegal")}</span>
+                      </button>
+                    </div>
+                  ) : null}
+                  {!legalLoading && !legalError && legalDocuments && !legalReady ? (
+                    <p className="text-eg-warning-text">
+                      {t("errors.legalNotPublished")} ({legalStatusText})
+                    </p>
+                  ) : null}
+                  {!legalLoading && !legalError && legalReady && legalVersionText ? (
+                    <p>{t("status.legalConfirmed", legalVersionText)}</p>
+                  ) : null}
+                </div>
+              </fieldset>
+            ) : null}
 
             {serverError ? (
               <div role="alert" className="rounded-xl border border-eg-danger/30 bg-eg-danger-soft px-4 py-3 text-sm text-eg-danger-text">

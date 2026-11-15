@@ -72,8 +72,10 @@ function CheckRow({
   checked: boolean;
   onChange: (checked: boolean) => void;
 }) {
+  // Opção sem comunidade fica atenuada (texto secundário), mas segue visível e marcável.
+  const muted = count === 0 && !checked;
   return (
-    <label className={CONTROL_ROW}>
+    <label className={cn(CONTROL_ROW, muted && "text-eg-muted")}>
       <input
         type="checkbox"
         checked={checked}

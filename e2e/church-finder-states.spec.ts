@@ -382,12 +382,10 @@ test.describe("estados do diretório público", () => {
     await page.locator('form[role="search"] button[type="submit"]:visible').click();
     await expect(page.getByRole("heading", { name: "3 comunidades" })).toBeVisible();
 
-    // Pílulas: códigos traduzidos primeiro, até 3; data de atualização da comunidade.
-    await expect(page.locator("#finder-result-a1 ul[aria-label='Para a visita'] li")).toHaveText([
-      "Entrada acessível",
-      "Libras",
-      "Estacionamento",
-    ]);
+    // Pílulas: códigos primeiro, até 3, com rótulo curto e ícone; data de atualização da comunidade.
+    const pills = page.locator("#finder-result-a1 ul[aria-label='Para a visita'] li");
+    await expect(pills).toHaveText(["Acessível", "Libras", "Estacionamento"]);
+    await expect(pills.first().locator("svg[aria-hidden='true']")).toHaveCount(1);
     await expect(page.locator("#finder-result-a1")).toContainText(
       "Atualizada pela comunidade em 03/11",
     );
@@ -579,8 +577,15 @@ test.describe("estados do diretório público", () => {
 
     await page.goto("/comunidades?tradicao=BATISTA&tradicao=CATOLICA");
 
-    await expect(page.getByRole("checkbox", { name: /Batista/ })).toBeChecked();
+    // Batista entra no grupo "Evangélica e protestante"; as principais aparecem mesmo com 0.
+    await expect(page.getByRole("checkbox", { name: /Evangélica e protestante/ })).toBeChecked();
     await expect(page.getByRole("checkbox", { name: /Católica/ })).toBeChecked();
+    for (const name of [/Matriz africana/, /Budista/]) {
+      const option = page.getByRole("checkbox", { name });
+      await expect(option).toBeVisible();
+      await expect(option).toBeEnabled();
+      await expect(option).not.toBeChecked();
+    }
 
     // Depois de uma busca, o filtro de tradição continua valendo sobre o resultado.
     await page.getByRole("textbox", { name: "Buscar comunidades" }).fill("todas");

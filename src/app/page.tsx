@@ -1,14 +1,5 @@
 import Link from "next/link";
-import {
-  Accessibility,
-  ArrowRight,
-  Baby,
-  CircleParking,
-  Hand,
-  LocateFixed,
-  MapPin,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, CalendarDays, LocateFixed, MapPin } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { HomeArt } from "@/components/site/home-art";
@@ -18,8 +9,11 @@ import { buildTraditionShortcuts, traditionHref } from "@/components/site/home-s
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import {
+  FEATURE_ICONS,
   VISIT_FEATURE_CODES,
+  countDayFilter,
   countFeature,
+  daysForFilters,
   featureHref,
 } from "@/lib/church-features";
 import { getPublicChurchesPage } from "@/lib/public-api";
@@ -59,40 +53,56 @@ async function loadHomeChurches(): Promise<HomeChurches> {
   }
 }
 
-const FEATURE_ICONS: Record<(typeof VISIT_FEATURE_CODES)[number], LucideIcon> = {
-  ACCESSIBLE_ENTRANCE: Accessibility,
-  KIDS_AREA: Baby,
-  LIBRAS: Hand,
-  PARKING: CircleParking,
-};
+type HomeFeatureCount = {
+  id: string;
+  count: number;
+} & ({ kind: "feature"; code: (typeof VISIT_FEATURE_CODES)[number] } | { kind: "weekdays" });
 
 /**
- * Quantas comunidades marcaram cada instalação de "Para a visita".
- * Se a Home carregou todas (`total` <= carregadas), conta localmente, sem custo. Senão, uma
- * requisição `limit=1` por código lê o `meta.total` da API (cacheada como o resto da Home).
- * Código cuja contagem falhar fica de fora (sem número estimado).
+ * Quantas comunidades marcaram cada instalação de "Para a visita" e quantas costumam ter
+ * encontro durante a semana. Se a Home carregou todas (`total` <= carregadas), conta
+ * localmente, sem custo. Senão, uma requisição `limit=1` por opção lê o `meta.total` da API
+ * (cacheada como o resto da Home). Opção cuja contagem falhar fica de fora (sem número estimado).
  */
-async function loadFeatureCounts(
-  home: HomeChurches,
-): Promise<Array<{ code: (typeof VISIT_FEATURE_CODES)[number]; count: number }>> {
+async function loadFeatureCounts(home: HomeChurches): Promise<HomeFeatureCount[]> {
   const complete = home.total !== null && home.churches.length >= home.total;
   if (complete) {
-    return VISIT_FEATURE_CODES.map((code) => ({ code, count: countFeature(home.churches, code) }));
+    return [
+      ...VISIT_FEATURE_CODES.map((code) => ({
+        id: code,
+        kind: "feature" as const,
+        code,
+        count: countFeature(home.churches, code),
+      })),
+      {
+        id: "WEEKDAYS",
+        kind: "weekdays" as const,
+        count: countDayFilter(home.churches, "WEEKDAYS"),
+      },
+    ];
   }
   if (home.total === null && home.churches.length === 0) return [];
-  const results = await Promise.all(
-    VISIT_FEATURE_CODES.map(async (code) => {
-      try {
-        const page = await getPublicChurchesPage(
-          { lat: GOIANIA_CENTER.lat, lng: GOIANIA_CENTER.lng, features: [code], limit: 1 },
-          { next: { revalidate: PUBLIC_CACHE_TTL_SECONDS.landingFeaturedChurches } },
-        );
-        return page.total === null ? null : { code, count: page.total };
-      } catch {
-        return null;
-      }
+  const count = async (filters: { features?: string[]; days?: string[] }) => {
+    try {
+      const page = await getPublicChurchesPage(
+        { lat: GOIANIA_CENTER.lat, lng: GOIANIA_CENTER.lng, ...filters, limit: 1 },
+        { next: { revalidate: PUBLIC_CACHE_TTL_SECONDS.landingFeaturedChurches } },
+      );
+      return page.total;
+    } catch {
+      return null;
+    }
+  };
+  const results = await Promise.all([
+    ...VISIT_FEATURE_CODES.map(async (code) => {
+      const total = await count({ features: [code] });
+      return total === null ? null : { id: code, kind: "feature" as const, code, count: total };
     }),
-  );
+    (async () => {
+      const total = await count({ days: daysForFilters(["WEEKDAYS"]) });
+      return total === null ? null : { id: "WEEKDAYS", kind: "weekdays" as const, count: total };
+    })(),
+  ]);
   return results.filter((item): item is NonNullable<typeof item> => item !== null);
 }
 
@@ -119,17 +129,26 @@ export default async function HomePage() {
     churches.slice(0, NEARBY_COUNT).map((church) => ({ ...church, distanceKm: null })),
   );
 
-  // Contagem real por código; opção sem comunidade (ou sem contagem) não aparece e, sem
-  // nenhuma opção, a seção some.
-  const featureOptions: HomeFeatureOption[] = (await loadFeatureCounts(home)).map(
-    ({ code, count }) => ({
-      id: code,
-      label: tv(`visit.${code}`),
-      description: tv(`hints.${code}`),
-      count,
-      href: featureHref([code]),
-      icon: FEATURE_ICONS[code],
-    }),
+  // Contagem real por opção (instalação ou dia); opção sem comunidade (ou sem contagem) não
+  // aparece e, sem nenhuma opção, a seção some.
+  const featureOptions: HomeFeatureOption[] = (await loadFeatureCounts(home)).map((item) =>
+    item.kind === "feature"
+      ? {
+          id: item.id,
+          label: tv(`short.${item.code}`),
+          description: tv(`hints.${item.code}`),
+          count: item.count,
+          href: featureHref([item.code]),
+          icon: FEATURE_ICONS[item.code],
+        }
+      : {
+          id: item.id,
+          label: t("features.weekdays.label"),
+          description: t("features.weekdays.description"),
+          count: item.count,
+          href: "/comunidades?dia=WEEKDAYS",
+          icon: CalendarDays,
+        },
   );
 
   const steps = [

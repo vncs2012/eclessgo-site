@@ -4,9 +4,14 @@ import { dirname, resolve } from "node:path";
 import { describe, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { formatTradition } from "../src/lib/public-church-utils.ts";
+import {
+  buildTraditionOptions,
+  filterByTradition,
+  formatTradition,
+  traditionOptionKey,
+} from "../src/lib/public-church-utils.ts";
 import { buildTraditionShortcuts, traditionHref } from "../src/components/site/home-shortcuts.ts";
-import { VISIT_FEATURE_CODES, featureHref } from "../src/lib/church-features.ts";
+import { VISIT_FEATURE_CODES, featureHref, readFeatureEntryParams } from "../src/lib/church-features.ts";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -26,55 +31,82 @@ describe("atalhos por tradição da Home", () => {
     assert.deepEqual(buildTraditionShortcuts([], labelOf), { items: [], others: null });
   });
 
-  test("conta os dados reais, ordena por contagem e nunca lista tradição sem comunidade", () => {
+  test("conta os dados reais, ordena por contagem e nunca lista opção com 0 (mesmo as principais)", () => {
     const { items, others } = buildTraditionShortcuts(
-      [...make("EVANGELICA", 3), ...make("CATOLICA", 2), ...make("ESPIRITA", 1)],
+      [...make("CATOLICA", 3), ...make("ESPIRITA", 2), ...make("EVANGELICA", 1)],
       labelOf,
     );
     assert.deepEqual(
       items.map(({ label, count }) => [label, count]),
       [
-        ["Evangélica", 3],
-        ["Católica", 2],
-        ["Espírita", 1],
+        ["Católica", 3],
+        ["Espírita", 2],
+        ["Evangélica e protestante", 1],
       ],
     );
     assert.equal(others, null);
   });
 
-  test("valores do banco com o mesmo rótulo somam num atalho e vão todos no filtro", () => {
+  test("agrupa como a Busca: códigos afins somam num atalho e o valor do link é a opção do filtro", () => {
     const { items } = buildTraditionShortcuts(
-      [...make("CATOLICA", 2), ...make("IGREJA_CATOLICA", 1)],
+      [...make("BATISTA", 2), ...make("EVANGELICA", 3), ...make("Evangélica Independente", 1), ...make("IGREJA_CATOLICA", 1), ...make("CATOLICA", 1)],
       labelOf,
     );
-    assert.equal(items.length, 1);
-    assert.equal(items[0].count, 3);
-    assert.deepEqual(items[0].values, ["CATOLICA", "IGREJA_CATOLICA"]);
+    assert.deepEqual(items, [
+      { label: "Evangélica e protestante", count: 6, values: ["EVANGELICA_E_PROTESTANTE"] },
+      { label: "Católica", count: 2, values: ["CATOLICA"] },
+    ]);
   });
 
-  test("o excedente vira Outras, somando contagem e valores", () => {
+  test("o número do atalho é o da Busca e o link marca a mesma opção nela", () => {
+    const churches = [
+      ...make("BATISTA", 2),
+      ...make("PRESBITERIANA", 1),
+      ...make("CATOLICA", 2),
+      ...make("UMBANDA", 1),
+      ...make("ORTODOXA", 2),
+    ];
+    const options = buildTraditionOptions(churches);
+    const { items } = buildTraditionShortcuts(churches, labelOf);
+    for (const item of items) {
+      const [value] = item.values;
+      assert.equal(options.find((option) => option.value === value)?.count, item.count);
+      // A Busca lê ?tradicao= com traditionOptionKey: o link cai na mesma opção.
+      const entry = new URLSearchParams(traditionHref(item.values).split("?")[1]).getAll("tradicao");
+      assert.deepEqual(entry.map(traditionOptionKey), item.values);
+      assert.equal(filterByTradition(churches, entry).length, item.count);
+    }
+    // Denominação sem grupo continua opção própria, com o rótulo dela.
+    assert.deepEqual(items.find((item) => item.label === "Ortodoxa"), {
+      label: "Ortodoxa",
+      count: 2,
+      values: ["ORTODOXA"],
+    });
+  });
+
+  test("o excedente vira Outras, somando contagem e valores das opções", () => {
     const churches = [
       ...make("EVANGELICA", 6),
       ...make("CATOLICA", 5),
       ...make("ESPIRITA", 4),
-      ...make("BATISTA", 3),
-      ...make("BUDISTA", 2),
+      ...make("BUDISTA", 3),
       ...make("UMBANDA", 2),
-      ...make("JUDAICA", 1),
+      ...make("JUDAICA", 2),
+      ...make("ISLAMICA", 1),
     ];
     const { items, others } = buildTraditionShortcuts(churches, labelOf, 5);
     assert.equal(items.length, 5);
-    assert.deepEqual(others, { count: 3, values: ["UMBANDA", "JUDAICA"] });
+    assert.deepEqual(others, { count: 3, values: ["MATRIZ_AFRICANA", "ISLAMICA"] });
   });
 
-  test("sobrando uma só tradição, ela entra como atalho próprio (sem Outras de um item)", () => {
+  test("sobrando uma só opção, ela entra como atalho próprio (sem Outras de um item)", () => {
     const churches = [
       ...make("EVANGELICA", 6),
       ...make("CATOLICA", 5),
       ...make("ESPIRITA", 4),
-      ...make("BATISTA", 3),
-      ...make("BUDISTA", 2),
-      ...make("UMBANDA", 1),
+      ...make("BUDISTA", 3),
+      ...make("UMBANDA", 2),
+      ...make("JUDAICA", 1),
     ];
     const { items, others } = buildTraditionShortcuts(churches, labelOf, 5);
     assert.equal(items.length, 6);
@@ -109,15 +141,23 @@ describe("Home: 'Encontre pelo que importa para você'", () => {
 
   test("opções reais de 'Para a visita', com link /comunidades?instalacao=CODE", () => {
     assert.match(PAGE, /VISIT_FEATURE_CODES/);
-    assert.match(PAGE, /href:\s*featureHref\(\[code\]\)/);
+    assert.match(PAGE, /href:\s*featureHref\(\[item\.code\]\)/);
     assert.equal(featureHref(["PARKING"]), "/comunidades?instalacao=PARKING");
     assert.deepEqual([...VISIT_FEATURE_CODES], ["ACCESSIBLE_ENTRANCE", "KIDS_AREA", "LIBRAS", "PARKING"]);
   });
 
   test("contagem real: local quando tudo foi carregado, senão meta.total por código; sem estimativa", () => {
     assert.match(PAGE, /home\.churches\.length\s*>=\s*home\.total/);
-    assert.match(PAGE, /features:\s*\[code\],\s*limit:\s*1/);
-    assert.match(PAGE, /page\.total === null \? null/);
+    assert.match(PAGE, /features:\s*\[code\]/);
+    assert.match(PAGE, /days:\s*daysForFilters\(\["WEEKDAYS"\]\)/);
+    assert.match(PAGE, /limit:\s*1/);
+    assert.match(PAGE, /total === null \? null/);
+  });
+
+  test("'Durante a semana': contagem real (dias de segunda a sexta) e link /comunidades?dia=WEEKDAYS", () => {
+    assert.match(PAGE, /countDayFilter\(home\.churches, "WEEKDAYS"\)/);
+    assert.match(PAGE, /href:\s*"\/comunidades\?dia=WEEKDAYS"/);
+    assert.deepEqual(readFeatureEntryParams(new URLSearchParams("dia=WEEKDAYS")).days, ["WEEKDAYS"]);
   });
 
   test("sem opção com contagem > 0 a seção não aparece", () => {

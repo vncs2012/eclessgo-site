@@ -1,7 +1,20 @@
+import {
+  Accessibility,
+  ArrowUpDown,
+  Baby,
+  CircleParking,
+  Hand,
+  Smile,
+  Toilet,
+  type LucideIcon,
+} from "lucide-react";
+
 /**
  * Vocabulário de instalações/acessibilidade e filtros de dia da Busca (Modelo 8).
- * Regras puras (sem `next`/`react`): usadas por cards, filtros, Home e página da comunidade.
- * Os rótulos ficam em `features.codes.*` / `features.groups.*` de messages/*.json.
+ * Regras puras (sem `next`/`react`): usadas por cards, filtros, Home, Cadastro e página da comunidade.
+ * Ícone por código mora aqui; os rótulos ficam em messages/*.json, em `features`:
+ * `codes` (completos: página da comunidade), `short` (curtos: pílulas, filtros, Home) e
+ * `describe` (descritivos: chips do Cadastro), além de `groups` e `hints`.
  */
 
 /** Mesmos códigos e grupos de `ChurchFeatureCode` / `GET /churches/features/vocabulary`. */
@@ -24,6 +37,17 @@ export const FEATURE_CODES: readonly FeatureCode[] = FEATURE_VOCABULARY.map((ite
 const GROUP_BY_CODE = new Map<string, FeatureGroupKey>(
   FEATURE_VOCABULARY.map((item) => [item.code, item.group]),
 );
+
+/** Ícone (lucide, decorativo: renderizar com `aria-hidden`) de cada código do vocabulário. */
+export const FEATURE_ICONS: Record<FeatureCode, LucideIcon> = {
+  ACCESSIBLE_ENTRANCE: Accessibility,
+  ACCESSIBLE_RESTROOM: Toilet,
+  ELEVATOR: ArrowUpDown,
+  LIBRAS: Hand,
+  KIDS_AREA: Smile,
+  NURSERY: Baby,
+  PARKING: CircleParking,
+};
 
 export function isFeatureCode(value: string): value is FeatureCode {
   return GROUP_BY_CODE.has(value);
@@ -55,16 +79,27 @@ export function orderFeatures(features: readonly string[] | undefined): string[]
   return [...codes, ...free];
 }
 
-/** Pílulas do card: até `limit` itens, códigos primeiro, já com rótulo. */
+export type FeaturePill = {
+  /** Código do vocabulário (tem ícone); null para texto livre. */
+  code: FeatureCode | null;
+  label: string;
+};
+
+/**
+ * Pílulas do card: até `limit` itens, códigos primeiro, já com rótulo (curto, de `features.short`).
+ * Texto livre aparece como veio, sem ícone.
+ */
 export function featurePills(
   features: readonly string[] | undefined,
   labels: Readonly<Record<string, string>>,
   limit = 3,
-): string[] {
-  const out: string[] = [];
+): FeaturePill[] {
+  const out: FeaturePill[] = [];
   for (const value of orderFeatures(features)) {
     const label = featureLabel(value, labels);
-    if (!out.includes(label)) out.push(label);
+    if (!out.some((pill) => pill.label === label)) {
+      out.push({ code: isFeatureCode(value) ? value : null, label });
+    }
     if (out.length >= limit) break;
   }
   return out;

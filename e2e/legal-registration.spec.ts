@@ -1,4 +1,29 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+/**
+ * O aceite legal fica no último passo (Contato), como no protótipo do Modelo 8; o envio
+ * continua exigindo o aceite e os documentos publicados. Os campos obrigatórios dos passos
+ * anteriores são preenchidos para liberar o avanço.
+ */
+async function goToLastStep(page: Page) {
+  await page.getByLabel("Nome do responsável", { exact: true }).fill("Responsável E2E");
+  await page.getByLabel("E-mail do responsável", { exact: true }).fill("e2e@example.com");
+  await page.getByLabel("Senha de acesso", { exact: true }).fill("Secret123!");
+  await page.getByRole("button", { name: "Continuar" }).click();
+
+  await page.getByLabel("Nome da comunidade", { exact: true }).fill("Comunidade E2E");
+  await page.getByLabel("Tradição", { exact: true }).selectOption("BATISTA");
+  await page.getByRole("button", { name: "Continuar" }).click();
+
+  await page.getByLabel("Rua", { exact: true }).fill("Rua E2E");
+  await page.getByLabel("Cidade", { exact: true }).fill("Goiânia");
+  await page.getByLabel("Estado", { exact: true }).fill("GO");
+  await page.getByLabel("Latitude", { exact: true }).fill("-16.6869");
+  await page.getByLabel("Longitude", { exact: true }).fill("-49.2648");
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.getByRole("button", { name: "Cadastrar minha comunidade" })).toBeVisible();
+}
 
 test.describe("aceite legal no cadastro web", () => {
   const publishedDocuments = {
@@ -22,7 +47,7 @@ test.describe("aceite legal no cadastro web", () => {
     },
   };
 
-  test("publica documentos e mantém o checkbox desmarcado", async ({ page }) => {
+  test("publica documentos e mantém o checkbox desmarcado no último passo", async ({ page }) => {
     await page.route("**/api/public/legal/documents", async (route) => {
       await route.fulfill({
         status: 200,
@@ -31,6 +56,10 @@ test.describe("aceite legal no cadastro web", () => {
       });
     });
     await page.goto("/cadastro-igreja");
+
+    // Passo 1: nenhum aceite ainda (o documento já foi consultado em segundo plano).
+    await expect(page.getByRole("checkbox")).toHaveCount(0);
+    await goToLastStep(page);
 
     const checkbox = page.getByRole("checkbox");
     await expect(checkbox).toBeVisible();
@@ -72,22 +101,7 @@ test.describe("aceite legal no cadastro web", () => {
     });
 
     await page.goto("/cadastro-igreja");
-    await page.getByLabel("Nome do responsável", { exact: true }).fill("Responsável E2E");
-    await page.getByLabel("E-mail do responsável", { exact: true }).fill("e2e@example.com");
-    await page.getByLabel("Senha de acesso", { exact: true }).fill("Secret123!");
-    await page.getByRole("button", { name: "Continuar" }).click();
-
-    await page.getByLabel("Nome da comunidade", { exact: true }).fill("Comunidade E2E");
-    await page.getByLabel("Tradição", { exact: true }).selectOption("BATISTA");
-    await page.getByRole("button", { name: "Continuar" }).click();
-
-    await page.getByLabel("Rua", { exact: true }).fill("Rua E2E");
-    await page.getByLabel("Cidade", { exact: true }).fill("Goiânia");
-    await page.getByLabel("Estado", { exact: true }).fill("GO");
-    await page.getByLabel("Latitude", { exact: true }).fill("-16.6869");
-    await page.getByLabel("Longitude", { exact: true }).fill("-49.2648");
-    await page.getByRole("button", { name: "Continuar" }).click();
-    await page.getByRole("button", { name: "Continuar" }).click();
+    await goToLastStep(page);
 
     await page.getByRole("checkbox").check();
     await page.getByRole("button", { name: "Cadastrar minha comunidade" }).click();
@@ -116,7 +130,9 @@ test.describe("aceite legal no cadastro web", () => {
     });
 
     await page.goto("/cadastro-igreja");
+    await goToLastStep(page);
     await expect(page.getByRole("checkbox")).toBeDisabled();
+    await expect(page.getByRole("button", { name: "Cadastrar minha comunidade" })).toBeDisabled();
     await expect(page.getByText(/O cadastro fica indisponível até que Termos e Privacidade estejam publicados/)).toBeVisible();
   });
 
@@ -140,6 +156,7 @@ test.describe("aceite legal no cadastro web", () => {
     });
 
     await page.goto("/cadastro-igreja");
+    await goToLastStep(page);
     await expect(page.getByText("Legal indisponível")).toBeVisible();
     await page.getByRole("button", { name: "Tentar novamente" }).click();
     await expect(page.getByRole("checkbox")).toBeEnabled();
@@ -185,20 +202,7 @@ test.describe("aceite legal no cadastro web", () => {
     });
 
     await page.goto("/cadastro-igreja");
-    await page.getByLabel("Nome do responsável", { exact: true }).fill("Responsável E2E");
-    await page.getByLabel("E-mail do responsável", { exact: true }).fill("e2e@example.com");
-    await page.getByLabel("Senha de acesso", { exact: true }).fill("Secret123!");
-    await page.getByRole("button", { name: "Continuar" }).click();
-    await page.getByLabel("Nome da comunidade", { exact: true }).fill("Comunidade E2E");
-    await page.getByLabel("Tradição", { exact: true }).selectOption("BATISTA");
-    await page.getByRole("button", { name: "Continuar" }).click();
-    await page.getByLabel("Rua", { exact: true }).fill("Rua E2E");
-    await page.getByLabel("Cidade", { exact: true }).fill("Goiânia");
-    await page.getByLabel("Estado", { exact: true }).fill("GO");
-    await page.getByLabel("Latitude", { exact: true }).fill("-16.6869");
-    await page.getByLabel("Longitude", { exact: true }).fill("-49.2648");
-    await page.getByRole("button", { name: "Continuar" }).click();
-    await page.getByRole("button", { name: "Continuar" }).click();
+    await goToLastStep(page);
     await page.getByRole("checkbox").check();
     await page.getByRole("button", { name: "Cadastrar minha comunidade" }).click();
 

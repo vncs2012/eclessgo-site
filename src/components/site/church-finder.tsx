@@ -30,11 +30,12 @@ import {
 } from "@/lib/church-features";
 import { trackPublicEvent } from "@/lib/public-analytics";
 import {
-  countByTradition,
+  buildTraditionOptions,
   filterByDistance,
   filterByTradition,
   numberResults,
   sortChurches,
+  traditionOptionKey,
   type FinderDistance,
   type FinderSort,
 } from "@/lib/public-church-utils";
@@ -74,8 +75,15 @@ function readEntryParams(search: string) {
   const params = new URLSearchParams(search);
   const { days, features } = readFeatureEntryParams(params);
   const q = (params.get("q") ?? "").trim().slice(0, URL_MAX_QUERY_LENGTH);
+  // A URL traz denominações (da Home); a opção do filtro é o grupo delas (ex.: BATISTA -> evangélica).
   const traditions = Array.from(
-    new Set(params.getAll("tradicao").map((value) => value.trim().slice(0, 60)).filter(Boolean)),
+    new Set(
+      params
+        .getAll("tradicao")
+        .map((value) => value.trim().slice(0, 60))
+        .filter(Boolean)
+        .map(traditionOptionKey),
+    ),
   ).slice(0, URL_MAX_TRADITIONS);
   return { q, traditions, days, features, locate: !q && params.get("localizar") === "1" };
 }
@@ -170,7 +178,7 @@ export function ChurchFinder() {
     [churches, distance],
   );
   const traditionOptions = useMemo(
-    () => countByTradition(distanceFiltered, traditions),
+    () => buildTraditionOptions(distanceFiltered, traditions),
     [distanceFiltered, traditions],
   );
   const traditionFiltered = useMemo(
@@ -203,8 +211,8 @@ export function ChurchFinder() {
     ];
     return codes.map((code) => ({
       value: code,
-      label: tv.has(`visit.${code}`)
-        ? tv(`visit.${code}` as "visit.PARKING")
+      label: tv.has(`short.${code}`)
+        ? tv(`short.${code}` as "short.PARKING")
         : tv(`codes.${code}` as "codes.PARKING"),
       count: countFeature(traditionFiltered, code),
     }));

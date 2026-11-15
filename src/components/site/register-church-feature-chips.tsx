@@ -1,10 +1,10 @@
 "use client";
 
 import { useId } from "react";
-import { Check, Plus } from "lucide-react";
+import { Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { FEATURE_CODES } from "@/lib/church-features";
+import { FEATURE_CODES, FEATURE_ICONS } from "@/lib/church-features";
 
 type FeatureChipsProps = {
   value: readonly string[];
@@ -13,11 +13,12 @@ type FeatureChipsProps = {
 
 /**
  * "Para a visita": cada instalação é um checkbox nativo (transparente, cobrindo o chip) com aparência de
- * chip. O foco do teclado aparece no chip (`peer-focus-visible`), o estado marcado também no ícone.
+ * chip: ícone do código + rótulo descritivo (`features.describe`). O foco do teclado aparece no chip
+ * (`peer-focus-visible`); o estado marcado muda as cores e acrescenta um "✓" depois do rótulo.
  */
 export function FeatureChips({ value, onChange }: FeatureChipsProps) {
   const t = useTranslations("register");
-  const tCodes = useTranslations("features.codes");
+  const tDescribe = useTranslations("features.describe");
   const headingId = useId();
   const hintId = useId();
 
@@ -44,6 +45,7 @@ export function FeatureChips({ value, onChange }: FeatureChipsProps) {
       <ul className="flex flex-wrap gap-2">
         {FEATURE_CODES.map((code) => {
           const checked = value.includes(code);
+          const Icon = FEATURE_ICONS[code];
           return (
             <li key={code}>
               <label className="relative inline-flex cursor-pointer">
@@ -56,12 +58,9 @@ export function FeatureChips({ value, onChange }: FeatureChipsProps) {
                 <span
                   className="inline-flex h-11 items-center gap-2 rounded-full border border-eg-border-strong bg-eg-surface px-4 text-eg-strong transition-colors hover:bg-eg-hover peer-checked:border-eg-primary peer-checked:bg-eg-primary-soft peer-checked:text-eg-primary-text peer-focus-visible:outline-2 peer-focus-visible:outline-solid peer-focus-visible:outline-offset-2 peer-focus-visible:outline-eg-focus md:h-10"
                 >
-                  {checked ? (
-                    <Check className="h-4 w-4" aria-hidden="true" />
-                  ) : (
-                    <Plus className="h-4 w-4" aria-hidden="true" />
-                  )}
-                  <span className="text-sm font-semibold">{tCodes(code)}</span>
+                  <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span className="text-sm font-semibold">{tDescribe(code)}</span>
+                  {checked ? <Check className="h-4 w-4 shrink-0" aria-hidden="true" /> : null}
                 </span>
               </label>
             </li>

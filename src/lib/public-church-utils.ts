@@ -151,17 +151,87 @@ export function filterByDistance<T extends Pick<PublicChurchListItem, "distanceK
   return churches.filter((church) => church.distanceKm !== null && church.distanceKm <= limit);
 }
 
-/** Contagem por tradição sobre os resultados carregados (a API não devolve facetas). */
-export function countByTradition(
+/**
+ * Tradições principais do filtro da Busca, sempre listadas (mesmo com 0). Cada uma agrupa
+ * códigos afins de `denomination`; `key` é o valor da opção e também o código do rótulo em
+ * `finder.traditions`. Denominação fora dos grupos continua como opção própria.
+ */
+export const TRADITION_GROUPS: ReadonlyArray<{ key: string; codes: readonly string[] }> = [
+  {
+    key: "EVANGELICA_E_PROTESTANTE",
+    codes: [
+      "EVANGELICA",
+      "EVANGELICA_INDEPENDENTE",
+      "EVANGELICA_E_PROTESTANTE",
+      "PROTESTANTE",
+      "ASSEMBLEIA",
+      "ASSEMBLEIA_DE_DEUS",
+      "BATISTA",
+      "PRESBITERIANA",
+      "METODISTA",
+      "LUTERANA",
+      "ADVENTISTA",
+      "PENTECOSTAL",
+      "QUADRANGULAR",
+      "CONGREGACIONAL",
+      "CONGREGACAO_CRISTA",
+    ],
+  },
+  { key: "CATOLICA", codes: ["CATOLICA", "CATOLICA_APOSTOLICA_ROMANA", "IGREJA_CATOLICA"] },
+  { key: "ESPIRITA", codes: ["ESPIRITA"] },
+  { key: "MATRIZ_AFRICANA", codes: ["MATRIZ_AFRICANA", "UMBANDA", "CANDOMBLE"] },
+  { key: "BUDISTA", codes: ["BUDISTA"] },
+];
+
+const TRADITION_GROUP_BY_CODE = new Map<string, string>(
+  TRADITION_GROUPS.flatMap((group) => group.codes.map((code) => [code, group.key] as const)),
+);
+
+/**
+ * Opção do filtro a que uma denominação pertence. "Batista", "BATISTA" e "Batista Renovada"
+ * (código com linha: começa pelo código de um grupo) caem no grupo; o que não tem grupo
+ * é a própria denominação.
+ */
+export function traditionOptionKey(denomination: string): string {
+  const code = traditionCode(denomination);
+  const direct = TRADITION_GROUP_BY_CODE.get(code);
+  if (direct) return direct;
+  let best: string | undefined;
+  let bestLength = 0;
+  for (const [known, key] of TRADITION_GROUP_BY_CODE) {
+    if (code.startsWith(`${known}_`) && known.length > bestLength) {
+      best = key;
+      bestLength = known.length;
+    }
+  }
+  return best ?? denomination;
+}
+
+/**
+ * Opções do filtro de tradição sobre os resultados carregados (a API não devolve facetas):
+ * as principais primeiro, sempre, mesmo com contagem 0; depois as demais com comunidade (ou
+ * já marcadas), da maior para a menor contagem.
+ */
+export function buildTraditionOptions(
   churches: readonly Pick<PublicChurchListItem, "denomination">[],
   selected: readonly string[] = [],
-): Array<{ value: string; count: number }> {
+): Array<{ value: string; count: number; principal: boolean }> {
   const counts = new Map<string, number>();
   for (const value of selected) counts.set(value, 0);
-  for (const church of churches) counts.set(church.denomination, (counts.get(church.denomination) ?? 0) + 1);
-  return Array.from(counts, ([value, count]) => ({ value, count })).sort(
-    (a, b) => b.count - a.count || a.value.localeCompare(b.value, "pt-BR"),
-  );
+  for (const church of churches) {
+    const key = traditionOptionKey(church.denomination);
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  const principal = TRADITION_GROUPS.map((group) => ({
+    value: group.key,
+    count: counts.get(group.key) ?? 0,
+    principal: true,
+  }));
+  const principalKeys = new Set(TRADITION_GROUPS.map((group) => group.key));
+  const others = Array.from(counts, ([value, count]) => ({ value, count, principal: false }))
+    .filter((option) => !principalKeys.has(option.value))
+    .sort((a, b) => b.count - a.count || a.value.localeCompare(b.value, "pt-BR"));
+  return [...principal, ...others];
 }
 
 export function filterByTradition<T extends Pick<PublicChurchListItem, "denomination">>(
@@ -169,8 +239,8 @@ export function filterByTradition<T extends Pick<PublicChurchListItem, "denomina
   traditions: readonly string[],
 ): T[] {
   if (traditions.length === 0) return [...churches];
-  const wanted = new Set(traditions);
-  return churches.filter((church) => wanted.has(church.denomination));
+  const wanted = new Set(traditions.map(traditionOptionKey));
+  return churches.filter((church) => wanted.has(traditionOptionKey(church.denomination)));
 }
 
 export function sortChurches<T extends Pick<PublicChurchListItem, "distanceKm" | "name">>(

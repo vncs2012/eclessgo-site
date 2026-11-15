@@ -36,7 +36,7 @@ export async function HomeFeatures({ options }: { options: readonly HomeFeatureO
       <p className="mt-2 text-eg-muted">{t("description")}</p>
       <ul
         aria-label={t("listLabel")}
-        className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4"
+        className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5"
       >
         {available.map((option) => (
           <li key={option.id}>

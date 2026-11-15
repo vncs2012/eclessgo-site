@@ -5,7 +5,8 @@ import { describe, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
-  countByTradition,
+  TRADITION_GROUPS,
+  buildTraditionOptions,
   filterByDistance,
   filterByTradition,
   formatTradition,
@@ -14,10 +15,12 @@ import {
   sortChurches,
   summarizeSchedule,
   traditionCode,
+  traditionOptionKey,
 } from "../src/lib/public-church-utils.ts";
 import {
   DAY_FILTER_KEYS,
   FEATURE_CODES,
+  FEATURE_ICONS,
   VISIT_FEATURE_CODES,
   countDayFilter,
   countFeature,
@@ -64,18 +67,68 @@ describe("filtros locais", () => {
     assert.equal(filterByDistance(ITEMS, "all").length, ITEMS.length);
   });
 
-  test("tradição conta sobre o que foi carregado e mantém a escolhida com zero", () => {
+  test("tradição: principais sempre listadas (com 0), contagem sobre o que foi carregado", () => {
     const near = filterByDistance(ITEMS, "near");
-    assert.deepEqual(countByTradition(near, ["ESPIRITA"]), [
-      { value: "EVANGELICA", count: 2 },
-      { value: "CATOLICA", count: 1 },
-      { value: "ESPIRITA", count: 0 },
+    assert.deepEqual(buildTraditionOptions(near), [
+      { value: "EVANGELICA_E_PROTESTANTE", count: 2, principal: true },
+      { value: "CATOLICA", count: 1, principal: true },
+      { value: "ESPIRITA", count: 0, principal: true },
+      { value: "MATRIZ_AFRICANA", count: 0, principal: true },
+      { value: "BUDISTA", count: 0, principal: true },
     ]);
     assert.deepEqual(
       filterByTradition(ITEMS, ["CATOLICA"]).map((item) => item.id),
       ["s", "x"],
     );
     assert.equal(filterByTradition(ITEMS, []).length, ITEMS.length);
+  });
+
+  test("tradição: códigos afins agrupam; o resto é opção própria, depois das principais", () => {
+    assert.equal(traditionOptionKey("BATISTA"), "EVANGELICA_E_PROTESTANTE");
+    assert.equal(traditionOptionKey("Evangélica Independente"), "EVANGELICA_E_PROTESTANTE");
+    assert.equal(traditionOptionKey("Batista Renovada"), "EVANGELICA_E_PROTESTANTE");
+    assert.equal(traditionOptionKey("UMBANDA"), "MATRIZ_AFRICANA");
+    assert.equal(traditionOptionKey("IGREJA_CATOLICA"), "CATOLICA");
+    assert.equal(traditionOptionKey("ORTODOXA"), "ORTODOXA");
+    assert.equal(traditionOptionKey("Bola de Neve"), "Bola de Neve");
+    const opts = buildTraditionOptions(
+      [
+        { denomination: "BATISTA" },
+        { denomination: "PRESBITERIANA" },
+        { denomination: "UMBANDA" },
+        { denomination: "ORTODOXA" },
+        { denomination: "ORTODOXA" },
+        { denomination: "JUDAICA" },
+      ],
+      ["ISLAMICA"],
+    );
+    assert.deepEqual(
+      opts.map((option) => [option.value, option.count]),
+      [
+        ["EVANGELICA_E_PROTESTANTE", 2],
+        ["CATOLICA", 0],
+        ["ESPIRITA", 0],
+        ["MATRIZ_AFRICANA", 1],
+        ["BUDISTA", 0],
+        ["ORTODOXA", 2],
+        ["JUDAICA", 1],
+        ["ISLAMICA", 0],
+      ],
+    );
+    // Filtrar pelo grupo pega todos os códigos dele; a URL pode trazer a denominação crua.
+    assert.deepEqual(
+      filterByTradition([{ denomination: "BATISTA" }, { denomination: "CATOLICA" }], ["Presbiteriana"]),
+      [{ denomination: "BATISTA" }],
+    );
+  });
+
+  test("os grupos usam códigos que têm rótulo em finder.traditions (pt-BR e en)", () => {
+    for (const locale of ["pt-BR", "en"]) {
+      const labels = traditionLabels(locale);
+      for (const group of TRADITION_GROUPS) {
+        assert.ok(labels[group.key], `${locale}: rótulo de ${group.key}`);
+      }
+    }
   });
 });
 
@@ -180,20 +233,22 @@ describe("item da busca: campos da Etapa 2 são opcionais", () => {
 
 function featureMessages(locale: string) {
   return JSON.parse(readFileSync(resolve(ROOT, `src/messages/${locale}.json`), "utf8")) as {
-    features: Record<"codes" | "groups" | "visit" | "hints", Record<string, string>>;
+    features: Record<"codes" | "short" | "describe" | "groups" | "hints", Record<string, string>>;
     finder: { filters: { dayOptions: Record<string, string> } };
   };
 }
 
 describe("vocabulário de instalações (Modelo 8)", () => {
-  const PT_CODES = featureMessages("pt-BR").features.codes;
+  const PT_SHORT = featureMessages("pt-BR").features.short;
 
   test("pt-BR e en traduzem todos os códigos, grupos, opções de visita e de dia", () => {
     for (const locale of ["pt-BR", "en"]) {
       const m = featureMessages(locale);
       assert.deepEqual(Object.keys(m.features.codes).sort(), [...FEATURE_CODES].sort(), locale);
       assert.deepEqual(Object.keys(m.features.groups).sort(), ["accessibility", "children", "structure"]);
-      assert.deepEqual(Object.keys(m.features.visit).sort(), [...VISIT_FEATURE_CODES].sort());
+      assert.deepEqual(Object.keys(m.features.short).sort(), [...FEATURE_CODES].sort(), locale);
+      assert.deepEqual(Object.keys(m.features.describe).sort(), [...FEATURE_CODES].sort(), locale);
+      assert.deepEqual(Object.keys(FEATURE_ICONS).sort(), [...FEATURE_CODES].sort());
       assert.deepEqual(Object.keys(m.features.hints).sort(), [...VISIT_FEATURE_CODES].sort());
       assert.deepEqual(Object.keys(m.finder.filters.dayOptions).sort(), [...DAY_FILTER_KEYS].sort());
     }
@@ -207,18 +262,28 @@ describe("vocabulário de instalações (Modelo 8)", () => {
     assert.deepEqual(orderFeatures(undefined), []);
   });
 
-  test("pílulas do card: até 3, códigos traduzidos, texto livre como veio", () => {
-    assert.deepEqual(featurePills(["Salão climatizado", "PARKING", "KIDS_AREA"], PT_CODES), [
-      "Espaço infantil",
-      "Estacionamento",
-      "Salão climatizado",
+  test("pílulas do card: até 3, rótulo curto + código (para o ícone), texto livre como veio", () => {
+    const labels = (pills: ReturnType<typeof featurePills>) => pills.map((pill) => pill.label);
+    assert.deepEqual(featurePills(["Salão climatizado", "PARKING", "KIDS_AREA"], PT_SHORT), [
+      { code: "KIDS_AREA", label: "Espaço infantil" },
+      { code: "PARKING", label: "Estacionamento" },
+      { code: null, label: "Salão climatizado" },
     ]);
     assert.deepEqual(
-      featurePills(["CAFÉ NO FIM", "Bebedouro", "LIBRAS", "ELEVATOR", "PARKING"], PT_CODES),
+      labels(featurePills(["CAFÉ NO FIM", "Bebedouro", "LIBRAS", "ELEVATOR", "PARKING"], PT_SHORT)),
       ["Elevador", "Libras", "Estacionamento"],
     );
-    assert.deepEqual(featurePills(["CAFÉ NO FIM"], PT_CODES), ["CAFÉ NO FIM"]);
-    assert.deepEqual(featurePills(undefined, PT_CODES), []);
+    assert.deepEqual(labels(featurePills(["ACCESSIBLE_ENTRANCE", "NURSERY"], PT_SHORT)), ["Acessível", "Berçário"]);
+    assert.deepEqual(featurePills(["CAFÉ NO FIM"], PT_SHORT), [{ code: null, label: "CAFÉ NO FIM" }]);
+    assert.deepEqual(featurePills(undefined, PT_SHORT), []);
+  });
+
+  test("rótulos: curtos nas pílulas, completos na página da comunidade, descritivos no Cadastro", () => {
+    const m = featureMessages("pt-BR").features;
+    assert.equal(m.codes.ACCESSIBLE_ENTRANCE, "Entrada acessível");
+    assert.equal(m.short.ACCESSIBLE_ENTRANCE, "Acessível");
+    assert.equal(m.describe.ACCESSIBLE_ENTRANCE, "Rampa ou acesso sem degraus");
+    assert.equal(m.describe.LIBRAS, "Intérprete de Libras");
   });
 });
 

@@ -244,7 +244,9 @@
     "themeToDark": "Use dark theme",
     "themeToLight": "Use light theme",
     "toggleLanguage": "Language: English. Switch to Portuguese",
-    "languageShort": "EN"
+    "languageShort": "EN",
+    "minimalLabel": "Free registration",
+    "minimalExit": "Exit"
   },
   "footer": {
     "homeLabel": "EclessGO, home",
@@ -519,7 +521,11 @@
       "eyebrow": "For a first visit",
       "title": "Find what matters to you",
       "description": "Information the community itself marks in its listing.",
-      "listLabel": "Facilities and accessibility"
+      "listLabel": "Facilities and accessibility",
+      "weekdays": {
+        "label": "During the week",
+        "description": "Meetings from Monday to Friday"
+      }
     },
     "how": {
       "eyebrow": "How it works",
@@ -686,11 +692,23 @@
       "children": "Children",
       "structure": "Building"
     },
-    "visit": {
+    "short": {
       "ACCESSIBLE_ENTRANCE": "Accessible",
-      "KIDS_AREA": "Kids area",
+      "ACCESSIBLE_RESTROOM": "Accessible restroom",
+      "ELEVATOR": "Elevator",
       "LIBRAS": "Sign language",
+      "KIDS_AREA": "Kids area",
+      "NURSERY": "Nursery",
       "PARKING": "Parking"
+    },
+    "describe": {
+      "ACCESSIBLE_ENTRANCE": "Ramp or step-free access",
+      "ACCESSIBLE_RESTROOM": "Adapted restroom",
+      "ELEVATOR": "Elevator",
+      "LIBRAS": "Sign language (Libras) interpreter",
+      "KIDS_AREA": "Kids area",
+      "NURSERY": "Nursery or changing room",
+      "PARKING": "Parking on site"
     },
     "hints": {
       "ACCESSIBLE_ENTRANCE": "Step-free or ramp entrance",

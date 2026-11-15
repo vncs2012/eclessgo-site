@@ -244,7 +244,9 @@
     "themeToDark": "Usar tema escuro",
     "themeToLight": "Usar tema claro",
     "toggleLanguage": "Idioma: português. Mudar para inglês",
-    "languageShort": "PT"
+    "languageShort": "PT",
+    "minimalLabel": "Cadastro gratuito",
+    "minimalExit": "Sair"
   },
   "footer": {
     "homeLabel": "EclessGO, início",
@@ -519,7 +521,11 @@
       "eyebrow": "Para a primeira visita",
       "title": "Encontre pelo que importa para você",
       "description": "Informações que a própria comunidade marca no cadastro.",
-      "listLabel": "Instalações e acessibilidade"
+      "listLabel": "Instalações e acessibilidade",
+      "weekdays": {
+        "label": "Durante a semana",
+        "description": "Encontros de segunda a sexta"
+      }
     },
     "how": {
       "eyebrow": "Como funciona",
@@ -686,11 +692,23 @@
       "children": "Crianças",
       "structure": "Estrutura"
     },
-    "visit": {
+    "short": {
       "ACCESSIBLE_ENTRANCE": "Acessível",
-      "KIDS_AREA": "Espaço infantil",
+      "ACCESSIBLE_RESTROOM": "Banheiro acessível",
+      "ELEVATOR": "Elevador",
       "LIBRAS": "Libras",
+      "KIDS_AREA": "Espaço infantil",
+      "NURSERY": "Berçário",
       "PARKING": "Estacionamento"
+    },
+    "describe": {
+      "ACCESSIBLE_ENTRANCE": "Rampa ou acesso sem degraus",
+      "ACCESSIBLE_RESTROOM": "Banheiro adaptado",
+      "ELEVATOR": "Elevador",
+      "LIBRAS": "Intérprete de Libras",
+      "KIDS_AREA": "Espaço infantil",
+      "NURSERY": "Berçário ou fraldário",
+      "PARKING": "Estacionamento próprio"
     },
     "hints": {
       "ACCESSIBLE_ENTRANCE": "Entrada sem degraus ou com rampa",
