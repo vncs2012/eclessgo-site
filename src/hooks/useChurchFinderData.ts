@@ -18,6 +18,10 @@ export interface ChurchFinderFiltersState {
   city: string;
   neighborhood: string;
   hasLive: boolean;
+  /** MONDAY..SUNDAY; vão para a API como `day` repetível (OU). */
+  days: string[];
+  /** Códigos do vocabulário; vão para a API como `feature` repetível (E). */
+  features: string[];
 }
 
 export interface ChurchFinderStatusMessages {
@@ -52,6 +56,8 @@ interface FetchChurchesParams {
   city?: string;
   neighborhood?: string;
   hasLive?: boolean;
+  days?: readonly string[];
+  features?: readonly string[];
 }
 
 type FinderRequestOperation = "search" | "clear" | "location";
@@ -106,6 +112,8 @@ async function fetchChurches(
   if (params.city) query.set("city", params.city);
   if (params.neighborhood) query.set("neighborhood", params.neighborhood);
   if (params.hasLive) query.set("hasLive", "true");
+  for (const day of params.days ?? []) query.append("day", day);
+  for (const feature of params.features ?? []) query.append("feature", feature);
 
   const response = await fetchWithClientTrace(`/api/public/churches?${query.toString()}`, { signal });
   if (!response.ok) throw new Error("public-churches-request-failed");
@@ -123,6 +131,8 @@ function toFetchParams(center: Coordinates, filters?: ChurchFinderFiltersState):
     city: filters?.city || undefined,
     neighborhood: filters?.neighborhood || undefined,
     hasLive: filters?.hasLive,
+    days: filters?.days,
+    features: filters?.features,
   };
 }
 
@@ -280,8 +290,9 @@ export function useChurchFinderData({
     }
   }
 
-  async function useMyLocation() {
+  async function useMyLocation(options: Pick<SearchChurchesOptions, "filters"> = {}) {
     const request = startRequest("location");
+    const nextFilters = { ...filters, ...options.filters };
 
     if (!navigator.geolocation) {
       setStatusKey("geoUnavailable");
@@ -303,7 +314,7 @@ export function useChurchFinderData({
 
         try {
           const items = await fetchChurches(
-            toFetchParams(nextCenter, filters),
+            toFetchParams(nextCenter, nextFilters),
             request.controller.signal,
           );
           if (!isCurrentRequest(request)) {

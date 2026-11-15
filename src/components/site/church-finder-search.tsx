@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
  * mouse continua sem anel.
  */
 export const FINDER_FOCUS =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus";
+  "focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-eg-focus";
 
 type ChurchFinderSearchProps = {
   /**

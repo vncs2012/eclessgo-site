@@ -8,6 +8,7 @@ import {
   type ChurchFinderFiltersState,
   type ChurchFinderStatusMessages,
 } from "@/hooks/useChurchFinderData";
+import { daysForFilters, featureLabel, type DayFilterKey } from "@/lib/church-features";
 import { formatTradition } from "@/lib/public-church-utils";
 import { GOIANIA_CENTER } from "@/lib/site-config";
 import type { Coordinates, PublicChurchListItem } from "@/types/public";
@@ -19,6 +20,12 @@ type ChurchFinderContextValue = ChurchFinderData & {
   setSearch: (value: string) => void;
   hasLive: boolean;
   setHasLive: (value: boolean) => void;
+  /** Opções de "Costuma ter encontro" marcadas (SUNDAY, WEEKDAYS, SATURDAY). */
+  dayFilters: DayFilterKey[];
+  setDayFilters: (value: DayFilterKey[]) => void;
+  /** Códigos de "Para a visita" marcados. */
+  features: string[];
+  setFeatures: (value: string[]) => void;
 };
 
 const ChurchFinderContext = createContext<ChurchFinderContextValue | null>(null);
@@ -43,14 +50,19 @@ export function ChurchFinderProvider({
   const t = useTranslations("finder");
   const [search, setSearch] = useState("");
   const [hasLive, setHasLive] = useState(false);
+  const [dayFilters, setDayFilters] = useState<DayFilterKey[]>([]);
+  const [features, setFeatures] = useState<string[]>([]);
   // Cidade, bairro e denominação continuam aceitos pelo hook/BFF; a tela nova filtra
   // tradição localmente (várias de uma vez) e busca cidade/bairro pelo campo de texto.
+  // Dia e instalação vão para a API: toda busca (texto, área, localização) os carrega.
   const filters: ChurchFinderFiltersState = {
     search,
     denomination: "",
     city: "",
     neighborhood: "",
     hasLive,
+    days: daysForFilters(dayFilters),
+    features,
   };
   const messages: ChurchFinderStatusMessages = {
     initialLoadError: t("directory.loadError"),
@@ -76,7 +88,17 @@ export function ChurchFinderProvider({
   });
 
   return (
-    <ChurchFinderContext.Provider value={{ ...data, search, setSearch, hasLive, setHasLive }}>
+    <ChurchFinderContext.Provider value={{
+        ...data,
+        search,
+        setSearch,
+        hasLive,
+        setHasLive,
+        dayFilters,
+        setDayFilters,
+        features,
+        setFeatures,
+      }}>
       {children}
     </ChurchFinderContext.Provider>
   );
@@ -93,4 +115,11 @@ export function useTraditionLabel() {
   const t = useTranslations("finder");
   const labels = t.raw("traditions") as Record<string, string>;
   return (value: string) => formatTradition(value, labels);
+}
+
+/** Rótulo de uma instalação: código traduzido (`features.codes`), texto livre como veio. */
+export function useFeatureLabel() {
+  const t = useTranslations("features");
+  const labels = t.raw("codes") as Record<string, string>;
+  return (value: string) => featureLabel(value, labels);
 }

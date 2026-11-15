@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { API_DAYS, FEATURE_CODES, type FeatureCode } from "@/lib/church-features";
+
 const nullableText = (maxLength: number) =>
   z.string().trim().max(maxLength).nullable().optional();
 
@@ -100,6 +102,11 @@ export const publicDirectoryQuerySchema = z
     city: z.string().trim().max(120).optional(),
     neighborhood: z.string().trim().max(120).optional(),
     hasLive: z.enum(["true", "false"]).optional(),
+    day: z.array(z.enum(API_DAYS)).max(API_DAYS.length).optional(),
+    feature: z
+      .array(z.enum(FEATURE_CODES as unknown as [FeatureCode, ...FeatureCode[]]))
+      .max(FEATURE_CODES.length)
+      .optional(),
     limit: z.coerce.number().int().min(1).max(100).optional(),
     page: z.coerce.number().int().min(1).max(10_000).optional(),
   })

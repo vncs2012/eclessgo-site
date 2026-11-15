@@ -17,7 +17,8 @@ import {
 /** Instalações e acessibilidade (de `features`), em grupos por palavra-chave. Sem dado, não renderiza. */
 export function ChurchProfileAttributes({ features }: { features: string[] }) {
   const t = useTranslations("communityPage.facilities");
-  const groups = groupFeatures(features);
+  const tf = useTranslations("features");
+  const groups = groupFeatures(features, tf.raw("codes") as Record<string, string>);
 
   if (groups.length === 0) return null;
 
@@ -27,7 +28,7 @@ export function ChurchProfileAttributes({ features }: { features: string[] }) {
         {groups.map((group) => (
           <div key={group.key} className="rounded-2xl border border-eg-border bg-eg-surface p-[18px]">
             <h3 className="mb-2.5 text-xs font-bold uppercase tracking-[0.07em] text-eg-muted">
-              {t(group.key)}
+              {tf(`groups.${group.key}`)}
             </h3>
             <ul className="grid gap-2.5">
               {group.items.map((item) => (

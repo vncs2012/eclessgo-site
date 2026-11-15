@@ -198,6 +198,23 @@ describe("instalacoes", () => {
   test("sem itens: nenhum grupo", () => {
     assert.deepEqual(groupFeatures([]), []);
   });
+
+  test("código vai para o grupo do vocabulário, traduzido; palavra-chave só para texto livre", () => {
+    const labels = JSON.parse(readFileSync(resolve(ROOT, "src/messages/pt-BR.json"), "utf8")).features
+      .codes as Record<string, string>;
+    const groups = groupFeatures(
+      ["Bebedouro", "PARKING", "Fraldário", "LIBRAS", "NURSERY", "Rampa lateral", "ELEVATOR", "TOALHAS NO BANHEIRO"],
+      labels,
+    );
+    assert.deepEqual(
+      groups.map((group) => [group.key, group.items]),
+      [
+        ["accessibility", ["Elevador", "Libras", "Rampa lateral"]],
+        ["children", ["Berçário", "Fraldário"]],
+        ["structure", ["Estacionamento", "Bebedouro", "TOALHAS NO BANHEIRO"]],
+      ],
+    );
+  });
 });
 
 describe("secoes e apresentacao", () => {

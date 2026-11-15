@@ -29,4 +29,13 @@ test.describe("limites do BFF público", () => {
     expect(response.headers()["retry-after"]).toBe("60");
     expect(response.headers()["x-request-id"]).toBe("boundary-register-01");
   });
+
+  test("diretório rejeita dia ou instalação fora do vocabulário antes do upstream", async ({
+    request,
+  }) => {
+    for (const query of ["day=FUNDAY", "feature=PISCINA", "day=SUNDAY&feature=parking"]) {
+      const response = await request.get(`/api/public/churches?${query}`);
+      expect(response.status(), query).toBe(400);
+    }
+  });
 });

@@ -3,7 +3,15 @@
  * e a lista de seções que realmente têm dado. Não importa `next` nem `react`.
  */
 
-import { ADDRESS_NOT_INFORMED, formatTradition } from "./public-church-utils.ts";
+import {
+  FEATURE_GROUP_ORDER,
+  featureGroupOf,
+  featureLabel,
+  isFeatureCode,
+  orderFeatures,
+  type FeatureGroupKey,
+} from "./church-features.ts";
+import { ADDRESS_NOT_INFORMED } from "./public-church-utils.ts";
 
 export const WEEK_ORDER = [
   "SUNDAY",
@@ -268,7 +276,7 @@ export function wazeUrl({ location, addressLine }: RouteTarget): string | null {
 
 /* ---------------------------------------------------------------- Instalações */
 
-export type FeatureGroupKey = "accessibility" | "children" | "structure";
+export type { FeatureGroupKey };
 export type FeatureGroup = { key: FeatureGroupKey; items: string[] };
 
 const ACCESSIBILITY_RE = /rampa|acess|libras|cadeir|adaptad|deficien|pcd|elevador|braille|tatil|surd/;
@@ -278,27 +286,40 @@ function plain(value: string): string {
   return value.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 }
 
-/** Agrupa por palavra-chave (a API ainda não tem vocabulário fechado). Grupos vazios somem. */
-export function groupFeatures(features: readonly string[]): FeatureGroup[] {
+/**
+ * Agrupa as instalações. Código do vocabulário vai para o grupo dele, com o rótulo de
+ * `labels` (features.codes); texto livre cai no grupo por palavra-chave e aparece como veio.
+ * Códigos vêm antes do texto livre dentro de cada grupo. Grupos vazios somem.
+ */
+export function groupFeatures(
+  features: readonly string[],
+  labels: Readonly<Record<string, string>> = {},
+): FeatureGroup[] {
   const groups: Record<FeatureGroupKey, string[]> = {
     accessibility: [],
     children: [],
     structure: [],
   };
-  for (const feature of features) {
-    const label = formatTradition(feature);
-    if (!label.trim()) continue;
-    const key = plain(feature);
-    const group: FeatureGroupKey = ACCESSIBILITY_RE.test(key)
-      ? "accessibility"
-      : CHILDREN_RE.test(key)
-        ? "children"
-        : "structure";
+  for (const feature of orderFeatures(features)) {
+    const label = featureLabel(feature, labels);
+    if (!label) continue;
+    let group: FeatureGroupKey;
+    if (isFeatureCode(feature)) {
+      group = featureGroupOf(feature);
+    } else {
+      const key = plain(feature);
+      group = ACCESSIBILITY_RE.test(key)
+        ? "accessibility"
+        : CHILDREN_RE.test(key)
+          ? "children"
+          : "structure";
+    }
     if (!groups[group].includes(label)) groups[group].push(label);
   }
-  return (["accessibility", "children", "structure"] as const)
-    .filter((key) => groups[key].length > 0)
-    .map((key) => ({ key, items: groups[key] }));
+  return FEATURE_GROUP_ORDER.filter((key) => groups[key].length > 0).map((key) => ({
+    key,
+    items: groups[key],
+  }));
 }
 
 /* ---------------------------------------------------------------- Seções */

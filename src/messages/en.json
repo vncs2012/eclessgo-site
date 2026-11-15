@@ -48,7 +48,16 @@
       "new": "New",
       "quick": "Filter shortcuts",
       "chipNear": "Up to 2 km",
-      "chipLive": "Live"
+      "chipLive": "Live",
+      "dayOptions": {
+        "SUNDAY": "Sunday",
+        "WEEKDAYS": "During the week",
+        "SATURDAY": "Saturday"
+      },
+      "optionCount": "{count, plural, one {# community} other {# communities}}",
+      "chipSunday": "Sunday",
+      "chipAccessible": "Accessible",
+      "chipKids": "Kids area"
     },
     "update": "Search",
     "updating": "Searching...",
@@ -603,10 +612,7 @@
       "copyError": "Could not copy. Please select the address manually."
     },
     "facilities": {
-      "title": "Facilities and accessibility",
-      "accessibility": "Accessibility",
-      "children": "Children",
-      "structure": "Building"
+      "title": "Facilities and accessibility"
     },
     "people": {
       "title": "Who is who"
@@ -640,6 +646,34 @@
     },
     "mobileBar": {
       "label": "Quick actions"
+    }
+  },
+  "features": {
+    "codes": {
+      "ACCESSIBLE_ENTRANCE": "Accessible entrance",
+      "ACCESSIBLE_RESTROOM": "Accessible restroom",
+      "ELEVATOR": "Elevator",
+      "LIBRAS": "Sign language (Libras)",
+      "KIDS_AREA": "Kids area",
+      "NURSERY": "Nursery",
+      "PARKING": "Parking"
+    },
+    "groups": {
+      "accessibility": "Accessibility",
+      "children": "Children",
+      "structure": "Building"
+    },
+    "visit": {
+      "ACCESSIBLE_ENTRANCE": "Accessible",
+      "KIDS_AREA": "Kids area",
+      "LIBRAS": "Sign language",
+      "PARKING": "Parking"
+    },
+    "hints": {
+      "ACCESSIBLE_ENTRANCE": "Step-free or ramp entrance",
+      "KIDS_AREA": "A space for children",
+      "LIBRAS": "Interpreter at some meetings",
+      "PARKING": "On site or partner lot"
     }
   }
 }

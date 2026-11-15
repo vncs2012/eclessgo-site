@@ -195,7 +195,9 @@ export default function ChurchMapCanvas({
           const selected = church.id === selectedChurchId;
           return (
             <Marker
-              key={church.id}
+              // react-leaflet não atualiza `title`/`alt` depois de criar o marcador: o número
+              // entra na chave para o pin ser recriado quando a lista é renumerada.
+              key={`${church.id}:${number}`}
               position={[church.location.lat, church.location.lng]}
               icon={iconFor(number, selected)}
               title={t("markerTitle", { number, name: church.name })}

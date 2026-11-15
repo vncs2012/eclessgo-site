@@ -16,7 +16,7 @@ import type {
   RegisterChurchRequest,
 } from "@/types/public";
 
-type QueryValue = string | number | boolean | null | undefined;
+type QueryValue = string | number | boolean | readonly string[] | null | undefined;
 
 const MAX_PUBLIC_CHURCHES_PER_PAGE = 100;
 
@@ -88,6 +88,11 @@ function buildUrl(path: string, query?: Record<string, QueryValue>) {
 
   for (const [key, value] of Object.entries(query)) {
     if (value === undefined || value === null || value === "") continue;
+    // Parâmetro repetível (`day`, `feature`): um par chave=valor por item.
+    if (Array.isArray(value)) {
+      for (const item of value) url.searchParams.append(key, item);
+      continue;
+    }
     url.searchParams.set(key, String(value));
   }
 
@@ -164,6 +169,10 @@ export async function getPublicChurchesPage(
     city?: string;
     neighborhood?: string;
     hasLive?: boolean;
+    /** MONDAY..SUNDAY, repetível; a API devolve quem tem encontro em algum deles (OU). */
+    days?: readonly string[];
+    /** Códigos do vocabulário, repetível; a API exige todos (E). */
+    features?: readonly string[];
     limit?: number;
     page?: number;
   } = {},
@@ -180,6 +189,8 @@ export async function getPublicChurchesPage(
       city: params.city,
       neighborhood: params.neighborhood,
       has_live: params.hasLive,
+      day: params.days,
+      feature: params.features,
       limit,
       page,
     },
@@ -205,6 +216,10 @@ export async function getPublicChurches(
     city?: string;
     neighborhood?: string;
     hasLive?: boolean;
+    /** MONDAY..SUNDAY, repetível; a API devolve quem tem encontro em algum deles (OU). */
+    days?: readonly string[];
+    /** Códigos do vocabulário, repetível; a API exige todos (E). */
+    features?: readonly string[];
     limit?: number;
     page?: number;
   } = {},

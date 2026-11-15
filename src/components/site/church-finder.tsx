@@ -19,6 +19,15 @@ import { ChurchFinderSearch, FINDER_FOCUS } from "@/components/site/church-finde
 import { ChurchMap } from "@/components/site/church-map";
 import type { ChurchFinderStatusKey } from "@/hooks/useChurchFinderData";
 import { getConsent, subscribeToConsent } from "@/lib/consent";
+import {
+  DAY_FILTER_KEYS,
+  VISIT_FEATURE_CODES,
+  countDayFilter,
+  countFeature,
+  daysForFilters,
+  readFeatureEntryParams,
+  type DayFilterKey,
+} from "@/lib/church-features";
 import { trackPublicEvent } from "@/lib/public-analytics";
 import {
   countByTradition,
@@ -57,14 +66,18 @@ const CHIP = cn(
 const URL_MAX_QUERY_LENGTH = 100;
 const URL_MAX_TRADITIONS = 20;
 
-/** Parâmetros aceitos na entrada (vindos da Home): `q`, `tradicao` (repetível) e `localizar=1`. */
+/**
+ * Parâmetros aceitos na entrada (vindos da Home): `q`, `tradicao`, `dia` e `instalacao`
+ * (repetíveis) e `localizar=1`.
+ */
 function readEntryParams(search: string) {
   const params = new URLSearchParams(search);
+  const { days, features } = readFeatureEntryParams(params);
   const q = (params.get("q") ?? "").trim().slice(0, URL_MAX_QUERY_LENGTH);
   const traditions = Array.from(
     new Set(params.getAll("tradicao").map((value) => value.trim().slice(0, 60)).filter(Boolean)),
   ).slice(0, URL_MAX_TRADITIONS);
-  return { q, traditions, locate: !q && params.get("localizar") === "1" };
+  return { q, traditions, days, features, locate: !q && params.get("localizar") === "1" };
 }
 
 function subscribeToLargeScreen(callback: () => void) {
@@ -75,6 +88,7 @@ function subscribeToLargeScreen(callback: () => void) {
 
 export function ChurchFinder() {
   const t = useTranslations("finder");
+  const tv = useTranslations("features");
   const consent = useSyncExternalStore(subscribeToConsent, getConsent, () => null);
   const isLargeScreen = useSyncExternalStore(
     subscribeToLargeScreen,
@@ -100,6 +114,10 @@ export function ChurchFinder() {
     setSearch,
     hasLive,
     setHasLive,
+    dayFilters,
+    setDayFilters,
+    features,
+    setFeatures,
   } = useChurchFinder();
 
   const [distance, setDistance] = useState<FinderDistance>("all");
@@ -125,11 +143,17 @@ export function ChurchFinder() {
   useEffect(() => {
     const entry = readEntryParams(window.location.search);
     if (entry.traditions.length > 0) setTraditions(entry.traditions);
+    if (entry.days.length > 0) setDayFilters(entry.days);
+    if (entry.features.length > 0) setFeatures(entry.features);
+    // Os setState acima só valem no próximo render: a 1ª busca recebe os filtros explicitamente.
+    const entryFilters = { days: daysForFilters(entry.days), features: entry.features };
     if (entry.q) {
       setSearch(entry.q);
-      void searchChurches({ filters: { search: entry.q } });
+      void searchChurches({ filters: { search: entry.q, ...entryFilters } });
     } else if (entry.locate) {
-      void requestMyLocation();
+      void requestMyLocation({ filters: entryFilters });
+    } else if (entry.days.length > 0 || entry.features.length > 0) {
+      void searchChurches({ filters: entryFilters });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -149,17 +173,56 @@ export function ChurchFinder() {
     () => countByTradition(distanceFiltered, traditions),
     [distanceFiltered, traditions],
   );
-  const numbered = useMemo(
-    () => numberResults(sortChurches(filterByTradition(distanceFiltered, traditions), sort)),
-    [distanceFiltered, traditions, sort],
+  const traditionFiltered = useMemo(
+    () => filterByTradition(distanceFiltered, traditions),
+    [distanceFiltered, traditions],
   );
+  const numbered = useMemo(
+    () => numberResults(sortChurches(traditionFiltered, sort)),
+    [traditionFiltered, sort],
+  );
+  // Dia e instalação já vêm filtrados pela API. As contagens são sobre a lista mostrada (o que
+  // foi carregado, depois de distância e tradição). Instalação é E: a contagem é quantas
+  // ficariam ao marcar a opção. Dia é OU: com um dia marcado, a API não devolveu quem só tem
+  // encontro nos outros, então a contagem só aparece enquanto nenhum dia está marcado.
+  const dayOptions = useMemo(
+    () =>
+      DAY_FILTER_KEYS.map((key) => ({
+        value: key,
+        label: t(`filters.dayOptions.${key}`),
+        count: dayFilters.length === 0 ? countDayFilter(traditionFiltered, key) : undefined,
+      })),
+    [t, dayFilters, traditionFiltered],
+  );
+  const hasScheduleData =
+    dayFilters.length > 0 || traditionFiltered.some((church) => (church.schedule?.length ?? 0) > 0);
+  const featureOptions = useMemo(() => {
+    const codes = [
+      ...VISIT_FEATURE_CODES,
+      ...features.filter((code) => !(VISIT_FEATURE_CODES as readonly string[]).includes(code)),
+    ];
+    return codes.map((code) => ({
+      value: code,
+      label: tv.has(`visit.${code}`)
+        ? tv(`visit.${code}` as "visit.PARKING")
+        : tv(`codes.${code}` as "codes.PARKING"),
+      count: countFeature(traditionFiltered, code),
+    }));
+  }, [tv, features, traditionFiltered]);
+  const hasFeatureData =
+    features.length > 0 || featureOptions.some((option) => option.count > 0);
   // Lista e mapa recebem este mesmo array: o item N é o pin N.
   const shown = useMemo(() => numbered.slice(0, visibleCount), [numbered, visibleCount]);
   const effectiveSelectedId = shown.some((item) => item.church.id === selectedChurchId)
     ? selectedChurchId
     : null;
 
-  const activeFilterCount = (distance !== "all" ? 1 : 0) + traditions.length + (hasLive ? 1 : 0);
+  const activeFilterCount =
+    (distance !== "all" ? 1 : 0) +
+    traditions.length +
+    (hasLive ? 1 : 0) +
+    dayFilters.length +
+    features.length;
   const hasActiveFilters = Boolean(search.trim()) || activeFilterCount > 0;
 
   const headingKey =
@@ -235,10 +298,38 @@ export function ChurchFinder() {
     void searchChurches({ filters: { hasLive: value } });
   }
 
+  function handleDaysChange(value: string[]) {
+    const next = DAY_FILTER_KEYS.filter((key) => value.includes(key));
+    setDayFilters(next);
+    resetPaging();
+    void searchChurches({ filters: { days: daysForFilters(next) } });
+  }
+
+  function handleFeaturesChange(value: string[]) {
+    setFeatures(value);
+    resetPaging();
+    void searchChurches({ filters: { features: value } });
+  }
+
+  function toggleDayChip(key: DayFilterKey) {
+    handleDaysChange(
+      dayFilters.includes(key) ? dayFilters.filter((item) => item !== key) : [...dayFilters, key],
+    );
+  }
+
+  function toggleFeatureChip(code: string) {
+    handleFeaturesChange(
+      features.includes(code) ? features.filter((item) => item !== code) : [...features, code],
+    );
+  }
+
   function handleClearFilters() {
-    const needsRequest = Boolean(search.trim()) || hasLive;
+    const needsRequest =
+      Boolean(search.trim()) || hasLive || dayFilters.length > 0 || features.length > 0;
     setSearch("");
     setHasLive(false);
+    setDayFilters([]);
+    setFeatures([]);
     setDistance("all");
     setTraditions([]);
     resetPaging();
@@ -367,6 +458,30 @@ export function ChurchFinder() {
           </button>
           <button
             type="button"
+            aria-pressed={dayFilters.includes("SUNDAY")}
+            onClick={() => toggleDayChip("SUNDAY")}
+            className={CHIP}
+          >
+            <span className="font-semibold">{t("filters.chipSunday")}</span>
+          </button>
+          <button
+            type="button"
+            aria-pressed={features.includes("ACCESSIBLE_ENTRANCE")}
+            onClick={() => toggleFeatureChip("ACCESSIBLE_ENTRANCE")}
+            className={CHIP}
+          >
+            <span className="font-semibold">{t("filters.chipAccessible")}</span>
+          </button>
+          <button
+            type="button"
+            aria-pressed={features.includes("KIDS_AREA")}
+            onClick={() => toggleFeatureChip("KIDS_AREA")}
+            className={CHIP}
+          >
+            <span className="font-semibold">{t("filters.chipKids")}</span>
+          </button>
+          <button
+            type="button"
             aria-pressed={hasLive}
             onClick={() => handleHasLiveChange(!hasLive)}
             className={CHIP}
@@ -413,6 +528,12 @@ export function ChurchFinder() {
               traditions={traditions}
               traditionOptions={traditionOptions}
               hasLive={hasLive}
+              dayOptions={hasScheduleData ? dayOptions : []}
+              selectedDays={dayFilters}
+              onDaysChange={handleDaysChange}
+              featureOptions={hasFeatureData ? featureOptions : []}
+              selectedFeatures={features}
+              onFeaturesChange={handleFeaturesChange}
               hasActiveFilters={hasActiveFilters}
               onDistanceChange={handleDistanceChange}
               onTraditionsChange={handleTraditionsChange}
@@ -497,6 +618,7 @@ export function ChurchFinder() {
           <ChurchFinderResults
             heading={t(`results.${headingKey}`, { count: numbered.length })}
             results={shown}
+            priorityDays={daysForFilters(dayFilters)}
             remaining={numbered.length - shown.length}
             selectedChurchId={effectiveSelectedId}
             sort={sort}

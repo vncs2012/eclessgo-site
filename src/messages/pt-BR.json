@@ -48,7 +48,16 @@
       "new": "Novo",
       "quick": "Atalhos de filtro",
       "chipNear": "Até 2 km",
-      "chipLive": "Ao vivo"
+      "chipLive": "Ao vivo",
+      "dayOptions": {
+        "SUNDAY": "Domingo",
+        "WEEKDAYS": "Durante a semana",
+        "SATURDAY": "Sábado"
+      },
+      "optionCount": "{count, plural, one {# comunidade} other {# comunidades}}",
+      "chipSunday": "Domingo",
+      "chipAccessible": "Acessível",
+      "chipKids": "Espaço infantil"
     },
     "update": "Buscar",
     "updating": "Buscando...",
@@ -603,10 +612,7 @@
       "copyError": "Não foi possível copiar. Selecione o endereço manualmente."
     },
     "facilities": {
-      "title": "Instalações e acessibilidade",
-      "accessibility": "Acessibilidade",
-      "children": "Crianças",
-      "structure": "Estrutura"
+      "title": "Instalações e acessibilidade"
     },
     "people": {
       "title": "Quem é quem"
@@ -640,6 +646,34 @@
     },
     "mobileBar": {
       "label": "Ações rápidas"
+    }
+  },
+  "features": {
+    "codes": {
+      "ACCESSIBLE_ENTRANCE": "Entrada acessível",
+      "ACCESSIBLE_RESTROOM": "Banheiro acessível",
+      "ELEVATOR": "Elevador",
+      "LIBRAS": "Libras",
+      "KIDS_AREA": "Espaço infantil",
+      "NURSERY": "Berçário",
+      "PARKING": "Estacionamento"
+    },
+    "groups": {
+      "accessibility": "Acessibilidade",
+      "children": "Crianças",
+      "structure": "Estrutura"
+    },
+    "visit": {
+      "ACCESSIBLE_ENTRANCE": "Acessível",
+      "KIDS_AREA": "Espaço infantil",
+      "LIBRAS": "Libras",
+      "PARKING": "Estacionamento"
+    },
+    "hints": {
+      "ACCESSIBLE_ENTRANCE": "Entrada sem degraus ou com rampa",
+      "KIDS_AREA": "Lugar para as crianças",
+      "LIBRAS": "Intérprete em algum encontro",
+      "PARKING": "Próprio ou conveniado"
     }
   }
 }

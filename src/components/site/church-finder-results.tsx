@@ -8,7 +8,8 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { FINDER_FOCUS } from "@/components/site/church-finder-search";
 import { useTraditionLabel } from "@/components/site/church-finder-context";
-import { formatTradition, summarizeSchedule, type FinderSort } from "@/lib/public-church-utils";
+import { featurePills } from "@/lib/church-features";
+import { summarizeSchedule, type FinderSort } from "@/lib/public-church-utils";
 import { cn } from "@/lib/utils";
 import type { PublicChurchListItem } from "@/types/public";
 
@@ -17,6 +18,8 @@ export type NumberedChurch = { church: PublicChurchListItem; number: number };
 interface ChurchFinderResultsProps {
   heading: string;
   results: NumberedChurch[];
+  /** Dias filtrados (MONDAY..SUNDAY): os horários desses dias aparecem primeiro no card. */
+  priorityDays?: readonly string[];
   remaining: number;
   selectedChurchId: string | null;
   sort: FinderSort;
@@ -66,12 +69,15 @@ export function ResultCard({
   item,
   selected,
   onSelect,
+  priorityDays = [],
 }: {
   item: NumberedChurch;
   selected: boolean;
   onSelect: () => void;
+  priorityDays?: readonly string[];
 }) {
   const t = useTranslations("finder");
+  const tv = useTranslations("features");
   const locale = useLocale();
   const { church, number } = item;
   const href = `/comunidades/${church.slug}`;
@@ -85,8 +91,11 @@ export function ResultCard({
     church.schedule,
     (day) => (t.has(`card.days.${day}`) ? t(`card.days.${day}` as "card.days.SUNDAY") : day),
     (times) => times.join(t("card.scheduleJoin")),
+    2,
+    priorityDays,
   );
-  const features = church.features?.slice(0, 3) ?? [];
+  // Até 3 pílulas, códigos do vocabulário primeiro (traduzidos); texto livre como veio.
+  const features = featurePills(church.features, tv.raw("codes") as Record<string, string>);
 
   function handleClick(event: MouseEvent<HTMLElement>) {
     // Clique no card destaca no mapa; links e botões internos seguem o próprio comportamento.
@@ -197,7 +206,7 @@ export function ResultCard({
                   key={feature}
                   className="rounded-full bg-eg-subtle px-2.5 py-1 text-xs font-semibold text-eg-text"
                 >
-                  {formatTradition(feature)}
+                  {feature}
                 </li>
               ))}
             </ul>
@@ -221,6 +230,7 @@ export function ResultCard({
 export function ChurchFinderResults({
   heading,
   results,
+  priorityDays,
   remaining,
   selectedChurchId,
   sort,
@@ -345,6 +355,7 @@ export function ChurchFinderResults({
               item={item}
               selected={item.church.id === selectedChurchId}
               onSelect={() => onSelectChurch(item.church.id)}
+              priorityDays={priorityDays}
             />
           ))}
         </ol>

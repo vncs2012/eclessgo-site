@@ -6,6 +6,12 @@ import { getPublicChurches } from "@/lib/public-api";
 import { getPublicRequestId, getPublicTraceHeaders, withPublicRequestId } from "@/lib/public-bff";
 import { publicDirectoryQuerySchema } from "@/lib/public-bff-schemas";
 
+/** Valores repetidos de `key` (sem duplicar); undefined quando ausente. */
+function uniqueParams(searchParams: URLSearchParams, key: string): string[] | undefined {
+  const values = Array.from(new Set(searchParams.getAll(key).map((value) => value.trim())));
+  return values.length > 0 ? values : undefined;
+}
+
 export async function GET(request: NextRequest) {
   const requestId = getPublicRequestId(request);
 
@@ -19,6 +25,8 @@ export async function GET(request: NextRequest) {
       city: searchParams.get("city") ?? undefined,
       neighborhood: searchParams.get("neighborhood") ?? undefined,
       hasLive: searchParams.get("hasLive") ?? searchParams.get("has_live") ?? undefined,
+      day: uniqueParams(searchParams, "day"),
+      feature: uniqueParams(searchParams, "feature"),
       limit: searchParams.get("limit") ?? undefined,
       page: searchParams.get("page") ?? undefined,
     });
@@ -44,6 +52,8 @@ export async function GET(request: NextRequest) {
         city: query.city,
         neighborhood: query.neighborhood,
         hasLive: query.hasLive === undefined ? undefined : query.hasLive === "true",
+        days: query.day,
+        features: query.feature,
         limit: query.limit,
         page: query.page,
       },

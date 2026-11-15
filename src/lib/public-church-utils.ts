@@ -104,8 +104,8 @@ function mapScheduleEntry(entry: unknown): PublicChurchScheduleEntry | null {
 }
 
 /**
- * Horários, instalações e data de atualização só entram no item da busca quando a API
- * os envia (Etapa 2). Ausentes, as chaves ficam fora do objeto e o card não mostra a linha.
+ * Horários, instalações e data de atualização do item da busca. Ausentes ou vazios, as
+ * chaves ficam fora do objeto e o card não mostra a linha.
  */
 function mapOptionalListFields(raw: Record<string, unknown>): Partial<PublicChurchListItem> {
   const extra: Partial<PublicChurchListItem> = {};
@@ -229,12 +229,16 @@ export function formatTradition(value: string, labels: Readonly<Record<string, s
   return labels[traditionCode(value)] ?? humanizeTradition(value);
 }
 
-/** Agrupa horários por dia ("Domingo, 09:00 e 18:00") e devolve no máximo `limit` linhas. */
+/**
+ * Agrupa horários por dia ("Domingo, 09:00 e 18:00") e devolve no máximo `limit` linhas.
+ * `priorityDays` (dias filtrados na Busca) vêm primeiro; o resto segue a ordem cadastrada.
+ */
 export function summarizeSchedule(
   schedule: readonly PublicChurchScheduleEntry[] | undefined,
   dayLabel: (day: string) => string,
   joinTimes: (times: string[]) => string,
   limit = 2,
+  priorityDays: readonly string[] = [],
 ): string[] {
   if (!schedule || schedule.length === 0) return [];
   const groups = new Map<string, string[]>();
@@ -244,8 +248,12 @@ export function summarizeSchedule(
     if (entry.time && !times.includes(entry.time)) times.push(entry.time);
     groups.set(key, times);
   }
+  const priority = new Set(priorityDays);
+  const ordered = [...groups].sort(
+    ([a], [b]) => Number(priority.has(b)) - Number(priority.has(a)),
+  );
   const lines: string[] = [];
-  for (const [day, times] of groups) {
+  for (const [day, times] of ordered) {
     const label = day ? dayLabel(day) : "";
     const timeText = times.length > 0 ? joinTimes([...times].sort()) : "";
     const line = [label, timeText].filter(Boolean).join(", ");

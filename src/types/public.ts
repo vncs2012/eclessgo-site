@@ -20,10 +20,11 @@ export interface PublicChurchListItem {
   distanceKm: number | null;
   thumbnail: string | null;
   /**
-   * Campos do resultado do Modelo 8 que a busca (ChurchListItem) ainda não envia (Etapa 2).
-   * Opcionais: sem dado, a linha correspondente não aparece no card.
+   * Campos do resultado do Modelo 8 (`schedule`, `features`, `updated_at` da lista).
+   * Opcionais: sem dado, a chave fica fora do objeto e a linha não aparece no card.
    */
   schedule?: PublicChurchScheduleEntry[];
+  /** Códigos do vocabulário (ChurchFeatureCode) misturados com texto livre. */
   features?: string[];
   /** ISO 8601 da última atualização feita pela comunidade. */
   updatedAt?: string | null;
@@ -61,7 +62,7 @@ export interface PublicChurchDetails {
   features: string[];
   /** URL https da transmissão, quando a comunidade a ligou (is_live). */
   liveUrl?: string | null;
-  /** ISO 8601 da última atualização feita pela comunidade; a API ainda não envia. */
+  /** ISO 8601 (UTC) da última atualização feita pela comunidade (`updated_at`). */
   updatedAt?: string | null;
 }
 

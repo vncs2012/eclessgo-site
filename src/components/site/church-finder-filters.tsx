@@ -16,8 +16,8 @@ interface ChurchFinderFiltersProps {
   traditionOptions: Array<{ value: string; count: number }>;
   hasLive: boolean;
   /**
-   * "Costuma ter encontro" e "Para a visita" dependem da Etapa 2 (a busca ainda não filtra
-   * por dia nem por instalação). Os grupos só aparecem quando receberem opções.
+   * "Costuma ter encontro" e "Para a visita" (filtrados pela API). Os grupos só aparecem
+   * quando receberem opções; sem `count`, a opção não mostra número.
    */
   dayOptions?: FinderFacetOption[];
   selectedDays?: string[];
@@ -198,6 +198,9 @@ export function ChurchFinderFilters({
               key={option.value}
               label={option.label}
               count={option.count}
+              countLabel={
+                option.count === undefined ? undefined : t("optionCount", { count: option.count })
+              }
               checked={selectedDays.includes(option.value)}
               onChange={(checked) => onDaysChange(toggle(selectedDays, option.value, checked))}
             />
@@ -212,6 +215,9 @@ export function ChurchFinderFilters({
               key={option.value}
               label={option.label}
               count={option.count}
+              countLabel={
+                option.count === undefined ? undefined : t("optionCount", { count: option.count })
+              }
               checked={selectedFeatures.includes(option.value)}
               onChange={(checked) =>
                 onFeaturesChange(toggle(selectedFeatures, option.value, checked))

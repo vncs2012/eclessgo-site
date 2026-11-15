@@ -255,6 +255,225 @@ test.describe("estados do diretório público", () => {
     ).toHaveAttribute("aria-pressed", "true");
   });
 
+  test("filtro de dia vai para a API (união dos dias) e lista e mapa são renumerados", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const churches = [
+      {
+        ...responseChurch("Domingueira"),
+        id: "d1",
+        slug: "d1",
+        distanceKm: 0.4,
+        location: { lat: -16.687, lng: -49.265 },
+        schedule: [{ day: "SUNDAY", time: "09:00", title: "Culto" }],
+      },
+      {
+        ...responseChurch("Semanal"),
+        id: "w1",
+        slug: "w1",
+        distanceKm: 0.6,
+        location: { lat: -16.69, lng: -49.27 },
+        schedule: [
+          { day: "WEDNESDAY", time: "19:30", title: "Oração" },
+          { day: "SATURDAY", time: "18:00", title: "Jovens" },
+        ],
+      },
+      {
+        ...responseChurch("Sabatina"),
+        id: "s1",
+        slug: "s1",
+        distanceKm: 0.9,
+        location: { lat: -16.7, lng: -49.28 },
+        schedule: [{ day: "SATURDAY", time: "16:00", title: "Encontro" }],
+      },
+    ];
+    const requests: Array<{ day: string[]; feature: string[] }> = [];
+    await page.route("**/api/public/churches**", async (route) => {
+      const params = new URL(route.request().url()).searchParams;
+      const day = params.getAll("day");
+      requests.push({ day, feature: params.getAll("feature") });
+      const data = day.length
+        ? churches.filter((church) => church.schedule.some((entry) => day.includes(entry.day)))
+        : churches;
+      await route.fulfill({ json: { data } });
+    });
+
+    await openDirectory(page);
+    await page.getByRole("textbox", { name: "Buscar comunidades" }).fill("todas");
+    await page.locator('form[role="search"] button[type="submit"]:visible').click();
+    await expect(page.getByRole("heading", { name: "3 comunidades" })).toBeVisible();
+
+    const pinTitles = () =>
+      page
+        .locator(".leaflet-marker-icon[title]")
+        .evaluateAll((els) => els.map((el) => el.getAttribute("title")).sort());
+
+    // Sem dia marcado, a contagem é sobre o que foi carregado.
+    await expect(page.getByRole("checkbox", { name: /^Sábado/ })).toBeVisible();
+    await expect(page.locator("label", { hasText: "Sábado" }).locator("span.font-mono")).toHaveText("2");
+
+    await page.getByRole("checkbox", { name: /^Domingo/ }).check();
+    await expect(page.getByRole("heading", { name: "1 comunidade" })).toBeVisible();
+    expect(requests.at(-1)).toEqual({ day: ["SUNDAY"], feature: [] });
+    await expect.poll(pinTitles).toEqual(["1. Domingueira"]);
+
+    await page.getByRole("checkbox", { name: /^Sábado/ }).check();
+    await expect(page.getByRole("heading", { name: "3 comunidades" })).toBeVisible();
+    expect(requests.at(-1)).toEqual({ day: ["SATURDAY", "SUNDAY"], feature: [] });
+    await expect(page.locator("ol > li h3")).toHaveText(["Domingueira", "Semanal", "Sabatina"]);
+    await expect.poll(pinTitles).toEqual(["1. Domingueira", "2. Semanal", "3. Sabatina"]);
+    // O horário do dia filtrado vem primeiro no card.
+    await expect(page.locator("#finder-result-w1 li").first()).toHaveText("Sábado, 18:00");
+
+    await page.getByRole("checkbox", { name: /^Domingo/ }).uncheck();
+    await expect(page.getByRole("heading", { name: "2 comunidades" })).toBeVisible();
+    expect(requests.at(-1)).toEqual({ day: ["SATURDAY"], feature: [] });
+    await expect.poll(pinTitles).toEqual(["1. Semanal", "2. Sabatina"]);
+
+    await page.getByRole("checkbox", { name: /^Durante a semana/ }).check();
+    await expect
+      .poll(() => requests.at(-1)?.day)
+      .toEqual(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]);
+    await expect(page.getByRole("heading", { name: "2 comunidades" })).toBeVisible();
+  });
+
+  test("filtro de instalação vai para a API (todas as marcadas) e lista e mapa são renumerados", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const churches = [
+      {
+        ...responseChurch("Acessível e Libras"),
+        id: "a1",
+        slug: "a1",
+        distanceKm: 0.4,
+        location: { lat: -16.687, lng: -49.265 },
+        features: ["Bebedouro", "LIBRAS", "ACCESSIBLE_ENTRANCE", "PARKING"],
+        updatedAt: "2026-11-03T12:00:00Z",
+      },
+      {
+        ...responseChurch("Só estacionamento"),
+        id: "p1",
+        slug: "p1",
+        distanceKm: 0.6,
+        location: { lat: -16.69, lng: -49.27 },
+        features: ["PARKING"],
+      },
+      {
+        ...responseChurch("Com crianças"),
+        id: "k1",
+        slug: "k1",
+        distanceKm: 0.9,
+        location: { lat: -16.7, lng: -49.28 },
+        features: ["KIDS_AREA", "PARKING"],
+      },
+    ];
+    const requests: string[][] = [];
+    await page.route("**/api/public/churches**", async (route) => {
+      const feature = new URL(route.request().url()).searchParams.getAll("feature");
+      requests.push(feature);
+      const data = churches.filter((church) => feature.every((code) => church.features.includes(code)));
+      await route.fulfill({ json: { data } });
+    });
+
+    await openDirectory(page);
+    await page.getByRole("textbox", { name: "Buscar comunidades" }).fill("todas");
+    await page.locator('form[role="search"] button[type="submit"]:visible').click();
+    await expect(page.getByRole("heading", { name: "3 comunidades" })).toBeVisible();
+
+    // Pílulas: códigos traduzidos primeiro, até 3; data de atualização da comunidade.
+    await expect(page.locator("#finder-result-a1 ul[aria-label='Para a visita'] li")).toHaveText([
+      "Entrada acessível",
+      "Libras",
+      "Estacionamento",
+    ]);
+    await expect(page.locator("#finder-result-a1")).toContainText(
+      "Atualizada pela comunidade em 03/11",
+    );
+    await expect(page.locator("#finder-result-p1")).not.toContainText("Atualizada");
+
+    const pinTitles = () =>
+      page
+        .locator(".leaflet-marker-icon[title]")
+        .evaluateAll((els) => els.map((el) => el.getAttribute("title")).sort());
+
+    await page.getByRole("checkbox", { name: /^Estacionamento/ }).check();
+    await expect.poll(() => requests.at(-1)).toEqual(["PARKING"]);
+    await expect(page.getByRole("heading", { name: "3 comunidades" })).toBeVisible();
+
+    await page.getByRole("checkbox", { name: /^Espaço infantil/ }).check();
+    await expect(page.getByRole("heading", { name: "1 comunidade" })).toBeVisible();
+    expect(requests.at(-1)).toEqual(["PARKING", "KIDS_AREA"]);
+    await expect(page.locator("ol > li h3")).toHaveText(["Com crianças"]);
+    await expect.poll(pinTitles).toEqual(["1. Com crianças"]);
+
+    await page.getByRole("button", { name: "Limpar" }).click();
+    await expect(page.getByRole("heading", { name: "3 comunidades" })).toBeVisible();
+    expect(requests.at(-1)).toEqual([]);
+    await expect.poll(pinTitles).toEqual(["1. Acessível e Libras", "2. Só estacionamento", "3. Com crianças"]);
+  });
+
+  test("?dia= e ?instalacao= repetidos marcam os filtros e saem na 1ª requisição", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const urls: URL[] = [];
+    await page.route("**/api/public/churches**", async (route) => {
+      urls.push(new URL(route.request().url()));
+      await route.fulfill({
+        json: {
+          data: [
+            {
+              ...responseChurch("Filtrada"),
+              schedule: [{ day: "SUNDAY", time: "09:00", title: null }],
+              features: ["LIBRAS", "PARKING"],
+            },
+          ],
+        },
+      });
+    });
+
+    await page.goto("/comunidades?dia=SUNDAY&dia=saturday&instalacao=PARKING&instalacao=LIBRAS");
+    await expect.poll(() => urls.length).toBeGreaterThan(0);
+    expect(urls[0].searchParams.getAll("day")).toEqual(["SATURDAY", "SUNDAY"]);
+    expect(urls[0].searchParams.getAll("feature")).toEqual(["PARKING", "LIBRAS"]);
+    await expect(page.getByRole("checkbox", { name: /^Domingo/ })).toBeChecked();
+    await expect(page.getByRole("checkbox", { name: /^Sábado/ })).toBeChecked();
+    await expect(page.getByRole("checkbox", { name: /^Estacionamento/ })).toBeChecked();
+    await expect(page.getByRole("checkbox", { name: /^Libras/ })).toBeChecked();
+    await expect(page.getByRole("checkbox", { name: /^Durante a semana/ })).not.toBeChecked();
+  });
+
+  test("em 390 px os chips Domingo e Acessível filtram pela API", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const requests: Array<{ day: string[]; feature: string[] }> = [];
+    await page.route("**/api/public/churches**", async (route) => {
+      const params = new URL(route.request().url()).searchParams;
+      requests.push({ day: params.getAll("day"), feature: params.getAll("feature") });
+      await route.fulfill({ json: { data: [responseChurch("Chip")] } });
+    });
+
+    await openDirectory(page);
+    const sunday = page.getByRole("button", { name: "Domingo", exact: true });
+    await sunday.click();
+    await expect(sunday).toHaveAttribute("aria-pressed", "true");
+    await expect.poll(() => requests.at(-1)).toEqual({ day: ["SUNDAY"], feature: [] });
+
+    const accessible = page.getByRole("button", { name: "Acessível", exact: true });
+    await accessible.click();
+    await expect(accessible).toHaveAttribute("aria-pressed", "true");
+    await expect
+      .poll(() => requests.at(-1))
+      .toEqual({ day: ["SUNDAY"], feature: ["ACCESSIBLE_ENTRANCE"] });
+    await expect(page.getByRole("button", { name: /Filtros, 2 ativos/ })).toBeVisible();
+
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+
   test("/igrejas redireciona 301 para /comunidades preservando a query", async ({ request }) => {
     const list = await request.get("/igrejas?q=centro", { maxRedirects: 0 });
     expect(list.status()).toBe(301);

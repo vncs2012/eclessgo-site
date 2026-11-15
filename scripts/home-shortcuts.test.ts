@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import { formatTradition } from "../src/lib/public-church-utils.ts";
 import { buildTraditionShortcuts, traditionHref } from "../src/components/site/home-shortcuts.ts";
+import { VISIT_FEATURE_CODES, featureHref } from "../src/lib/church-features.ts";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -99,5 +100,28 @@ describe("mensagens da Home", () => {
       JSON.parse(readFileSync(resolve(ROOT, `src/messages/${locale}.json`), "utf8")).home;
     assert.deepEqual(keys(read("en")).sort(), keys(read("pt-BR")).sort());
     assert.doesNotMatch(JSON.stringify(read("pt-BR")), /acontecendo agora|contagem regressiva/i);
+  });
+});
+
+describe("Home: 'Encontre pelo que importa para você'", () => {
+  const PAGE = readFileSync(resolve(ROOT, "src/app/page.tsx"), "utf8");
+  const SECTION = readFileSync(resolve(ROOT, "src/components/site/home-features.tsx"), "utf8");
+
+  test("opções reais de 'Para a visita', com link /comunidades?instalacao=CODE", () => {
+    assert.match(PAGE, /VISIT_FEATURE_CODES/);
+    assert.match(PAGE, /href:\s*featureHref\(\[code\]\)/);
+    assert.equal(featureHref(["PARKING"]), "/comunidades?instalacao=PARKING");
+    assert.deepEqual([...VISIT_FEATURE_CODES], ["ACCESSIBLE_ENTRANCE", "KIDS_AREA", "LIBRAS", "PARKING"]);
+  });
+
+  test("contagem real: local quando tudo foi carregado, senão meta.total por código; sem estimativa", () => {
+    assert.match(PAGE, /home\.churches\.length\s*>=\s*home\.total/);
+    assert.match(PAGE, /features:\s*\[code\],\s*limit:\s*1/);
+    assert.match(PAGE, /page\.total === null \? null/);
+  });
+
+  test("sem opção com contagem > 0 a seção não aparece", () => {
+    assert.match(SECTION, /option\.count > 0/);
+    assert.match(SECTION, /if \(available\.length === 0\) return null/);
   });
 });

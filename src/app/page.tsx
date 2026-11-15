@@ -1,5 +1,14 @@
 import Link from "next/link";
-import { ArrowRight, LocateFixed, MapPin } from "lucide-react";
+import {
+  Accessibility,
+  ArrowRight,
+  Baby,
+  CircleParking,
+  Hand,
+  LocateFixed,
+  MapPin,
+  type LucideIcon,
+} from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { HomeArt } from "@/components/site/home-art";
@@ -8,6 +17,11 @@ import { HomeNearby } from "@/components/site/home-nearby";
 import { buildTraditionShortcuts, traditionHref } from "@/components/site/home-shortcuts";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
+import {
+  VISIT_FEATURE_CODES,
+  countFeature,
+  featureHref,
+} from "@/lib/church-features";
 import { getPublicChurchesPage } from "@/lib/public-api";
 import { PUBLIC_CACHE_TTL_SECONDS } from "@/lib/public-cache";
 import { formatTradition, numberResults } from "@/lib/public-church-utils";
@@ -45,6 +59,43 @@ async function loadHomeChurches(): Promise<HomeChurches> {
   }
 }
 
+const FEATURE_ICONS: Record<(typeof VISIT_FEATURE_CODES)[number], LucideIcon> = {
+  ACCESSIBLE_ENTRANCE: Accessibility,
+  KIDS_AREA: Baby,
+  LIBRAS: Hand,
+  PARKING: CircleParking,
+};
+
+/**
+ * Quantas comunidades marcaram cada instalação de "Para a visita".
+ * Se a Home carregou todas (`total` <= carregadas), conta localmente, sem custo. Senão, uma
+ * requisição `limit=1` por código lê o `meta.total` da API (cacheada como o resto da Home).
+ * Código cuja contagem falhar fica de fora (sem número estimado).
+ */
+async function loadFeatureCounts(
+  home: HomeChurches,
+): Promise<Array<{ code: (typeof VISIT_FEATURE_CODES)[number]; count: number }>> {
+  const complete = home.total !== null && home.churches.length >= home.total;
+  if (complete) {
+    return VISIT_FEATURE_CODES.map((code) => ({ code, count: countFeature(home.churches, code) }));
+  }
+  if (home.total === null && home.churches.length === 0) return [];
+  const results = await Promise.all(
+    VISIT_FEATURE_CODES.map(async (code) => {
+      try {
+        const page = await getPublicChurchesPage(
+          { lat: GOIANIA_CENTER.lat, lng: GOIANIA_CENTER.lng, features: [code], limit: 1 },
+          { next: { revalidate: PUBLIC_CACHE_TTL_SECONDS.landingFeaturedChurches } },
+        );
+        return page.total === null ? null : { code, count: page.total };
+      } catch {
+        return null;
+      }
+    }),
+  );
+  return results.filter((item): item is NonNullable<typeof item> => item !== null);
+}
+
 const FOCUS_ON_PHOTO =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 const FOCUS =
@@ -57,7 +108,9 @@ const SECTION_TITLE =
 export default async function HomePage() {
   const t = await getTranslations("home");
   const tf = await getTranslations("finder");
-  const { churches, total } = await loadHomeChurches();
+  const tv = await getTranslations("features");
+  const home = await loadHomeChurches();
+  const { churches, total } = home;
 
   const labels = tf.raw("traditions") as Record<string, string>;
   const shortcuts = buildTraditionShortcuts(churches, (value) => formatTradition(value, labels));
@@ -66,9 +119,18 @@ export default async function HomePage() {
     churches.slice(0, NEARBY_COUNT).map((church) => ({ ...church, distanceKm: null })),
   );
 
-  // Etapa 2: a lista da API ainda não manda `features`. Quando mandar, preencher com
-  // { id, label, description, count, href, icon } (contagem real); sem opções a seção some.
-  const featureOptions: HomeFeatureOption[] = [];
+  // Contagem real por código; opção sem comunidade (ou sem contagem) não aparece e, sem
+  // nenhuma opção, a seção some.
+  const featureOptions: HomeFeatureOption[] = (await loadFeatureCounts(home)).map(
+    ({ code, count }) => ({
+      id: code,
+      label: tv(`visit.${code}`),
+      description: tv(`hints.${code}`),
+      count,
+      href: featureHref([code]),
+      icon: FEATURE_ICONS[code],
+    }),
+  );
 
   const steps = [
     { number: "01", photo: 4 as const, key: "first" as const },

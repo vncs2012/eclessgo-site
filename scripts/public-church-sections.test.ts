@@ -243,6 +243,14 @@ describe("ChurchProfileAttributes (Instalacoes e acessibilidade)", () => {
     assert.equal(elementsOf(html, "li").length, 4);
   });
 
+  test("codigos do vocabulario aparecem traduzidos no grupo deles", () => {
+    const html = renderAttributes(["PARKING", "ACCESSIBLE_RESTROOM", "Bebedouro"]);
+    assert.deepEqual(textsOf(html, "h3"), ["Acessibilidade", "Estrutura"]);
+    assert.ok(html.includes("Banheiro acessível"));
+    assert.ok(html.includes("Estacionamento"));
+    assert.equal(html.includes("PARKING"), false);
+  });
+
   test("so um grupo: so um cartao", () => {
     const html = renderAttributes(["Bebedouro", "Salao climatizado"]);
     assert.deepEqual(textsOf(html, "h3"), ["Estrutura"]);
