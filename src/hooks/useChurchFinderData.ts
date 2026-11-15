@@ -21,6 +21,7 @@ export interface ChurchFinderFiltersState {
 }
 
 export interface ChurchFinderStatusMessages {
+  initialLoadError: string;
   initialShowing: string;
   initialEmpty: string;
   filtersClearedShowing: string;
@@ -54,6 +55,7 @@ interface FetchChurchesParams {
 }
 
 type FinderRequestOperation = "search" | "clear" | "location";
+type ChurchFinderStatusKey = keyof ChurchFinderStatusMessages;
 
 interface ActiveFinderRequest {
   controller: AbortController;
@@ -125,9 +127,11 @@ export function useChurchFinderData({
   const [selectedChurchId, setSelectedChurchId] = useState<string | null>(initialChurches[0]?.id ?? null);
   const [center, setCenter] = useState(initialCenter);
   const [isLoading, setIsLoading] = useState(false);
-  const [statusMessage, setStatusMessage] = useState(
-    initialLoadError || (initialChurches.length > 0 ? messages.initialShowing : messages.initialEmpty),
-  );
+  const [statusKey, setStatusKey] = useState<ChurchFinderStatusKey>(() => {
+    if (initialLoadError) return "initialLoadError";
+    return initialChurches.length > 0 ? "initialShowing" : "initialEmpty";
+  });
+  const statusMessage = messages[statusKey];
 
   const activeRequestRef = useRef<ActiveFinderRequest | null>(null);
   const requestSequenceRef = useRef(0);
@@ -217,7 +221,7 @@ export function useChurchFinderData({
 
       setChurches(items);
       setSelectedChurchId(items[0]?.id ?? null);
-      setStatusMessage(items.length > 0 ? messages.searchUpdated : messages.searchEmpty);
+      setStatusKey(items.length > 0 ? "searchUpdated" : "searchEmpty");
       completeRequest(request, "success", items.length);
     } catch (error) {
       if (isAbortError(error, request.controller.signal) || !isCurrentRequest(request)) {
@@ -226,7 +230,7 @@ export function useChurchFinderData({
       }
 
       reportRequestError(error, request);
-      setStatusMessage(messages.filterFailed);
+      setStatusKey("filterFailed");
       completeRequest(request, "error");
     }
   }
@@ -243,7 +247,7 @@ export function useChurchFinderData({
 
       setChurches(items);
       setSelectedChurchId(items[0]?.id ?? null);
-      setStatusMessage(items.length > 0 ? messages.filtersClearedShowing : messages.filtersClearedEmpty);
+      setStatusKey(items.length > 0 ? "filtersClearedShowing" : "filtersClearedEmpty");
       completeRequest(request, "success", items.length);
     } catch (error) {
       if (isAbortError(error, request.controller.signal) || !isCurrentRequest(request)) {
@@ -252,7 +256,7 @@ export function useChurchFinderData({
       }
 
       reportRequestError(error, request);
-      setStatusMessage(messages.clearFailed);
+      setStatusKey("clearFailed");
       completeRequest(request, "error");
     }
   }
@@ -261,7 +265,7 @@ export function useChurchFinderData({
     const request = startRequest("location");
 
     if (!navigator.geolocation) {
-      setStatusMessage(messages.geoUnavailable);
+      setStatusKey("geoUnavailable");
       completeRequest(request, "error");
       return;
     }
@@ -288,7 +292,7 @@ export function useChurchFinderData({
 
           setChurches(items);
           setSelectedChurchId(items[0]?.id ?? null);
-          setStatusMessage(messages.recalculated);
+          setStatusKey("recalculated");
           completeRequest(request, "success", items.length);
         } catch (error) {
           if (isAbortError(error, request.controller.signal) || !isCurrentRequest(request)) {
@@ -297,7 +301,7 @@ export function useChurchFinderData({
           }
 
           reportRequestError(error, request);
-          setStatusMessage(messages.locationFailed);
+          setStatusKey("locationFailed");
           completeRequest(request, "error");
         }
       },
@@ -307,7 +311,7 @@ export function useChurchFinderData({
           return;
         }
 
-        setStatusMessage(error.code === error.PERMISSION_DENIED ? messages.permissionDenied : messages.locationFailed);
+        setStatusKey(error.code === error.PERMISSION_DENIED ? "permissionDenied" : "locationFailed");
         completeRequest(request, "error");
       },
       { enableHighAccuracy: true, timeout: 8_000 },

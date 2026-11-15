@@ -25,7 +25,8 @@ const UTILS = readFileSync(resolve(ROOT, "src/lib/public-church-utils.ts"), "utf
 
 const LIB_IMPORT =
   /import\s*\{[^}]*\bbuildPublicChurchProfile\b[^}]*\}\s*from\s*["']@\/lib\/public-church-profile["']/;
-const SECTIONS_IMPORT = /import\s*\{([^}]*)\}\s*from\s*["']@\/components\/site\/church-profile-sections["']/;
+const SECTIONS_IMPORT =
+  /import\s*\{([^}]*)\}\s*from\s*["']@\/components\/site\/church-profile-sections["']/;
 const PROFILE_COMPONENTS = ["ChurchProfileMedia", "ChurchProfileAttributes", "ChurchProfileLinks"];
 
 // O bloco e o cartao de endereco existem nas duas versoes (HEAD e working tree).
@@ -77,7 +78,10 @@ describe("pagina publica: chamada de buildPublicChurchProfile", () => {
     assert.ok(match, "a pagina nao importa de @/components/site/church-profile-sections");
     const names = match[1].split(",").map((name) => name.trim());
     for (const component of PROFILE_COMPONENTS) {
-      assert.ok(names.includes(component), `${component} nao vem de @/components/site/church-profile-sections`);
+      assert.ok(
+        names.includes(component),
+        `${component} nao vem de @/components/site/church-profile-sections`,
+      );
     }
   });
 
@@ -98,7 +102,10 @@ describe("pagina publica: chamada de buildPublicChurchProfile", () => {
   });
 
   test("recebe mediaOrigin: process.env.NEXT_PUBLIC_MEDIA_ORIGIN", () => {
-    assert.match(buildCallBody(PAGE), /\bmediaOrigin\s*:\s*process\.env\.NEXT_PUBLIC_MEDIA_ORIGIN(?![\w.])/);
+    assert.match(
+      buildCallBody(PAGE),
+      /\bmediaOrigin\s*:\s*process\.env\.NEXT_PUBLIC_MEDIA_ORIGIN(?![\w.])/,
+    );
   });
 });
 
@@ -116,11 +123,17 @@ describe("pagina publica: props dos componentes do perfil", () => {
   });
 
   test("ChurchProfileMedia recebe gallery={profile.gallery}", () => {
-    assert.match(jsxElement(PAGE, "ChurchProfileMedia"), /\bgallery\s*=\s*\{\s*profile\.gallery\s*\}/);
+    assert.match(
+      jsxElement(PAGE, "ChurchProfileMedia"),
+      /\bgallery\s*=\s*\{\s*profile\.gallery\s*\}/,
+    );
   });
 
   test("ChurchProfileAttributes recebe features={profile.features}", () => {
-    assert.match(jsxElement(PAGE, "ChurchProfileAttributes"), /\bfeatures\s*=\s*\{\s*profile\.features\s*\}/);
+    assert.match(
+      jsxElement(PAGE, "ChurchProfileAttributes"),
+      /\bfeatures\s*=\s*\{\s*profile\.features\s*\}/,
+    );
   });
 
   test("ChurchProfileLinks recebe links={profile.links}", () => {
@@ -128,7 +141,10 @@ describe("pagina publica: props dos componentes do perfil", () => {
   });
 
   test("ChurchProfileLinks recebe churchName={church.name}", () => {
-    assert.match(jsxElement(PAGE, "ChurchProfileLinks"), /\bchurchName\s*=\s*\{\s*church\.name\s*\}/);
+    assert.match(
+      jsxElement(PAGE, "ChurchProfileLinks"),
+      /\bchurchName\s*=\s*\{\s*church\.name\s*\}/,
+    );
   });
 });
 
@@ -137,7 +153,7 @@ describe("pagina publica: ordem dos componentes no layout", () => {
     const block = indexAfter(PAGE, LAYOUT_BLOCK);
     const from = Math.max(block, 0);
     assertInOrder([
-      ["<div className=\"space-y-5\">", block],
+      ['<div className="space-y-5">', block],
       ["<ChurchProfileMedia", indexAfter(PAGE, /<ChurchProfileMedia\b/, from)],
       ["<ChurchProfileAttributes", indexAfter(PAGE, /<ChurchProfileAttributes\b/, from)],
       ["<ChurchProfileLinks", indexAfter(PAGE, /<ChurchProfileLinks\b/, from)],
@@ -158,6 +174,9 @@ describe("pagina publica: ordem dos componentes no layout", () => {
 
 describe("mapeamento: src/lib/public-church-utils.ts", () => {
   test("mapPublicChurchDetails passa features derivado de church.features", () => {
-    assert.match(functionBody(UTILS, "mapPublicChurchDetails"), /\bfeatures\s*:\s*[^\n]*\bchurch\.features\b/);
+    assert.match(
+      functionBody(UTILS, "mapPublicChurchDetails"),
+      /\bfeatures\s*:\s*[^\n]*\bchurch\.features\b/,
+    );
   });
 });

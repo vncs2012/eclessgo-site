@@ -44,16 +44,16 @@ export function ChurchFinderFilters({
   const t = useTranslations("finder");
 
   return (
-    <form onSubmit={onSubmit} className="glass-card rounded-[1.75rem] p-4 sm:p-5">
-      <div className="grid gap-3 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr_0.6fr_auto_auto]">
-        <label className="relative block">
+    <form onSubmit={onSubmit} className="glass-card min-w-0 rounded-[1.75rem] p-4 sm:p-5">
+      <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <label className="relative block min-w-0 sm:col-span-2 lg:col-span-2">
           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
           <input
             value={search}
             onChange={(event) => onSearchChange(event.target.value)}
             aria-label={t("search.aria")}
             placeholder={t("search.placeholder")}
-            className="input-surface h-12 w-full rounded-2xl pl-11 pr-4 text-sm"
+            className="input-surface h-12 w-full min-w-0 rounded-2xl pl-11 pr-4 text-sm"
           />
         </label>
 
@@ -61,7 +61,7 @@ export function ChurchFinderFilters({
           value={city}
           onChange={(event) => onCityChange(event.target.value)}
           aria-label={t("filters.cityAria")}
-          className="input-surface h-12 rounded-2xl px-4 text-sm"
+          className="input-surface h-12 w-full min-w-0 rounded-2xl px-4 text-sm"
         >
           <option value="">{t("filters.allCities")}</option>
           {cities.map((item) => <option key={item} value={item}>{item}</option>)}
@@ -71,7 +71,7 @@ export function ChurchFinderFilters({
           value={neighborhood}
           onChange={(event) => onNeighborhoodChange(event.target.value)}
           aria-label={t("filters.neighborhoodAria")}
-          className="input-surface h-12 rounded-2xl px-4 text-sm"
+          className="input-surface h-12 w-full min-w-0 rounded-2xl px-4 text-sm"
         >
           <option value="">{t("filters.allNeighborhoods")}</option>
           {neighborhoods.map((item) => <option key={item} value={item}>{item}</option>)}
@@ -81,13 +81,13 @@ export function ChurchFinderFilters({
           value={denomination}
           onChange={(event) => onDenominationChange(event.target.value)}
           aria-label={t("filters.denominationAria")}
-          className="input-surface h-12 rounded-2xl px-4 text-sm"
+          className="input-surface h-12 w-full min-w-0 rounded-2xl px-4 text-sm"
         >
           <option value="">{t("filters.allDenominations")}</option>
           {denominations.map((item) => <option key={item} value={item}>{item}</option>)}
         </select>
 
-        <label className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-white/10 bg-zinc-950/70 px-4 text-sm text-zinc-200">
+        <label className="flex h-12 min-w-0 items-center justify-start gap-2 whitespace-nowrap rounded-2xl border border-white/10 bg-zinc-950/70 px-4 text-sm text-zinc-200">
           <input
             type="checkbox"
             checked={hasLive}
@@ -99,7 +99,7 @@ export function ChurchFinderFilters({
 
         <button
           type="submit"
-          className="inline-flex h-12 items-center justify-center rounded-2xl bg-emerald-500 px-5 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400"
+          className="inline-flex h-12 w-full min-w-0 items-center justify-center whitespace-nowrap rounded-2xl bg-emerald-500 px-4 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400 sm:px-5"
         >
           {isLoading ? t("updating") : t("update")}
         </button>
@@ -107,7 +107,7 @@ export function ChurchFinderFilters({
         <button
           type="button"
           onClick={onUseMyLocation}
-          className="inline-flex h-12 items-center justify-center rounded-2xl border border-white/10 px-5 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
+          className="inline-flex h-12 w-full min-w-0 items-center justify-center whitespace-nowrap rounded-2xl border border-white/10 px-4 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white sm:px-5"
         >
           <LocateFixed className="mr-2 h-4 w-4" aria-hidden="true" />
           {t("myLocation")}

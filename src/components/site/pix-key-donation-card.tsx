@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Check, Copy, HeartHandshake } from "lucide-react";
 
 import { createPixQrMatrix } from "@/lib/pix-qr";
@@ -54,6 +55,7 @@ function PixQrSvg({ matrix, label }: { matrix: ReturnType<typeof createPixQrMatr
 }
 
 export function PixKeyDonationCard({ churchId, churchName, slug, pixKey }: PixKeyDonationCardProps) {
+  const t = useTranslations("finder");
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
   const qrResult = useMemo(() => {
@@ -91,25 +93,25 @@ export function PixKeyDonationCard({ churchId, churchName, slug, pixKey }: PixKe
       <div className="flex items-center gap-2">
         <HeartHandshake className="h-4 w-4 text-emerald-300" aria-hidden="true" />
         <h3 id="pix-donation-title" className="text-sm font-semibold text-emerald-100">
-          Contribua por PIX
+          {t("pix.title")}
         </h3>
       </div>
       <p className="mt-3 text-sm leading-6 text-zinc-300">
-        QR da chave PIX configurada por {churchName}. Escaneie com o app do seu banco ou copie a chave abaixo.
+        {t("pix.description", { name: churchName })}
       </p>
 
       {matrix ? (
         <div className="mx-auto mt-5 w-full max-w-[232px] rounded-2xl bg-white p-4 shadow-sm">
-          <PixQrSvg matrix={matrix} label={`QR da chave PIX de ${churchName}`} />
+          <PixQrSvg matrix={matrix} label={t("pix.qrLabel", { name: churchName })} />
         </div>
       ) : (
         <p className="mt-4 rounded-xl border border-amber-300/20 bg-amber-400/10 p-3 text-xs leading-5 text-amber-100">
-          Não foi possível gerar o QR localmente agora. A chave continua disponível para cópia.
+          {t("pix.qrUnavailable")}
         </p>
       )}
 
       <div className="mt-5 rounded-xl border border-white/10 bg-zinc-950/50 p-3">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-500">Chave PIX</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-500">{t("pix.key")}</p>
         <code className="mt-2 block break-all text-sm leading-6 text-zinc-200">{pixKey}</code>
         <button
           type="button"
@@ -117,15 +119,15 @@ export function PixKeyDonationCard({ churchId, churchName, slug, pixKey }: PixKe
           className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300/70"
         >
           {copied ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
-          {copied ? "Chave copiada" : "Copiar chave PIX"}
+          {copied ? t("pix.copied") : t("pix.copy")}
         </button>
-        {copyError ? <p className="mt-2 text-xs text-amber-200">Não foi possível copiar automaticamente. Selecione a chave manualmente.</p> : null}
+        {copyError ? <p className="mt-2 text-xs text-amber-200">{t("pix.copyError")}</p> : null}
       </div>
 
       <p className="mt-4 text-xs leading-5 text-zinc-500">
-        O EclessGO apenas exibe a chave PIX. Não processamos o pagamento, emitimos recibo nem confirmamos a transferência.
+        {t("pix.liability")}
       </p>
-      {qrResult.error ? <span className="sr-only">Erro ao gerar o QR local da chave PIX.</span> : null}
+      {qrResult.error ? <span className="sr-only">{t("pix.qrError")}</span> : null}
     </section>
   );
 }

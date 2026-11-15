@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import {
   ArrowLeft,
   Church,
@@ -38,16 +39,6 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-const WEEKDAY_LABELS: Record<string, string> = {
-  MONDAY: "Segunda-feira",
-  TUESDAY: "Terça-feira",
-  WEDNESDAY: "Quarta-feira",
-  THURSDAY: "Quinta-feira",
-  FRIDAY: "Sexta-feira",
-  SATURDAY: "Sábado",
-  SUNDAY: "Domingo",
-};
-
 export async function generateStaticParams() {
   try {
     const churches = await getPublicChurches(
@@ -72,12 +63,17 @@ function pickRecordValue(record: Record<string, unknown>, keys: string[]) {
   return null;
 }
 
-function localizeScheduleDay(value: string | null) {
-  if (!value) return null;
-  return WEEKDAY_LABELS[value.toUpperCase()] || value;
+interface SchedulePresentationMessages {
+  fallbackTitle: (number: number) => string;
+  weekdays: Record<string, string>;
 }
 
-function normalizeScheduleEntries(schedule: unknown[]) {
+function localizeScheduleDay(value: string | null, weekdays: Record<string, string>) {
+  if (!value) return null;
+  return weekdays[value.toUpperCase()] || value;
+}
+
+function normalizeScheduleEntries(schedule: unknown[], messages: SchedulePresentationMessages) {
   return schedule
     .map((entry, index) => {
       if (typeof entry === "string" && entry.trim()) {
@@ -93,8 +89,12 @@ function normalizeScheduleEntries(schedule: unknown[]) {
 
       const record = entry as Record<string, unknown>;
       const title =
-        pickRecordValue(record, ["title", "name", "service", "label"]) || `Programação ${index + 1}`;
-      const day = localizeScheduleDay(pickRecordValue(record, ["day", "weekday", "date"]));
+        pickRecordValue(record, ["title", "name", "service", "label"]) ||
+        messages.fallbackTitle(index + 1);
+      const day = localizeScheduleDay(
+        pickRecordValue(record, ["day", "weekday", "date"]),
+        messages.weekdays,
+      );
       const time = pickRecordValue(record, ["time", "start_time", "hour"]);
       const description = pickRecordValue(record, ["description", "details", "notes"]);
 
@@ -157,7 +157,9 @@ async function loadChurch(slug: string) {
   }
 }
 
-function PublicChurchUnavailable({ slug }: { slug: string }) {
+async function PublicChurchUnavailable({ slug }: { slug: string }) {
+  const t = await getTranslations("finder");
+
   return (
     <div className="site-shell min-h-screen bg-background text-foreground">
       <div className="grid-noise absolute inset-0 opacity-35" aria-hidden="true" />
@@ -168,29 +170,26 @@ function PublicChurchUnavailable({ slug }: { slug: string }) {
           className="glass-card rounded-[2rem] border border-amber-400/20 bg-amber-500/5 p-8 sm:p-10"
           aria-labelledby="public-church-unavailable-title"
         >
-          <p className="text-xs uppercase tracking-[0.24em] text-amber-200">Diretório público</p>
+          <p className="text-xs uppercase tracking-[0.24em] text-amber-200">{t("detail.unavailable.eyebrow")}</p>
           <h1
             id="public-church-unavailable-title"
             className="mt-4 text-3xl font-semibold tracking-tight text-zinc-50 sm:text-4xl"
           >
-            Esta página está temporariamente indisponível
+            {t("detail.unavailable.title")}
           </h1>
-          <p className="mt-5 text-base leading-8 text-zinc-300">
-            O serviço de dados não respondeu agora. Tente novamente em alguns instantes ou volte ao
-            mapa público.
-          </p>
+          <p className="mt-5 text-base leading-8 text-zinc-300">{t("detail.unavailable.description")}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/comunidades"
               className="inline-flex rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400"
             >
-              Voltar ao mapa
+              {t("detail.unavailable.back")}
             </Link>
             <Link
               href={`/comunidades/${slug}`}
               className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-500/10 px-5 py-3 text-sm font-semibold text-emerald-200 transition hover:border-emerald-300/30 hover:bg-emerald-500/20"
             >
-              Tentar novamente
+              {t("detail.unavailable.retry")}
             </Link>
           </div>
         </section>
@@ -249,11 +248,24 @@ export default async function ChurchDetailPage({ params }: PageProps) {
   } catch {
     // Availability is only a snapshot; a failed check remains unavailable.
   }
+  const t = await getTranslations("finder");
 
   const publicUrl = `${SITE_URL}/comunidades/${church.slug}`;
   const email = pickRecordValue(church.contact, ["email", "contact_email"]);
   const phone = pickRecordValue(church.contact, ["phone", "whatsapp", "contact_phone"]);
-  const scheduleEntries = normalizeScheduleEntries(church.schedule);
+  const scheduleMessages: SchedulePresentationMessages = {
+    fallbackTitle: (number) => t("detail.schedule.fallbackTitle", { number }),
+    weekdays: {
+      MONDAY: t("detail.schedule.weekdays.monday"),
+      TUESDAY: t("detail.schedule.weekdays.tuesday"),
+      WEDNESDAY: t("detail.schedule.weekdays.wednesday"),
+      THURSDAY: t("detail.schedule.weekdays.thursday"),
+      FRIDAY: t("detail.schedule.weekdays.friday"),
+      SATURDAY: t("detail.schedule.weekdays.saturday"),
+      SUNDAY: t("detail.schedule.weekdays.sunday"),
+    },
+  };
+  const scheduleEntries = normalizeScheduleEntries(church.schedule, scheduleMessages);
   const mapChurches = toMapChurch(church);
   const profile = buildPublicChurchProfile({
     features: church.features,
@@ -274,7 +286,7 @@ export default async function ChurchDetailPage({ params }: PageProps) {
           className="mb-6 inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-zinc-200 transition hover:border-emerald-400/30 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Voltar ao mapa de comunidades
+          {t("detail.backToDirectory")}
         </Link>
 
         <PublicAnalyticsBeacon
@@ -294,12 +306,12 @@ export default async function ChurchDetailPage({ params }: PageProps) {
           <div className="glass-card rounded-[2rem] p-8 sm:p-10">
             <div className="flex flex-wrap items-center gap-3">
               <span className="rounded-full border border-white/8 bg-zinc-950/80 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-zinc-400">
-                Página pública
+                {t("detail.pageLabel")}
               </span>
               {church.isLive ? (
                 <span className="inline-flex items-center rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-red-200">
                   <Radio className="mr-1.5 h-3.5 w-3.5" />
-                  Ao vivo agora
+                  {t("detail.liveNow")}
                 </span>
               ) : null}
             </div>
@@ -310,7 +322,7 @@ export default async function ChurchDetailPage({ params }: PageProps) {
             <p className="mt-4 text-lg font-medium text-emerald-300">{church.denomination}</p>
 
             <p className="mt-6 text-base leading-8 text-zinc-300">
-              {church.description || "Esta comunidade já está publicada no diretório do EclessGO."}
+              {church.description || t("detail.descriptionFallback")}
             </p>
 
             <ChurchDetailActions
@@ -321,25 +333,27 @@ export default async function ChurchDetailPage({ params }: PageProps) {
             />
 
             <p className="mt-4 text-xs text-zinc-500">
-              Link público: <span className="text-zinc-300">{publicUrl}</span>
+              {t("detail.publicLink")} <span className="text-zinc-300">{publicUrl}</span>
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               <div className="rounded-[1.5rem] border border-white/8 bg-zinc-950/70 p-5">
                 <Church className="h-5 w-5 text-emerald-300" />
-                <p className="mt-4 text-sm text-zinc-500">Plano</p>
+                <p className="mt-4 text-sm text-zinc-500">{t("detail.plan")}</p>
                 <p className="mt-1 font-semibold text-zinc-50">{church.plan}</p>
               </div>
               <div className="rounded-[1.5rem] border border-white/8 bg-zinc-950/70 p-5">
                 <HeartHandshake className="h-5 w-5 text-emerald-300" />
-                <p className="mt-4 text-sm text-zinc-500">Membros</p>
+                <p className="mt-4 text-sm text-zinc-500">{t("detail.members")}</p>
                 <p className="mt-1 font-semibold text-zinc-50">{church.memberCount}</p>
               </div>
               <div className="rounded-[1.5rem] border border-white/8 bg-zinc-950/70 p-5">
                 <ShieldCheck className="h-5 w-5 text-emerald-300" />
-                <p className="mt-4 text-sm text-zinc-500">Doações</p>
+                <p className="mt-4 text-sm text-zinc-500">{t("detail.donations")}</p>
                 <p className="mt-1 font-semibold text-zinc-50">
-                  {church.donationsEnabled && church.pixKey ? "Disponíveis" : "Não configuradas"}
+                  {church.donationsEnabled && church.pixKey
+                    ? t("detail.donationsAvailable")
+                    : t("detail.donationsNotConfigured")}
                 </p>
               </div>
             </div>
@@ -355,18 +369,18 @@ export default async function ChurchDetailPage({ params }: PageProps) {
             <ChurchProfileAttributes features={profile.features} />
             <ChurchProfileLinks links={profile.links} churchName={church.name} />
             <div className="glass-card rounded-[1.9rem] p-6">
-              <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">Endereço</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">{t("detail.address")}</p>
               <div className="mt-4 flex items-start gap-3">
                 <MapPinned className="mt-1 h-5 w-5 text-emerald-300" />
                 <p className="text-sm leading-7 text-zinc-300">{church.addressLine}</p>
               </div>
               {church.location ? (
                 <p className="mt-4 text-xs text-zinc-500">
-                  Coordenadas: {church.location.lat.toFixed(6)}, {church.location.lng.toFixed(6)}
+                  {t("detail.coordinates")}: {church.location.lat.toFixed(6)}, {church.location.lng.toFixed(6)}
                 </p>
               ) : (
                 <p className="mt-4 text-xs text-zinc-500">
-                  Esta comunidade ainda não possui coordenadas públicas para o mapa.
+                  {t("detail.coordinatesUnavailable")}
                 </p>
               )}
             </div>
@@ -385,7 +399,7 @@ export default async function ChurchDetailPage({ params }: PageProps) {
 
         <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_0.95fr]">
           <div className="glass-card rounded-[1.9rem] p-6">
-            <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">Programação</p>
+            <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">{t("detail.schedule.heading")}</p>
             {scheduleEntries.length > 0 ? (
               <div className="mt-5 grid gap-4">
                 {scheduleEntries.map((entry) => (
@@ -405,16 +419,16 @@ export default async function ChurchDetailPage({ params }: PageProps) {
               </div>
             ) : (
               <p className="mt-5 text-sm leading-7 text-zinc-400">
-                A comunidade ainda não publicou uma programação visível no diretório público.
+                {t("detail.schedule.empty")}
               </p>
             )}
           </div>
 
           <div className="glass-card rounded-[1.9rem] p-4 sm:p-5">
             <div className="mb-4 px-2">
-              <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">Mapa local</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">{t("detail.localMap")}</p>
               <p className="mt-1 text-sm text-zinc-300">
-                O marker destaca a localização pública da comunidade na plataforma web.
+                {t("detail.mapDescription")}
               </p>
             </div>
             {mapChurches.length > 0 && church.location ? (
@@ -425,7 +439,7 @@ export default async function ChurchDetailPage({ params }: PageProps) {
               />
             ) : (
               <div className="flex min-h-[340px] items-center justify-center rounded-[1.5rem] border border-white/8 bg-zinc-950/80 px-6 text-center text-sm leading-7 text-zinc-400">
-                Sem latitude e longitude válidas, a comunidade não pode ser exibida no mapa web.
+                {t("detail.mapUnavailable")}
               </div>
             )}
           </div>

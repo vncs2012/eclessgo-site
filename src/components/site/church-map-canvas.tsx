@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
@@ -54,6 +55,8 @@ export default function ChurchMapCanvas({
   selectedChurchId,
   onSelectChurch,
 }: ChurchMapCanvasProps) {
+  const locale = useLocale();
+  const t = useTranslations("finder");
   const selectedChurch = churches.find((church) => church.id === selectedChurchId) ?? null;
 
   return (
@@ -72,9 +75,11 @@ export default function ChurchMapCanvas({
 
       {churches.map((church) => (
         <Marker
-          key={church.id}
+          key={`${locale}-${church.id}`}
           position={[church.location.lat, church.location.lng]}
           icon={buildMarkerIcon(church.isLive, church.id === selectedChurchId)}
+          title={t("map.markerTitle", { name: church.name })}
+          keyboard
           eventHandlers={{
             click: () => onSelectChurch?.(church),
           }}
@@ -87,7 +92,7 @@ export default function ChurchMapCanvas({
               </div>
               <p className="text-xs text-zinc-600">{church.addressLine}</p>
               <Link href={`/comunidades/${church.slug}`} className="inline-flex text-xs">
-                Ver página da comunidade
+                {t("map.openPublicPage")}
               </Link>
             </div>
           </Popup>

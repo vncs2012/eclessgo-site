@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowRight } from "lucide-react";
 
 import { SITE_URL } from "@/lib/site-config";
@@ -20,8 +21,9 @@ export function ChurchDetailActions({
   publicUrl,
   slug,
 }: ChurchDetailActionsProps) {
+  const t = useTranslations("finder");
   const whatsappShareUrl = `https://wa.me/?text=${encodeURIComponent(
-    `Conheca ${churchName} no mapa publico do EclessGO: ${publicUrl}`,
+    t("actions.shareMessage", { name: churchName, url: publicUrl }),
   )}`;
   const path = buildCommunityUniversalPath(slug);
   const appUrl = buildCommunityUniversalUrl(slug, SITE_URL);
@@ -43,14 +45,14 @@ export function ChurchDetailActions({
         }
         className="inline-flex rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400"
       >
-        Abrir no app
+        {t("actions.openApp")}
         <ArrowRight className="ml-2 h-4 w-4" />
       </a>
       <Link
         href="/cadastro-comunidade"
         className="inline-flex rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
       >
-        Cadastrar outra comunidade
+        {t("actions.registerAnother")}
       </Link>
       <a
         href={whatsappShareUrl}
@@ -69,7 +71,7 @@ export function ChurchDetailActions({
         }
         className="inline-flex rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-100 transition hover:border-emerald-400/30 hover:text-white"
       >
-        Compartilhar
+        {t("actions.share")}
       </a>
     </div>
   );

@@ -40,7 +40,10 @@
     "map": {
       "eyebrow": "Mapa web",
       "subtitle": "Descoberta pública de comunidades próximas",
-      "visibleCount": "{count} comunidades visíveis"
+      "visibleCount": "{count} comunidades visíveis",
+      "markerTitle": "Ver {name} no mapa",
+      "openPublicPage": "Ver página da comunidade",
+      "loading": "Carregando mapa..."
     },
     "directoryRealtime": "Diretório público em tempo real",
     "empty": {
@@ -76,6 +79,75 @@
       "recalculated": "Diretório recalculado com a sua localização atual.",
       "locationFailed": "Não foi possível usar sua localização agora.",
       "permissionDenied": "A permissão de localização foi negada."
+    },
+    "directory": {
+      "eyebrow": "Mapa público",
+      "title": "Descubra comunidades cadastradas no EclessGO",
+      "description": "Este diretório mostra apenas comunidades com latitude e longitude válidas. A pessoa pode buscar por nome, filtrar por tradição, usar a própria localização e abrir a página pública de cada espaço.",
+      "loadError": "Não foi possível carregar o diretório público agora porque a API do EclessGO não respondeu."
+    },
+    "detail": {
+      "backToDirectory": "Voltar ao mapa de comunidades",
+      "pageLabel": "Página pública",
+      "liveNow": "Ao vivo agora",
+      "descriptionFallback": "Esta comunidade já está publicada no diretório do EclessGO.",
+      "publicLink": "Link público:",
+      "plan": "Plano",
+      "members": "Membros",
+      "donations": "Doações",
+      "donationsAvailable": "Disponíveis",
+      "donationsNotConfigured": "Não configuradas",
+      "address": "Endereço",
+      "coordinates": "Coordenadas",
+      "coordinatesUnavailable": "Esta comunidade ainda não possui coordenadas públicas para o mapa.",
+      "localMap": "Mapa local",
+      "mapDescription": "O marcador destaca a localização pública da comunidade na plataforma web.",
+      "mapUnavailable": "Sem latitude e longitude válidas, a comunidade não pode ser exibida no mapa web.",
+      "schedule": {
+        "heading": "Programação",
+        "fallbackTitle": "Programação {number}",
+        "empty": "A comunidade ainda não publicou uma programação visível no diretório público.",
+        "weekdays": {
+          "monday": "Segunda-feira",
+          "tuesday": "Terça-feira",
+          "wednesday": "Quarta-feira",
+          "thursday": "Quinta-feira",
+          "friday": "Sexta-feira",
+          "saturday": "Sábado",
+          "sunday": "Domingo"
+        }
+      },
+      "unavailable": {
+        "eyebrow": "Diretório público",
+        "title": "Esta página está temporariamente indisponível",
+        "description": "O serviço de dados não respondeu agora. Tente novamente em alguns instantes ou volte ao mapa público.",
+        "back": "Voltar ao mapa",
+        "retry": "Tentar novamente"
+      }
+    },
+    "actions": {
+      "openApp": "Abrir no app",
+      "registerAnother": "Cadastrar outra comunidade",
+      "share": "Compartilhar",
+      "shareMessage": "Conheça {name} no mapa público do EclessGO: {url}"
+    },
+    "contact": {
+      "heading": "Contato público",
+      "pixMissing": "Doações estão habilitadas, mas a chave PIX da comunidade ainda não foi configurada.",
+      "donationsDisabled": "Doações não estão habilitadas para esta comunidade no momento.",
+      "noChannels": "Esta comunidade ainda não publicou canais públicos de contato."
+    },
+    "pix": {
+      "title": "Contribua por PIX",
+      "description": "QR da chave PIX configurada por {name}. Escaneie com o app do seu banco ou copie a chave abaixo.",
+      "qrLabel": "QR da chave PIX de {name}",
+      "qrUnavailable": "Não foi possível gerar o QR localmente agora. A chave continua disponível para cópia.",
+      "key": "Chave PIX",
+      "copied": "Chave copiada",
+      "copy": "Copiar chave PIX",
+      "copyError": "Não foi possível copiar automaticamente. Selecione a chave manualmente.",
+      "liability": "O EclessGO apenas exibe a chave PIX. Não processamos o pagamento, emitimos recibo nem confirmamos a transferência.",
+      "qrError": "Erro ao gerar o QR local da chave PIX."
     }
   },
   "publicAssistant": {

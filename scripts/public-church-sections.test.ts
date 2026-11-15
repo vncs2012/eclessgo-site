@@ -78,11 +78,7 @@ function transpile(source: string, fileName: string, aliasTarget: string | null)
 
   const rewritten = result.outputText.replace(ALIAS_RE, `"./${aliasTarget}"`);
 
-  assert.notEqual(
-    rewritten,
-    result.outputText,
-    "alias @/lib/public-church-profile nao encontrado",
-  );
+  assert.notEqual(rewritten, result.outputText, "alias @/lib/public-church-profile nao encontrado");
 
   return rewritten;
 }
@@ -140,11 +136,7 @@ before(async () => {
   mkdirSync(CACHE_DIR, { recursive: true });
 
   const moduleJs = transpile(readFileSync(MODULE_SOURCE, "utf8"), MODULE_SOURCE, null);
-  const sectionsJs = transpile(
-    readFileSync(SECTIONS_SOURCE, "utf8"),
-    SECTIONS_SOURCE,
-    MODULE_FILE,
-  );
+  const sectionsJs = transpile(readFileSync(SECTIONS_SOURCE, "utf8"), SECTIONS_SOURCE, MODULE_FILE);
 
   writeFileSync(resolve(CACHE_DIR, MODULE_FILE), moduleJs);
   writeFileSync(resolve(CACHE_DIR, SECTIONS_FILE), sectionsJs);

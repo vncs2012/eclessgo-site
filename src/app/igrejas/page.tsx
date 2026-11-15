@@ -1,6 +1,7 @@
 import { ChurchFinder } from "@/components/site/church-finder";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
+import { getTranslations } from "next-intl/server";
 import { PUBLIC_CACHE_TTL_SECONDS } from "@/lib/public-cache";
 import { getPublicChurches } from "@/lib/public-api";
 import { GOIANIA_CENTER } from "@/lib/site-config";
@@ -13,7 +14,7 @@ type DirectoryChurchesResult = {
   loadError: string | null;
 };
 
-async function loadDirectoryChurches(): Promise<DirectoryChurchesResult> {
+async function loadDirectoryChurches(loadErrorMessage: string): Promise<DirectoryChurchesResult> {
   try {
     const churches = await getPublicChurches(
       {
@@ -33,13 +34,14 @@ async function loadDirectoryChurches(): Promise<DirectoryChurchesResult> {
     console.warn("[igrejas] API publica indisponivel:", error instanceof Error ? error.message : error);
     return {
       churches: [],
-      loadError: "Não foi possível carregar o diretório público agora porque a API do EclessGO não respondeu.",
+      loadError: loadErrorMessage,
     };
   }
 }
 
 export default async function ChurchesPage() {
-  const { churches, loadError } = await loadDirectoryChurches();
+  const t = await getTranslations("finder");
+  const { churches, loadError } = await loadDirectoryChurches(t("directory.loadError"));
 
   return (
     <div className="site-shell min-h-screen bg-background text-foreground">
@@ -48,15 +50,11 @@ export default async function ChurchesPage() {
 
       <main className="relative z-10 mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
         <section className="max-w-3xl">
-          <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">Mapa público</p>
+          <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">{t("directory.eyebrow")}</p>
           <h1 className="section-title mt-4 text-5xl font-semibold tracking-tight text-zinc-50">
-            Descubra comunidades cadastradas no EclessGO
+            {t("directory.title")}
           </h1>
-          <p className="mt-5 text-base leading-8 text-zinc-400">
-            Este diretório mostra apenas comunidades com latitude e longitude válidas. A pessoa pode
-            buscar por nome, filtrar por tradição, usar a própria localização e abrir a página
-            pública de cada espaço.
-          </p>
+          <p className="mt-5 text-base leading-8 text-zinc-400">{t("directory.description")}</p>
         </section>
 
         <section className="mt-10">

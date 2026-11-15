@@ -37,6 +37,7 @@ export function ChurchFinder({
   const [hasLive, setHasLive] = useState(false);
   const filters: ChurchFinderFiltersState = { search, denomination, city, neighborhood, hasLive };
   const messages: ChurchFinderStatusMessages = {
+    initialLoadError: t("directory.loadError"),
     initialShowing: t("status.initialShowing"),
     initialEmpty: t("status.initialEmpty"),
     filtersClearedShowing: t("status.filtersClearedShowing"),
