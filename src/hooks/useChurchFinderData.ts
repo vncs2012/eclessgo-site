@@ -55,7 +55,17 @@ interface FetchChurchesParams {
 }
 
 type FinderRequestOperation = "search" | "clear" | "location";
-type ChurchFinderStatusKey = keyof ChurchFinderStatusMessages;
+
+/** De onde vem o centro da busca: referência padrão, localização da pessoa ou área do mapa. */
+export type ChurchFinderCenterSource = "default" | "user" | "area";
+
+export interface SearchChurchesOptions {
+  /** Filtros que acabaram de mudar e ainda não chegaram ao estado do componente. */
+  filters?: Partial<ChurchFinderFiltersState>;
+  /** "Buscar nesta área": novo centro escolhido no mapa. */
+  center?: Coordinates;
+}
+export type ChurchFinderStatusKey = keyof ChurchFinderStatusMessages;
 
 interface ActiveFinderRequest {
   controller: AbortController;
@@ -126,6 +136,8 @@ export function useChurchFinderData({
   const [churches, setChurches] = useState(initialChurches);
   const [selectedChurchId, setSelectedChurchId] = useState<string | null>(initialChurches[0]?.id ?? null);
   const [center, setCenter] = useState(initialCenter);
+  const [centerSource, setCenterSource] = useState<ChurchFinderCenterSource>("default");
+  const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [statusKey, setStatusKey] = useState<ChurchFinderStatusKey>(() => {
     if (initialLoadError) return "initialLoadError";
@@ -209,11 +221,18 @@ export function useChurchFinderData({
     };
   }, []);
 
-  async function searchChurches() {
+  async function searchChurches(options: SearchChurchesOptions = {}) {
     const request = startRequest("search");
+    const nextCenter = options.center ?? center;
+    const nextFilters = { ...filters, ...options.filters };
+
+    if (options.center) {
+      setCenter(options.center);
+      setCenterSource("area");
+    }
 
     try {
-      const items = await fetchChurches(toFetchParams(center, filters), request.controller.signal);
+      const items = await fetchChurches(toFetchParams(nextCenter, nextFilters), request.controller.signal);
       if (!isCurrentRequest(request)) {
         completeRequest(request, "aborted");
         return;
@@ -279,6 +298,8 @@ export function useChurchFinderData({
 
         const nextCenter = { lat: position.coords.latitude, lng: position.coords.longitude };
         setCenter(nextCenter);
+        setCenterSource("user");
+        setUserLocation(nextCenter);
 
         try {
           const items = await fetchChurches(
@@ -323,9 +344,12 @@ export function useChurchFinderData({
   return {
     churches,
     center,
+    centerSource,
+    userLocation,
     selectedChurchId,
     selectedChurch,
     isLoading,
+    statusKey,
     statusMessage,
     selectChurch: setSelectedChurchId,
     searchChurches,

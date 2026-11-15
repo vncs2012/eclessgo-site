@@ -7,7 +7,7 @@ function ChurchMapLoading() {
   const t = useTranslations("finder");
 
   return (
-    <div className="flex min-h-[340px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-zinc-950 text-sm text-zinc-400">
+    <div className="flex h-full min-h-[280px] w-full items-center justify-center bg-eg-subtle text-sm text-eg-muted">
       {t("map.loading")}
     </div>
   );
@@ -18,4 +18,5 @@ const ChurchMapCanvas = dynamic(() => import("./church-map-canvas"), {
   loading: ChurchMapLoading,
 });
 
+export type { ChurchMapCanvasProps, ChurchMapItem } from "./church-map-canvas";
 export { ChurchMapCanvas as ChurchMap };

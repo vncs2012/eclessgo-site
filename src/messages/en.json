@@ -23,29 +23,51 @@
   "finder": {
     "search": {
       "aria": "Search communities",
-      "placeholder": "Search by name, city, neighborhood or known community"
+      "label": "Address, neighborhood or name",
+      "placeholder": "Address, neighborhood or community name",
+      "submit": "Search"
     },
     "filters": {
-      "cityAria": "Filter by city",
-      "allCities": "All cities",
-      "neighborhoodAria": "Filter by neighborhood",
-      "allNeighborhoods": "All neighborhoods",
-      "denominationAria": "Filter by denomination",
-      "allDenominations": "All denominations",
-      "live": "Live"
+      "title": "Filters",
+      "clear": "Clear",
+      "open": "Filters",
+      "openActive": "{count, plural, one {Filters, # active} other {Filters, # active}}",
+      "close": "Close filters",
+      "showResults": "{count, plural, =0 {See results} one {See # result} other {See # results}}",
+      "distance": "Distance",
+      "near": "Close by",
+      "nearHint": "up to 2 km",
+      "drive": "Up to 15 minutes",
+      "driveHint": "about 8 km by car",
+      "all": "Whole city",
+      "tradition": "Tradition",
+      "traditionCount": "{count, plural, one {# community} other {# communities}}",
+      "liveGroup": "Broadcast",
+      "live": "Streaming live",
+      "liveHint": "Turned on by the community itself",
+      "days": "Usually meets on",
+      "visit": "For your visit",
+      "new": "New",
+      "quick": "Filter shortcuts",
+      "chipNear": "Up to 2 km",
+      "chipLive": "Live"
     },
-    "update": "Update",
+    "update": "Search",
     "updating": "Searching...",
     "myLocation": "My location",
     "map": {
-      "eyebrow": "Web map",
-      "subtitle": "Public discovery of nearby communities",
-      "visibleCount": "{count} visible communities",
-      "markerTitle": "View {name} on the map",
+      "label": "Map of the communities found",
+      "markerTitle": "{number}. {name}",
       "openPublicPage": "View community page",
-      "loading": "Loading map..."
+      "loading": "Loading map...",
+      "searchArea": "Search this area",
+      "legendYou": "You",
+      "legendSame": "Same number as the list",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "locate": "Center where I am",
+      "you": "Your location"
     },
-    "directoryRealtime": "Public directory in real time",
     "empty": {
       "title": "No community found",
       "withFilters": "The current filters returned no published communities. Try broadening the search or clearing the filters.",
@@ -56,15 +78,22 @@
     },
     "card": {
       "live": "Live",
-      "plan": "{plan} plan",
-      "members": "{count} members",
-      "km": "{km} km",
-      "viewPublic": "View public page",
-      "hint": "Click the card or the marker to highlight it on the map."
-    },
-    "highlighted": {
-      "eyebrow": "Highlighted community",
-      "openFull": "Open full page"
+      "liveAria": "Streaming live now",
+      "selectOnMap": "Highlight {number} on the map: {name}",
+      "distanceM": "{m} m",
+      "distanceKm": "{km} km",
+      "updatedAt": "Updated by the community on {date}",
+      "scheduleJoin": " and ",
+      "days": {
+        "MONDAY": "Monday",
+        "TUESDAY": "Tuesday",
+        "WEDNESDAY": "Wednesday",
+        "THURSDAY": "Thursday",
+        "FRIDAY": "Friday",
+        "SATURDAY": "Saturday",
+        "SUNDAY": "Sunday"
+      },
+      "features": "For your visit"
     },
     "status": {
       "initialShowing": "Showing EclessGO public communities from the Goiânia reference.",
@@ -148,6 +177,64 @@
       "copyError": "The key could not be copied automatically. Select it manually.",
       "liability": "EclessGO only displays the PIX key. We do not process payments, issue receipts, or confirm transfers.",
       "qrError": "Error generating the local PIX key QR code."
+    },
+    "results": {
+      "headingNear": "{count, plural, =0 {No communities within 2 km} one {# community within 2 km} other {# communities within 2 km}}",
+      "headingDrive": "{count, plural, =0 {No communities within 8 km} one {# community within 8 km} other {# communities within 8 km}}",
+      "headingAll": "{count, plural, =0 {No communities} one {# community} other {# communities}}",
+      "sortLabel": "Sort results",
+      "sortDistance": "Closest",
+      "sortName": "Name (A–Z)",
+      "center": "Search center: {place}",
+      "centerChange": "change",
+      "centerChangeAria": "Change the search center",
+      "centerDefault": "downtown Goiânia",
+      "centerUser": "your location",
+      "centerArea": "area chosen on the map",
+      "showMore": "{count, plural, one {Show # more community} other {Show # more communities}}",
+      "listLabel": "Communities found"
+    },
+    "drawer": {
+      "expand": "Show the full list",
+      "collapse": "Show more of the map"
+    },
+    "traditions": {
+      "CATOLICA": "Catholic",
+      "CATOLICA_APOSTOLICA_ROMANA": "Catholic",
+      "IGREJA_CATOLICA": "Catholic",
+      "ORTODOXA": "Orthodox",
+      "ANGLICANA": "Anglican",
+      "EVANGELICA": "Evangelical",
+      "EVANGELICA_INDEPENDENTE": "Independent evangelical",
+      "PROTESTANTE": "Evangelical and Protestant",
+      "EVANGELICA_E_PROTESTANTE": "Evangelical and Protestant",
+      "ASSEMBLEIA": "Assemblies of God",
+      "ASSEMBLEIA_DE_DEUS": "Assemblies of God",
+      "BATISTA": "Baptist",
+      "PRESBITERIANA": "Presbyterian",
+      "METODISTA": "Methodist",
+      "LUTERANA": "Lutheran",
+      "ADVENTISTA": "Adventist",
+      "PENTECOSTAL": "Pentecostal",
+      "QUADRANGULAR": "Foursquare",
+      "CONGREGACIONAL": "Congregational",
+      "CONGREGACAO_CRISTA": "Christian Congregation",
+      "ESPIRITA": "Spiritist",
+      "MATRIZ_AFRICANA": "African-rooted",
+      "UMBANDA": "Umbanda",
+      "CANDOMBLE": "Candomblé",
+      "BUDISTA": "Buddhist",
+      "JUDAICA": "Jewish",
+      "ISLAMICA": "Islamic",
+      "COMUNIDADE": "Community",
+      "OUTRA": "Other"
+    },
+    "bottomNav": {
+      "label": "Quick navigation",
+      "search": "Search",
+      "activities": "Activities",
+      "register": "Register",
+      "menu": "Menu"
     }
   },
   "publicAssistant": {
@@ -180,35 +267,46 @@
     "remove": "Remove"
   },
   "header": {
-    "tagline": "Public map of communities and digital presence",
+    "homeLabel": "EclessGO, home",
+    "mainNav": "Main",
     "nav": {
       "communities": "Communities",
+      "activities": "Activities",
       "howItWorks": "How it works",
-      "forCommunities": "For communities",
-      "register": "Register"
+      "forCommunities": "For communities"
     },
-    "appCta": "App",
-    "panelCta": "Open the panel",
-    "toggleLanguage": "Change language",
+    "registerCta": "Register a community",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu",
+    "themeToDark": "Use dark theme",
+    "themeToLight": "Use light theme",
+    "toggleLanguage": "Language: English. Switch to Portuguese",
     "languageShort": "EN"
   },
   "footer": {
-    "tagline": "Digital presence, public map and community in a single ecosystem.",
-    "description": "Discover communities, showcase your space on the map and connect people to the app and the admin panel.",
+    "homeLabel": "EclessGO, home",
+    "quote": "Every community deserves to be found.",
     "explore": {
       "title": "Explore",
       "home": "Home",
-      "map": "Communities map",
-      "register": "Register a community"
+      "communities": "Communities",
+      "activities": "Activities"
     },
     "operation": {
       "title": "Operations",
-      "panel": "Admin panel",
-      "howItWorks": "How it works",
-      "app": "EclessGO app"
+      "panel": "Open the panel",
+      "app": "Open the app",
+      "register": "Register a community"
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Terms of Use",
+      "privacy": "Privacy Policy"
     },
     "copyright": "© 2026 EclessGO. Public platform for discovery and digital presence of communities.",
-    "mapCredit": "Leaflet + OpenStreetMap for the public web map"
+    "languageGroup": "Language",
+    "languagePt": "Portuguese",
+    "languageEn": "English"
   },
   "register": {
     "page": {

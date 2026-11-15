@@ -24,10 +24,16 @@ async function openDirectory(page: Page) {
   await page.goto("/comunidades");
 }
 
+// Etapa 1a: o botão do cabeçalho diz o idioma atual e o destino.
+const LOCALE_TOGGLE_PT = "Idioma: português. Mudar para inglês";
+const LOCALE_TOGGLE_EN = "Language: English. Switch to Portuguese";
+
 async function toggleLocale(page: Page) {
-  const toggle = page.getByRole("button", { name: /Mudar idioma|Change language/ });
+  const toggle = page.getByRole("button", {
+    name: new RegExp(`${LOCALE_TOGGLE_PT}|${LOCALE_TOGGLE_EN}`),
+  });
   const currentLabel = await toggle.getAttribute("aria-label");
-  const nextLabel = currentLabel === "Mudar idioma" ? "Change language" : "Mudar idioma";
+  const nextLabel = currentLabel === LOCALE_TOGGLE_PT ? LOCALE_TOGGLE_EN : LOCALE_TOGGLE_PT;
 
   await toggle.click();
   await expect(page.getByRole("button", { name: nextLabel })).toBeVisible();
@@ -47,11 +53,15 @@ test.describe("estados do diretório público", () => {
 
     await openDirectory(page);
     await page.getByRole("textbox", { name: "Buscar comunidades" }).fill("loading");
-    await page.locator('form button[type="submit"]').click();
+    await page.locator('form[role="search"] button[type="submit"]:visible').click();
 
-    await expect(page.locator('form button[type="submit"]')).toHaveText("Buscando...");
+    await expect(page.locator('form[role="search"] button[type="submit"]:visible')).toHaveText(
+      "Buscando...",
+    );
     release();
-    await expect(page.getByRole("heading", { name: "Resultado loading", exact: true }).first()).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Resultado loading", exact: true }).first(),
+    ).toBeVisible();
   });
 
   test("exibe mensagem de erro quando a busca falha", async ({ page }) => {
@@ -65,9 +75,11 @@ test.describe("estados do diretório público", () => {
 
     await openDirectory(page);
     await page.getByRole("textbox", { name: "Buscar comunidades" }).fill("erro");
-    await page.locator('form button[type="submit"]').click();
+    await page.locator('form[role="search"] button[type="submit"]:visible').click();
 
-    await expect(page.getByText("Não foi possível aplicar os filtros agora.", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("Não foi possível aplicar os filtros agora.", { exact: true }),
+    ).toBeVisible();
   });
 
   test("exibe empty state quando a busca não encontra comunidades", async ({ page }) => {
@@ -77,16 +89,20 @@ test.describe("estados do diretório público", () => {
 
     await openDirectory(page);
     await page.getByRole("textbox", { name: "Buscar comunidades" }).fill("vazio");
-    await page.locator('form button[type="submit"]').click();
+    await page.locator('form[role="search"] button[type="submit"]:visible').click();
 
-    await expect(page.getByText("Nenhuma comunidade encontrada para os filtros informados.", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("Nenhuma comunidade encontrada para os filtros informados.", { exact: true }),
+    ).toBeVisible();
   });
 
   test("trata permissão de localização negada sem alterar o diretório", async ({ page }) => {
     await openDirectory(page);
     await page.getByRole("button", { name: "Minha localização" }).click();
 
-    await expect(page.getByText("A permissão de localização foi negada.", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("A permissão de localização foi negada.", { exact: true }),
+    ).toBeVisible();
   });
 
   test("retraduz o status atual ao trocar idioma sem refazer buscas", async ({ page }) => {
@@ -142,7 +158,7 @@ test.describe("estados do diretório público", () => {
     expect(publicDirectoryRequests).toBe(0);
 
     const search = page.getByRole("textbox", { name: "Buscar comunidades" });
-    const submit = page.locator('form button[type="submit"]');
+    const submit = page.locator('form[role="search"] button[type="submit"]:visible');
 
     await search.fill("sucesso");
     await submit.click();
@@ -166,11 +182,15 @@ test.describe("estados do diretório público", () => {
     const requestsAfterEmptySearch = publicDirectoryRequests;
 
     await page.getByRole("button", { name: "Clear filters" }).click();
-    await expect(status).toHaveText("Filters cleared. Showing published communities near the current reference.");
+    await expect(status).toHaveText(
+      "Filters cleared. Showing published communities near the current reference.",
+    );
     expect(publicDirectoryRequests).toBe(requestsAfterEmptySearch + 1);
 
     await toggleLocale(page);
-    await expect(status).toHaveText("Filtros limpos. Exibindo comunidades publicadas próximas da referência atual.");
+    await expect(status).toHaveText(
+      "Filtros limpos. Exibindo comunidades publicadas próximas da referência atual.",
+    );
     const requestsAfterClear = publicDirectoryRequests;
 
     await search.fill("erro");
@@ -181,5 +201,129 @@ test.describe("estados do diretório público", () => {
     await expect(status).toHaveText("Could not apply the filters right now.");
     expect(publicDirectoryRequests).toBe(requestsAfterClear + 1);
     expect(documentLoads).toBe(1);
+  });
+
+  test("lista e mapa usam os mesmos números, inclusive depois de filtrar", async ({ page }) => {
+    const churches = [
+      {
+        ...responseChurch("Perto Dois"),
+        id: "p2",
+        slug: "p2",
+        distanceKm: 1.5,
+        location: { lat: -16.69, lng: -49.27 },
+      },
+      {
+        ...responseChurch("Perto Um"),
+        id: "p1",
+        slug: "p1",
+        distanceKm: 0.4,
+        location: { lat: -16.687, lng: -49.265 },
+      },
+      {
+        ...responseChurch("Longe"),
+        id: "l1",
+        slug: "l1",
+        distanceKm: 6,
+        location: { lat: -16.73, lng: -49.3 },
+      },
+    ];
+    await page.route("**/api/public/churches**", async (route) => {
+      await route.fulfill({ json: { data: churches } });
+    });
+
+    await openDirectory(page);
+    await page.getByRole("textbox", { name: "Buscar comunidades" }).fill("todas");
+    await page.locator('form[role="search"] button[type="submit"]:visible').click();
+    await expect(page.getByRole("heading", { name: "3 comunidades" })).toBeVisible();
+
+    const pinTitles = () =>
+      page
+        .locator(".leaflet-marker-icon[title]")
+        .evaluateAll((els) => els.map((el) => el.getAttribute("title")).sort());
+    const cardOrder = () => page.locator("ol > li h3").allTextContents();
+
+    await expect(cardOrder()).resolves.toEqual(["Perto Um", "Perto Dois", "Longe"]);
+    await expect.poll(pinTitles).toEqual(["1. Perto Um", "2. Perto Dois", "3. Longe"]);
+
+    await page.getByRole("radio", { name: /Aqui perto/ }).check();
+    await expect(page.getByRole("heading", { name: "2 comunidades até 2 km" })).toBeVisible();
+    await expect.poll(pinTitles).toEqual(["1. Perto Um", "2. Perto Dois"]);
+
+    await page.locator('.leaflet-marker-icon[title="2. Perto Dois"]').click();
+    await expect(
+      page.getByRole("button", { name: "Destacar 2 no mapa: Perto Dois" }),
+    ).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("/igrejas redireciona 301 para /comunidades preservando a query", async ({ request }) => {
+    const list = await request.get("/igrejas?q=centro", { maxRedirects: 0 });
+    expect(list.status()).toBe(301);
+    expect(
+      new URL(list.headers().location, "http://x").pathname +
+        new URL(list.headers().location, "http://x").search,
+    ).toBe("/comunidades?q=centro");
+
+    const detail = await request.get("/igrejas/alguma-comunidade", { maxRedirects: 0 });
+    expect(detail.status()).toBe(301);
+    expect(new URL(detail.headers().location, "http://x").pathname).toBe(
+      "/comunidades/alguma-comunidade",
+    );
+  });
+
+  test("em 1440 px, arrastar o mapa mostra 'Buscar nesta área' e renumera a partir do novo centro", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const centers: string[] = [];
+    await page.route("**/api/public/churches**", async (route) => {
+      const url = new URL(route.request().url());
+      centers.push(`${url.searchParams.get("lat")},${url.searchParams.get("lng")}`);
+      const area = centers.length > 1;
+      await route.fulfill({
+        json: {
+          data: area
+            ? [
+                { ...responseChurch("Area Um"), id: "a1", slug: "a1", distanceKm: 0.2 },
+                {
+                  ...responseChurch("Area Dois"),
+                  id: "a2",
+                  slug: "a2",
+                  distanceKm: 0.8,
+                  location: { lat: -16.69, lng: -49.27 },
+                },
+              ]
+            : [responseChurch("Inicial")],
+        },
+      });
+    });
+
+    await openDirectory(page);
+    await page.getByRole("textbox", { name: "Buscar comunidades" }).fill("x");
+    await page.locator('form[role="search"] button[type="submit"]:visible').click();
+    await expect(page.getByRole("heading", { name: "Inicial", exact: true })).toBeVisible();
+
+    const searchArea = page.getByRole("button", { name: "Buscar nesta área" });
+    await expect(searchArea).toHaveCount(0);
+
+    const box = await page.locator(".leaflet-container").boundingBox();
+    if (!box) throw new Error("mapa sem caixa");
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width / 2 - 160, box.y + box.height / 2 - 90, { steps: 8 });
+    await page.mouse.up();
+
+    await expect(searchArea).toBeVisible();
+    await searchArea.click();
+    await expect(page.getByRole("heading", { name: "Area Um", exact: true })).toBeVisible();
+    expect(centers).toHaveLength(2);
+    expect(centers[1]).not.toBe(centers[0]);
+    await expect(searchArea).toHaveCount(0);
+    await expect
+      .poll(() =>
+        page
+          .locator(".leaflet-marker-icon[title]")
+          .evaluateAll((els) => els.map((el) => el.getAttribute("title")).sort()),
+      )
+      .toEqual(["1. Area Um", "2. Area Dois"]);
   });
 });

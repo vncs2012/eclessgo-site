@@ -1,11 +1,27 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
+import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { cookies } from "next/headers";
 import type { ReactNode } from "react";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
 import { ConsentBanner } from "@/components/site/consent-banner";
+import { THEME_COOKIE, resolveTheme } from "@/components/site/theme";
 import { SITE_URL } from "@/lib/site-config";
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono-loaded",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -38,9 +54,15 @@ export default async function RootLayout({
   children: ReactNode;
 }>) {
   const locale = await getLocale();
+  const theme = resolveTheme((await cookies()).get(THEME_COOKIE)?.value);
 
   return (
-    <html lang={locale} className="h-full antialiased" data-scroll-behavior="smooth">
+    <html
+      lang={locale}
+      data-theme={theme}
+      className={`${geist.variable} ${jakarta.variable} ${geistMono.variable} h-full antialiased`}
+      data-scroll-behavior="smooth"
+    >
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           {children}

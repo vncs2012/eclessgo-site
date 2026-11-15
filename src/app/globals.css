@@ -2,9 +2,13 @@
 @import "./tokens.css";
 
 :root {
-  --font-geist-sans: "Geist", "Aptos", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-  --font-display-stack: "Space Grotesk", "Aptos Display", "Segoe UI", ui-sans-serif, system-ui,
+  /* --font-geist, --font-jakarta and --font-geist-mono-loaded come from next/font (layout.tsx) */
+  --font-geist-sans: var(--font-geist), "Geist", "Aptos", "Segoe UI", ui-sans-serif, system-ui,
     sans-serif;
+  --font-display-stack: var(--font-jakarta), "Plus Jakarta Sans", "Geist", "Aptos Display",
+    "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: var(--font-geist-mono-loaded), "Geist Mono", ui-monospace, SFMono-Regular,
+    Menlo, monospace;
 }
 
 @theme inline {
@@ -12,6 +16,31 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-display: var(--font-display-stack);
+  --font-mono: var(--font-geist-mono);
+
+  /* Modelo 8 tokens as Tailwind colors: bg-eg-surface, text-eg-muted, border-eg-border... */
+  --color-eg-app: var(--eg-bg-app);
+  --color-eg-surface: var(--eg-bg-surface);
+  --color-eg-subtle: var(--eg-bg-surface-subtle);
+  --color-eg-hover: var(--eg-bg-hover);
+  --color-eg-alt: var(--eg-section-alt);
+  --color-eg-nav: var(--eg-bg-nav);
+  --color-eg-nav-active: var(--eg-bg-nav-active);
+  --color-eg-nav-text: var(--eg-text-nav);
+  --color-eg-border: var(--eg-border-default);
+  --color-eg-border-strong: var(--eg-border-strong);
+  --color-eg-strong: var(--eg-text-strong);
+  --color-eg-text: var(--eg-text-default);
+  --color-eg-muted: var(--eg-text-muted);
+  --color-eg-inverse: var(--eg-text-inverse);
+  --color-eg-primary: var(--eg-action-primary);
+  --color-eg-primary-hover: var(--eg-action-primary-hover);
+  --color-eg-primary-soft: var(--eg-action-primary-soft);
+  --color-eg-primary-text: var(--eg-action-primary-text);
+  --color-eg-focus: var(--eg-action-focus);
+  --color-eg-warm: var(--eg-accent-warm);
+  --color-eg-warm-soft: var(--eg-accent-warm-soft);
+  --color-eg-on-photo: var(--eg-text-on-photo);
 }
 
 * {
@@ -29,9 +58,13 @@ body {
   min-height: 100vh;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* Em @layer base para que as utilities do Tailwind (text-*, hover:text-*) valham em <a>.
+   Sem camada, esta regra vencia qualquer text-* aplicado direto ao link. */
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 button,
@@ -70,11 +103,14 @@ select {
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 85%);
 }
 
+/* Legado: as páginas ainda não migradas desenham texto claro sobre este cartão escuro.
+   Valores fixos até a migração para os tokens do Modelo 8 (evita texto claro sobre fundo claro
+   quando o tema claro é escolhido). */
 .glass-card {
-  background: var(--card);
-  color: var(--card-foreground);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  background: rgba(24, 24, 27, 0.88);
+  color: #f4f4f5;
+  border: 1px solid rgba(63, 63, 70, 0.75);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(16px);
 }
 
@@ -168,5 +204,38 @@ select {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Rodapé: ConsentPreferences (componente fora do escopo da base visual) ainda usa cores
+   zinc fixas. Estas regras o adaptam aos tokens do Modelo 8 sem alterar o componente. */
+.eg-footer-consent > div > button {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  border-radius: 0.375rem;
+  color: var(--eg-text-default);
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.eg-footer-consent > div > button:hover {
+  color: var(--eg-text-strong);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.eg-footer-consent > div > button:focus-visible {
+  outline: 2px solid var(--eg-action-focus);
+  outline-offset: 2px;
+}
+
+@media (max-width: 639px) {
+  /* Coluna do meio/esquerda no celular: o painel abre fixo, centrado, sem cortar a tela. */
+  .eg-footer-consent [role="dialog"] {
+    position: fixed;
+    inset: auto 1rem 1rem 1rem;
+    width: auto;
+    margin: 0;
   }
 }

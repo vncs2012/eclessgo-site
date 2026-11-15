@@ -1,87 +1,127 @@
 import Link from "next/link";
-import { MapPinned, Menu, Smartphone, Users } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { cookies } from "next/headers";
+import type { ReactNode } from "react";
 
 import { LocaleSwitcher } from "@/components/site/locale-switcher";
-import { APP_CTA_URL, PANEL_URL } from "@/lib/site-config";
+import {
+  HEADER_FOCUS,
+  MobileMenu,
+  NavLink,
+  ThemeToggle,
+} from "@/components/site/site-header-client";
+import { THEME_COOKIE, resolveTheme } from "@/components/site/theme";
 
-export async function SiteHeader() {
+type SiteHeaderProps = {
+  /**
+   * "solid": barra sólida, fixa no topo (todas as páginas, exceto a Home).
+   * "overlay": transparente, texto claro, posicionada sobre a foto de capa da Home
+   * (o contêiner da foto precisa ser `relative` e ter o escurecimento aplicado).
+   */
+  variant?: "solid" | "overlay";
+  /**
+   * Cabeçalho compacto da Busca: campo de busca no lugar dos links de navegação
+   * (visível a partir de lg; no celular a busca fica na própria página).
+   */
+  search?: ReactNode;
+};
+
+const REGISTER_HREF = "/cadastro-comunidade";
+
+export async function SiteHeader({ variant = "solid", search }: SiteHeaderProps) {
   const t = await getTranslations("header");
+  const theme = resolveTheme((await cookies()).get(THEME_COOKIE)?.value);
+  const isOverlay = variant === "overlay";
+
+  const links = [
+    { href: "/comunidades", label: t("nav.communities") },
+    { href: "/atividades", label: t("nav.activities") },
+    { href: "/#como-funciona", label: t("nav.howItWorks") },
+    { href: "/#para-comunidades", label: t("nav.forCommunities") },
+  ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/8 bg-black/55 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-3 gap-y-3 px-4 py-3 sm:gap-x-4 sm:px-6 sm:py-4 lg:px-8">
-        <Link href="/" className="order-1 mr-auto flex min-w-0 items-center gap-3 xl:mr-0">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/18 text-emerald-300 ring-1 ring-emerald-400/20 sm:h-11 sm:w-11 sm:rounded-2xl">
-            <Users className="h-5 w-5" />
-          </div>
-          <div className="min-w-0">
-            <p className="font-display text-lg font-semibold tracking-tight text-zinc-50">EclessGO</p>
-            <p className="hidden text-xs text-zinc-500 lg:block">{t("tagline")}</p>
-          </div>
+    <header
+      data-variant={variant}
+      className={`group/header z-40 w-full ${
+        isOverlay
+          ? "absolute inset-x-0 top-0 bg-transparent text-white"
+          : "sticky top-0 border-b border-eg-border bg-eg-surface text-eg-text"
+      }`}
+    >
+      <div
+        className={`mx-auto flex w-full max-w-[var(--eg-content-max)] items-center gap-3 px-4 sm:px-6 lg:gap-3 lg:px-6 xl:gap-5 xl:px-10 ${
+          isOverlay ? "h-16 lg:h-20" : "h-16"
+        }`}
+      >
+        <Link
+          href="/"
+          aria-label={t("homeLabel")}
+          className={`mr-auto inline-flex min-h-11 shrink-0 items-center gap-2.5 rounded-lg lg:mr-0 ${HEADER_FOCUS}`}
+        >
+          <span
+            aria-hidden="true"
+            className="inline-flex h-[34px] w-[34px] items-center justify-center rounded-full bg-[image:var(--eg-gradient-logo)] text-white"
+          >
+            <MapPin className="h-[18px] w-[18px]" />
+          </span>
+          <span
+            className={`font-display text-xl font-extrabold tracking-tight ${
+              isOverlay ? "text-white" : "text-eg-strong"
+            }`}
+          >
+            EclessGO
+          </span>
         </Link>
 
-        <div className="order-2 flex shrink-0 items-center gap-2 xl:order-3">
-          <LocaleSwitcher />
-          <a
-            href={APP_CTA_URL}
-            className="hidden whitespace-nowrap rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-zinc-200 transition hover:border-emerald-400/30 hover:text-white sm:inline-flex"
-          >
-            <Smartphone className="mr-2 h-4 w-4" />
-            {t("appCta")}
-          </a>
-        </div>
-
-        <a
-          href={PANEL_URL}
-          className="order-3 inline-flex h-11 w-full items-center justify-center whitespace-nowrap rounded-full bg-emerald-500 px-4 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400 sm:w-auto sm:px-4 sm:py-2 xl:order-4"
-        >
-          <MapPinned className="mr-2 h-4 w-4" aria-hidden="true" />
-          {t("panelCta")}
-        </a>
-
-        <details className="order-4 w-full md:hidden">
-          <summary className="inline-flex cursor-pointer list-none items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-zinc-200 transition hover:border-emerald-400/30 hover:text-white">
-            <Menu className="h-4 w-4" aria-hidden="true" />
-            Menu
-          </summary>
-          <nav aria-label="Menu" className="mt-2 grid gap-1 rounded-2xl border border-white/10 bg-zinc-950/95 p-2 text-sm text-zinc-200 shadow-xl sm:grid-cols-2">
-            <Link href="/comunidades" className="rounded-xl px-4 py-3 transition hover:bg-white/5 hover:text-white">
-              {t("nav.communities")}
-            </Link>
-            <Link href="/#como-funciona" className="rounded-xl px-4 py-3 transition hover:bg-white/5 hover:text-white">
-              {t("nav.howItWorks")}
-            </Link>
-            <Link href="/#para-comunidades" className="rounded-xl px-4 py-3 transition hover:bg-white/5 hover:text-white">
-              {t("nav.forCommunities")}
-            </Link>
-            <Link href="/cadastro-comunidade" className="rounded-xl px-4 py-3 transition hover:bg-white/5 hover:text-white">
-              {t("nav.register")}
-            </Link>
-            <a
-              href={APP_CTA_URL}
-              className="inline-flex items-center rounded-xl px-4 py-3 transition hover:bg-white/5 hover:text-white sm:hidden"
-            >
-              <Smartphone className="mr-2 h-4 w-4" aria-hidden="true" />
-              {t("appCta")}
-            </a>
+        {search ? (
+          <div className="mx-auto hidden min-w-0 max-w-xl flex-1 lg:block">{search}</div>
+        ) : (
+          <nav aria-label={t("mainNav")} className="mx-auto hidden lg:block">
+            <ul className="flex items-center gap-0.5">
+              {links.map((link) => (
+                <li key={link.href}>
+                  <NavLink href={link.href}>{link.label}</NavLink>
+                </li>
+              ))}
+            </ul>
           </nav>
-        </details>
+        )}
 
-        <nav className="order-5 hidden w-full items-center justify-center gap-6 text-sm text-zinc-300 md:flex xl:order-2 xl:w-auto">
-          <Link href="/comunidades" className="transition hover:text-white">
-            {t("nav.communities")}
+        <div className="flex items-center gap-1 sm:gap-1.5">
+          <LocaleSwitcher />
+          <ThemeToggle initialTheme={theme} />
+          <Link
+            href={REGISTER_HREF}
+            className={`hidden h-11 items-center justify-center whitespace-nowrap px-4 text-sm font-bold sm:inline-flex ${HEADER_FOCUS} ${
+              search
+                ? "rounded-lg px-2 text-eg-strong underline underline-offset-4 group-data-[variant=overlay]/header:text-white"
+                : "rounded-full bg-eg-primary text-eg-inverse shadow-[var(--eg-shadow-md)] transition-colors hover:bg-eg-primary-hover"
+            }`}
+          >
+            {t("registerCta")}
           </Link>
-          <Link href="/#como-funciona" className="transition hover:text-white">
-            {t("nav.howItWorks")}
-          </Link>
-          <Link href="/#para-comunidades" className="transition hover:text-white">
-            {t("nav.forCommunities")}
-          </Link>
-          <Link href="/cadastro-comunidade" className="transition hover:text-white">
-            {t("nav.register")}
-          </Link>
-        </nav>
+          <MobileMenu>
+            <nav aria-label={t("mainNav")}>
+              <ul className="grid gap-0.5">
+                {links.map((link) => (
+                  <li key={link.href}>
+                    <NavLink href={link.href} variant="menu">
+                      {link.label}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <Link
+              href={REGISTER_HREF}
+              className={`mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-eg-primary px-5 text-base font-bold text-eg-inverse transition-colors hover:bg-eg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eg-focus`}
+            >
+              {t("registerCta")}
+            </Link>
+          </MobileMenu>
+        </div>
       </div>
     </header>
   );

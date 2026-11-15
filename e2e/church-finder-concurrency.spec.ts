@@ -80,7 +80,7 @@ test.describe("concorrência do diretório público", () => {
     await page.goto("/comunidades");
 
     const search = page.getByRole("textbox", { name: "Buscar comunidades" });
-    const submit = page.locator('form button[type="submit"]');
+    const submit = page.locator('form[role="search"] button[type="submit"]:visible');
 
     await search.fill("first");
     await submit.click();

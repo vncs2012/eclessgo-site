@@ -19,6 +19,22 @@ export interface PublicChurchListItem {
   plan: string;
   distanceKm: number | null;
   thumbnail: string | null;
+  /**
+   * Campos do resultado do Modelo 8 que a busca (ChurchListItem) ainda não envia (Etapa 2).
+   * Opcionais: sem dado, a linha correspondente não aparece no card.
+   */
+  schedule?: PublicChurchScheduleEntry[];
+  features?: string[];
+  /** ISO 8601 da última atualização feita pela comunidade. */
+  updatedAt?: string | null;
+}
+
+export interface PublicChurchScheduleEntry {
+  /** MONDAY..SUNDAY (como no detalhe da API). */
+  day: string | null;
+  /** HH:MM */
+  time: string | null;
+  title: string | null;
 }
 
 export interface PublicChurchDetails {

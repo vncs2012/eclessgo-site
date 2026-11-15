@@ -23,29 +23,51 @@
   "finder": {
     "search": {
       "aria": "Buscar comunidades",
-      "placeholder": "Buscar por nome, cidade, bairro ou comunidade conhecida"
+      "label": "Endereço, bairro ou nome",
+      "placeholder": "Endereço, bairro ou nome da comunidade",
+      "submit": "Buscar"
     },
     "filters": {
-      "cityAria": "Filtrar por cidade",
-      "allCities": "Todas as cidades",
-      "neighborhoodAria": "Filtrar por bairro",
-      "allNeighborhoods": "Todos os bairros",
-      "denominationAria": "Filtrar por denominação",
-      "allDenominations": "Todas as denominações",
-      "live": "Ao vivo"
+      "title": "Filtros",
+      "clear": "Limpar",
+      "open": "Filtros",
+      "openActive": "{count, plural, one {Filtros, # ativo} other {Filtros, # ativos}}",
+      "close": "Fechar filtros",
+      "showResults": "{count, plural, =0 {Ver resultados} one {Ver # resultado} other {Ver # resultados}}",
+      "distance": "Distância",
+      "near": "Aqui perto",
+      "nearHint": "até 2 km",
+      "drive": "Até 15 minutos",
+      "driveHint": "cerca de 8 km de carro",
+      "all": "Na cidade toda",
+      "tradition": "Tradição",
+      "traditionCount": "{count, plural, one {# comunidade} other {# comunidades}}",
+      "liveGroup": "Transmissão",
+      "live": "Transmitindo ao vivo",
+      "liveHint": "Ligada pela própria comunidade",
+      "days": "Costuma ter encontro",
+      "visit": "Para a visita",
+      "new": "Novo",
+      "quick": "Atalhos de filtro",
+      "chipNear": "Até 2 km",
+      "chipLive": "Ao vivo"
     },
-    "update": "Atualizar",
+    "update": "Buscar",
     "updating": "Buscando...",
     "myLocation": "Minha localização",
     "map": {
-      "eyebrow": "Mapa web",
-      "subtitle": "Descoberta pública de comunidades próximas",
-      "visibleCount": "{count} comunidades visíveis",
-      "markerTitle": "Ver {name} no mapa",
+      "label": "Mapa das comunidades encontradas",
+      "markerTitle": "{number}. {name}",
       "openPublicPage": "Ver página da comunidade",
-      "loading": "Carregando mapa..."
+      "loading": "Carregando mapa...",
+      "searchArea": "Buscar nesta área",
+      "legendYou": "Você",
+      "legendSame": "Mesmo número da lista",
+      "zoomIn": "Aproximar",
+      "zoomOut": "Afastar",
+      "locate": "Centralizar onde estou",
+      "you": "Sua localização"
     },
-    "directoryRealtime": "Diretório público em tempo real",
     "empty": {
       "title": "Nenhuma comunidade encontrada",
       "withFilters": "Os filtros atuais não retornaram comunidades publicadas. Tente ampliar a busca ou limpar os filtros.",
@@ -56,15 +78,22 @@
     },
     "card": {
       "live": "Ao vivo",
-      "plan": "Plano {plan}",
-      "members": "{count} membros",
-      "km": "{km} km",
-      "viewPublic": "Ver página pública",
-      "hint": "Clique no card ou no marker para destacar no mapa."
-    },
-    "highlighted": {
-      "eyebrow": "Comunidade destacada",
-      "openFull": "Abrir página completa"
+      "liveAria": "Transmitindo ao vivo agora",
+      "selectOnMap": "Destacar {number} no mapa: {name}",
+      "distanceM": "{m} m",
+      "distanceKm": "{km} km",
+      "updatedAt": "Atualizada pela comunidade em {date}",
+      "scheduleJoin": " e ",
+      "days": {
+        "MONDAY": "Segunda",
+        "TUESDAY": "Terça",
+        "WEDNESDAY": "Quarta",
+        "THURSDAY": "Quinta",
+        "FRIDAY": "Sexta",
+        "SATURDAY": "Sábado",
+        "SUNDAY": "Domingo"
+      },
+      "features": "Para a visita"
     },
     "status": {
       "initialShowing": "Exibindo comunidades públicas do EclessGO a partir da referência de Goiânia.",
@@ -148,6 +177,64 @@
       "copyError": "Não foi possível copiar automaticamente. Selecione a chave manualmente.",
       "liability": "O EclessGO apenas exibe a chave PIX. Não processamos o pagamento, emitimos recibo nem confirmamos a transferência.",
       "qrError": "Erro ao gerar o QR local da chave PIX."
+    },
+    "results": {
+      "headingNear": "{count, plural, =0 {Nenhuma comunidade até 2 km} one {# comunidade até 2 km} other {# comunidades até 2 km}}",
+      "headingDrive": "{count, plural, =0 {Nenhuma comunidade até 8 km} one {# comunidade até 8 km} other {# comunidades até 8 km}}",
+      "headingAll": "{count, plural, =0 {Nenhuma comunidade} one {# comunidade} other {# comunidades}}",
+      "sortLabel": "Ordenar resultados",
+      "sortDistance": "Mais perto",
+      "sortName": "Nome (A–Z)",
+      "center": "Centro da busca: {place}",
+      "centerChange": "alterar",
+      "centerChangeAria": "Alterar o centro da busca",
+      "centerDefault": "centro de Goiânia",
+      "centerUser": "sua localização",
+      "centerArea": "área escolhida no mapa",
+      "showMore": "{count, plural, one {Mostrar mais # comunidade} other {Mostrar mais # comunidades}}",
+      "listLabel": "Comunidades encontradas"
+    },
+    "drawer": {
+      "expand": "Mostrar a lista inteira",
+      "collapse": "Mostrar mais o mapa"
+    },
+    "traditions": {
+      "CATOLICA": "Católica",
+      "CATOLICA_APOSTOLICA_ROMANA": "Católica",
+      "IGREJA_CATOLICA": "Católica",
+      "ORTODOXA": "Ortodoxa",
+      "ANGLICANA": "Anglicana",
+      "EVANGELICA": "Evangélica",
+      "EVANGELICA_INDEPENDENTE": "Evangélica independente",
+      "PROTESTANTE": "Evangélica e protestante",
+      "EVANGELICA_E_PROTESTANTE": "Evangélica e protestante",
+      "ASSEMBLEIA": "Assembleia de Deus",
+      "ASSEMBLEIA_DE_DEUS": "Assembleia de Deus",
+      "BATISTA": "Batista",
+      "PRESBITERIANA": "Presbiteriana",
+      "METODISTA": "Metodista",
+      "LUTERANA": "Luterana",
+      "ADVENTISTA": "Adventista",
+      "PENTECOSTAL": "Pentecostal",
+      "QUADRANGULAR": "Quadrangular",
+      "CONGREGACIONAL": "Congregacional",
+      "CONGREGACAO_CRISTA": "Congregação Cristã",
+      "ESPIRITA": "Espírita",
+      "MATRIZ_AFRICANA": "Matriz africana",
+      "UMBANDA": "Umbanda",
+      "CANDOMBLE": "Candomblé",
+      "BUDISTA": "Budista",
+      "JUDAICA": "Judaica",
+      "ISLAMICA": "Islâmica",
+      "COMUNIDADE": "Comunidade",
+      "OUTRA": "Outra"
+    },
+    "bottomNav": {
+      "label": "Navegação rápida",
+      "search": "Buscar",
+      "activities": "Atividades",
+      "register": "Cadastrar",
+      "menu": "Menu"
     }
   },
   "publicAssistant": {
@@ -180,35 +267,46 @@
     "remove": "Remover"
   },
   "header": {
-    "tagline": "Mapa público de comunidades e presença digital",
+    "homeLabel": "EclessGO, início",
+    "mainNav": "Principal",
     "nav": {
       "communities": "Comunidades",
+      "activities": "Atividades",
       "howItWorks": "Como funciona",
-      "forCommunities": "Para comunidades",
-      "register": "Cadastro"
+      "forCommunities": "Para comunidades"
     },
-    "appCta": "App",
-    "panelCta": "Entrar no painel",
-    "toggleLanguage": "Mudar idioma",
+    "registerCta": "Cadastrar comunidade",
+    "menuOpen": "Abrir menu",
+    "menuClose": "Fechar menu",
+    "themeToDark": "Usar tema escuro",
+    "themeToLight": "Usar tema claro",
+    "toggleLanguage": "Idioma: português. Mudar para inglês",
     "languageShort": "PT"
   },
   "footer": {
-    "tagline": "Presença digital, mapa público e comunidade em um só ecossistema.",
-    "description": "Descubra comunidades, apresente seu espaço no mapa e conecte o público ao app e ao painel administrativo.",
+    "homeLabel": "EclessGO, início",
+    "quote": "Toda comunidade merece ser encontrada.",
     "explore": {
       "title": "Explorar",
       "home": "Início",
-      "map": "Mapa de comunidades",
-      "register": "Cadastrar comunidade"
+      "communities": "Comunidades",
+      "activities": "Atividades"
     },
     "operation": {
       "title": "Operação",
-      "panel": "Painel administrativo",
-      "howItWorks": "Como funciona",
-      "app": "App EclessGO"
+      "panel": "Entrar no painel",
+      "app": "Abrir o app",
+      "register": "Cadastrar comunidade"
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Termos de Uso",
+      "privacy": "Política de Privacidade"
     },
     "copyright": "© 2026 EclessGO. Plataforma pública para descoberta e presença digital de comunidades.",
-    "mapCredit": "Leaflet + OpenStreetMap para o mapa web público"
+    "languageGroup": "Idioma",
+    "languagePt": "Português",
+    "languageEn": "Inglês"
   },
   "register": {
     "page": {

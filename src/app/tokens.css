@@ -3,8 +3,16 @@
  *
  * Public web copy of the canonical panel tokens. Keep the --eg-* prefix
  * portable so these values can later be synced across panel, web and mobile.
- * The public web app keeps its current dark default and CSS-color aliases
- * because Tailwind v4 reads these variables directly through @theme.
+ *
+ * Modelo 8 (site redesign): the semantic layer follows
+ * docs/redesign-site/tokens-site.css (V4 base: navy #0E1430, indigo #4F46E5),
+ * light and dark. Components read var(--eg-*) (or the Tailwind `eg-*` colors
+ * declared in globals.css); literal colors live only in this file.
+ *
+ * Theme: `data-theme="light" | "dark"` on <html> (set from the `eg-theme`
+ * cookie in layout.tsx). Without a choice the site stays dark, as before.
+ * The CSS-color aliases (--background, --card...) are kept because Tailwind v4
+ * and existing pages read them; they now resolve to the semantic tokens.
  */
 
 :root {
@@ -61,9 +69,21 @@
   --eg-color-slate-500: #64748b;
   --eg-color-slate-900: #0f172a;
 
-  --eg-font-sans: var(--font-geist-sans), "Inter", ui-sans-serif, system-ui, sans-serif;
-  --eg-font-display: var(--font-display), "Inter", ui-sans-serif, system-ui, sans-serif;
-  --eg-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --eg-font-sans: var(--font-geist-sans), "Geist", ui-sans-serif, system-ui, sans-serif;
+  --eg-font-display: var(--font-display-stack), "Plus Jakarta Sans", "Geist", ui-sans-serif,
+    system-ui, sans-serif;
+  --eg-font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+
+  /* Brand primitives (Modelo 8 / V4) */
+  --eg-color-navy-950: #070b18;
+  --eg-color-navy-900: #0b1020;
+  --eg-color-navy-800: #0e1430;
+  --eg-color-indigo-300: #b9b4ff;
+  --eg-color-indigo-400: #8b83fa;
+  --eg-color-indigo-600: #4f46e5;
+  --eg-color-indigo-700: #4338ca;
+  --eg-color-indigo-800: #3730a3;
 
   --eg-text-xs: 0.75rem;
   --eg-text-sm: 0.875rem;
@@ -74,9 +94,17 @@
   --eg-text-3xl: 1.875rem;
   --eg-text-4xl: 2.25rem;
 
+  /* Fluid type scale for the public site [SITE] */
+  --eg-type-display-xl: clamp(2.4rem, 1.4rem + 4.2vw, 4.75rem);
+  --eg-type-display-l: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
+  --eg-type-display-m: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem);
+  --eg-type-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+
   --eg-leading-tight: 1.2;
+  --eg-leading-display: 1.12;
   --eg-leading-normal: 1.5;
   --eg-leading-relaxed: 1.65;
+  --eg-leading-read: 1.75;
 
   --eg-space-0: 0;
   --eg-space-1: 0.25rem;
@@ -91,23 +119,31 @@
   --eg-space-16: 4rem;
 
   --eg-radius-xs: 0.25rem;
-  --eg-radius-sm: 0.375rem;
-  --eg-radius-md: 0.5rem;
+  --eg-radius-sm: 0.5rem; /* V4: 8px */
+  --eg-radius-md: 0.5625rem; /* V4: 9px */
   --eg-radius-lg: 0.75rem;
   --eg-radius-xl: 1rem;
   --eg-radius-2xl: 1.5rem;
   --eg-radius-full: 999px;
 
-  --eg-shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.05);
-  --eg-shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.1);
-  --eg-shadow-md: 0 8px 24px rgba(16, 24, 40, 0.1);
-  --eg-shadow-lg: 0 16px 40px rgba(16, 24, 40, 0.14);
-  --eg-shadow-focus: 0 0 0 3px rgba(4, 120, 87, 0.22);
-  --eg-shadow-web: 0 20px 50px rgba(0, 0, 0, 0.28);
+  /* Measures [V4] + [SITE] */
+  --eg-control-h: 36px;
+  --eg-control-h-sm: 30px;
+  --eg-control-h-lg: 48px;
+  --eg-input-h: 40px;
+  --eg-search-h: 56px;
+  --eg-target-touch: 44px;
+  --eg-header-h: 64px;
+  --eg-header-h-lg: 80px;
+  --eg-content-max: 1240px;
+  --eg-read-max: 68ch;
+  --eg-gutter: clamp(16px, 4vw, 40px);
+  --eg-section-y: clamp(56px, 9vw, 120px);
 
-  --eg-duration-fast: 150ms;
+  --eg-duration-fast: 120ms;
   --eg-duration-base: 200ms;
-  --eg-duration-slow: 300ms;
+  --eg-duration-slow: 360ms;
+  --eg-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
 
   --eg-z-base: 0;
   --eg-z-sticky: 20;
@@ -116,44 +152,100 @@
   --eg-z-modal: 80;
   --eg-z-toast: 100;
 
-  /* Layer 2: semantic tokens - dark public web default */
+  /* Shared across themes [V4] / [SITE] */
+  --eg-action-primary: var(--eg-color-indigo-600); /* white text: 6.3:1 */
+  --eg-action-primary-hover: var(--eg-color-indigo-700);
+  --eg-action-primary-active: var(--eg-color-indigo-800);
+  --eg-text-inverse: #ffffff;
+  --eg-text-nav-strong: #ffffff;
+  --eg-nav-indicator: var(--eg-color-indigo-400);
+  --eg-gradient-highlight: linear-gradient(135deg, #191c4a 0%, #3b2fb0 62%, #4f46e5 100%);
+  --eg-gradient-highlight-text-muted: #dddbff;
+  --eg-gradient-logo: linear-gradient(135deg, #6e64f5, #4f46e5);
+  --eg-data-1: #4f46e5;
+  --eg-data-2: #14b8a6;
+  --eg-data-3: #f59e0b;
+  --eg-data-4: #f43f5e;
+  --eg-data-neutral: #a5adc8;
+  --eg-photo-1: linear-gradient(140deg, #f6c28b 0%, #e9876b 45%, #6e4b8c 100%);
+  --eg-photo-2: linear-gradient(150deg, #9ad6cb 0%, #3e9c95 50%, #1f3d63 100%);
+  --eg-photo-3: linear-gradient(135deg, #c9c3ff 0%, #7f76f0 50%, #2c2670 100%);
+  --eg-photo-4: linear-gradient(160deg, #ffe3a3 0%, #f1a54a 50%, #9b3f2a 100%);
+  --eg-text-on-photo: #ffffff;
+  --eg-map-pin-ring: #ffffff;
+  --eg-qr-dark: #0e1430;
+  --eg-qr-light: #ffffff;
+
+  /* Layer 2: semantic tokens - dark (default, no data-theme) */
   color-scheme: dark;
-  --eg-bg-app: var(--eg-color-black);
-  --eg-bg-surface: #0d1110;
-  --eg-bg-surface-subtle: #141a18;
-  --eg-bg-elevated: #171f1c;
+  --eg-bg-app: #0b1020;
+  --eg-bg-surface: #121933;
+  --eg-bg-surface-subtle: #182040;
+  --eg-bg-elevated: #182040;
+  --eg-bg-hover: #1c2547;
   --eg-bg-inverse: var(--eg-color-white);
+  --eg-bg-nav: #070b18; /* [V4*] deeper than the page so it still reads as a band */
+  --eg-bg-nav-active: #161e3d;
+  --eg-text-nav: #aab2cc;
+  --eg-section-alt: #0f1530;
 
-  --eg-text-strong: #f6f7f6;
-  --eg-text-default: #d7ded9;
-  --eg-text-muted: #9aa6a0;
-  --eg-text-subtle: #7f8d86;
-  --eg-text-inverse: #06130e;
+  --eg-text-strong: #f1f3fa;
+  --eg-text-default: #c3c9dc;
+  --eg-text-muted: #9aa3bf;
+  --eg-text-subtle: #8c95b3;
 
-  --eg-border-subtle: #1b2420;
-  --eg-border-default: #25302b;
-  --eg-border-strong: #3a4942;
+  --eg-border-subtle: #1c2444;
+  --eg-border-default: #262f52;
+  --eg-border-strong: #6b7496; /* controls: 3:1 on surface */
 
-  --eg-action-primary: var(--eg-color-emerald-400);
-  --eg-action-primary-hover: var(--eg-color-emerald-300);
-  --eg-action-primary-active: var(--eg-color-emerald-200);
-  --eg-action-primary-soft: #06251a;
+  --eg-action-primary-soft: #1e2350;
+  --eg-action-primary-text: #b9b4ff;
   --eg-action-secondary: var(--eg-color-teal-500);
-  --eg-action-focus: var(--eg-color-emerald-300);
+  --eg-action-focus: #8b83fa; /* [V4*] indigo base vanishes on #0b1020 */
 
-  --eg-feedback-success: #4ade80;
-  --eg-feedback-success-soft: #072416;
-  --eg-feedback-warning: var(--eg-color-amber-500);
-  --eg-feedback-warning-soft: #271906;
-  --eg-feedback-danger: #f87171;
-  --eg-feedback-danger-soft: #2b0b0b;
-  --eg-feedback-info: #60a5fa;
-  --eg-feedback-info-soft: #061527;
+  --eg-feedback-success: #0f766e;
+  --eg-feedback-success-soft: #0d2b2a;
+  --eg-feedback-success-text: #5eead4;
+  --eg-feedback-warning: #b45309;
+  --eg-feedback-warning-soft: #2e2210;
+  --eg-feedback-warning-text: #fbbf24;
+  --eg-feedback-danger: #be123c;
+  --eg-feedback-danger-soft: #331522;
+  --eg-feedback-danger-text: #fda4af;
+  --eg-feedback-info: #1d4ed8;
+  --eg-feedback-info-soft: #14224a;
+  --eg-feedback-info-text: #93c5fd;
+  --eg-accent-warm: #fbbf24;
+  --eg-accent-warm-soft: #2e2210;
+
+  --eg-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --eg-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --eg-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --eg-shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --eg-shadow-focus: 0 0 0 3px rgba(139, 131, 250, 0.3);
+  --eg-shadow-web: 0 20px 50px rgba(0, 0, 0, 0.28);
+
+  --eg-scrim: rgba(3, 6, 16, 0.62);
+  --eg-glass: rgba(18, 25, 51, 0.9);
+  --eg-skeleton-a: #182040;
+  --eg-skeleton-b: #212a50;
+  --eg-photo-scrim: linear-gradient(180deg, rgba(7, 11, 24, 0) 25%, rgba(7, 11, 24, 0.85) 100%);
+  --eg-photo-scrim-strong: linear-gradient(
+    180deg,
+    rgba(7, 11, 24, 0.55) 0%,
+    rgba(7, 11, 24, 0.38) 30%,
+    rgba(7, 11, 24, 0.7) 60%,
+    rgba(7, 11, 24, 0.9) 100%
+  );
+  --eg-map-pin: #7c74f6;
+  --eg-map-pin-selected: #f1f3fa;
+  --eg-map-me: #60a5fa;
+  --eg-map-me-halo: rgba(96, 165, 250, 0.22);
 
   /* Layer 3: component tokens */
   --eg-shell-bg: var(--eg-bg-app);
   --eg-shell-sidebar-bg: var(--eg-bg-surface);
-  --eg-shell-header-bg: rgba(13, 17, 16, 0.74);
+  --eg-shell-header-bg: rgba(18, 25, 51, 0.86);
   --eg-shell-border: var(--eg-border-default);
 
   --eg-card-bg: var(--eg-bg-surface);
@@ -170,7 +262,7 @@
   --eg-button-height-lg: 3rem;
 
   --eg-input-bg: var(--eg-bg-surface);
-  --eg-input-border: var(--eg-border-default);
+  --eg-input-border: var(--eg-border-strong);
   --eg-input-border-focus: var(--eg-action-focus);
   --eg-input-text: var(--eg-text-default);
   --eg-input-placeholder: var(--eg-text-subtle);
@@ -180,152 +272,112 @@
   --eg-toast-bg: var(--eg-bg-elevated);
   --eg-toast-border: var(--eg-border-default);
   --eg-focus-ring: var(--eg-shadow-focus);
+}
 
-  /* Compatibility aliases consumed by Tailwind v4 and existing public UI */
-  --background: var(--eg-color-zinc-950);
-  --foreground: var(--eg-color-zinc-100);
-  --card: rgba(24, 24, 27, 0.88);
-  --card-foreground: var(--eg-color-zinc-100);
-  --popover: var(--eg-color-zinc-900);
-  --popover-foreground: var(--eg-color-zinc-100);
-  --primary: var(--eg-color-emerald-500);
-  --primary-strong: var(--eg-color-emerald-600);
-  --primary-foreground: var(--eg-color-emerald-950);
-  --secondary: var(--eg-color-zinc-800);
-  --secondary-foreground: var(--eg-color-zinc-100);
-  --muted: var(--eg-color-zinc-900);
-  --muted-foreground: var(--eg-color-zinc-400);
-  --accent: var(--eg-color-emerald-400);
-  --accent-foreground: var(--eg-color-emerald-950);
-  --destructive: var(--eg-color-red-600);
-  --destructive-foreground: var(--eg-color-white);
-  --border: rgba(63, 63, 70, 0.75);
-  --input: rgba(63, 63, 70, 0.85);
-  --ring: rgba(16, 185, 129, 0.45);
-  --radius: var(--eg-radius-xl);
-  --shadow: var(--eg-shadow-web);
+/* Dark is also selectable explicitly. The block above is the default. */
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 .light,
 [data-theme="light"] {
   color-scheme: light;
-  --eg-bg-app: #f7f8f6;
-  --eg-bg-surface: var(--eg-color-white);
-  --eg-bg-surface-subtle: #f1f5f2;
-  --eg-bg-elevated: var(--eg-color-white);
-  --eg-bg-inverse: var(--eg-color-zinc-950);
+  --eg-bg-app: #f6f7f9;
+  --eg-bg-surface: #ffffff;
+  --eg-bg-surface-subtle: #f2f3f7;
+  --eg-bg-elevated: #ffffff;
+  --eg-bg-hover: #edeff5;
+  --eg-bg-inverse: var(--eg-color-navy-800);
+  --eg-bg-nav: #0e1430;
+  --eg-bg-nav-active: #1c2547;
+  --eg-text-nav: #aab2cc; /* on --eg-bg-nav: 8.6:1 */
+  --eg-section-alt: #ffffff;
 
-  --eg-text-strong: #111827;
-  --eg-text-default: #1f2937;
-  --eg-text-muted: #667085;
-  --eg-text-subtle: #8a948e;
-  --eg-text-inverse: var(--eg-color-white);
+  --eg-text-strong: #0e1430; /* 17:1 on white */
+  --eg-text-default: #3a4256;
+  --eg-text-muted: #5d6585; /* 5.7:1 on white; 5.3:1 on --eg-bg-app */
+  --eg-text-subtle: #6a7290;
 
-  --eg-border-subtle: #edf1ee;
-  --eg-border-default: #d9e1dc;
-  --eg-border-strong: #aebbb3;
+  --eg-border-subtle: #edeff4;
+  --eg-border-default: #e4e6ec;
+  --eg-border-strong: #8d93a8; /* controls: 3:1 on white */
 
-  --eg-action-primary: var(--eg-color-emerald-700);
-  --eg-action-primary-hover: var(--eg-color-emerald-800);
-  --eg-action-primary-active: var(--eg-color-emerald-900);
-  --eg-action-primary-soft: #dff5ea;
+  --eg-action-primary-soft: #eef0ff;
+  --eg-action-primary-text: #3730a3; /* on soft: 8.8:1; also link color */
   --eg-action-secondary: var(--eg-color-teal-700);
-  --eg-action-focus: var(--eg-color-emerald-700);
+  --eg-action-focus: #4f46e5;
 
-  --eg-feedback-success: #16803c;
-  --eg-feedback-success-soft: #e8f7ee;
-  --eg-feedback-warning: var(--eg-color-amber-700);
-  --eg-feedback-warning-soft: var(--eg-color-amber-50);
-  --eg-feedback-danger: var(--eg-color-red-600);
-  --eg-feedback-danger-soft: var(--eg-color-red-50);
-  --eg-feedback-info: var(--eg-color-blue-600);
-  --eg-feedback-info-soft: var(--eg-color-blue-50);
+  --eg-feedback-success: #0f766e;
+  --eg-feedback-success-soft: #e6f6f3;
+  --eg-feedback-success-text: #0f766e;
+  --eg-feedback-warning: #b45309;
+  --eg-feedback-warning-soft: #fef3e2;
+  --eg-feedback-warning-text: #9a4507;
+  --eg-feedback-danger: #be123c;
+  --eg-feedback-danger-soft: #fdecef;
+  --eg-feedback-danger-text: #be123c;
+  --eg-feedback-info: #1d4ed8;
+  --eg-feedback-info-soft: #eaf0fe;
+  --eg-feedback-info-text: #1d4ed8;
+  --eg-accent-warm: #9a4507; /* 6.6:1 on white */
+  --eg-accent-warm-soft: #fef3e2;
 
-  --eg-shell-header-bg: rgba(250, 250, 250, 0.72);
-  --eg-card-shadow: var(--eg-shadow-sm);
+  --eg-shadow-xs: 0 1px 2px rgba(16, 24, 64, 0.05);
+  --eg-shadow-sm: 0 1px 2px rgba(16, 24, 64, 0.05);
+  --eg-shadow-md: 0 8px 24px rgba(16, 24, 64, 0.1);
+  --eg-shadow-lg: 0 24px 64px rgba(14, 20, 48, 0.3);
+  --eg-shadow-focus: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  --eg-shadow-web: var(--eg-shadow-md);
 
+  --eg-scrim: rgba(14, 20, 48, 0.45);
+  --eg-glass: rgba(255, 255, 255, 0.9);
+  --eg-skeleton-a: #eceef5;
+  --eg-skeleton-b: #f6f7fb;
+  --eg-photo-scrim: linear-gradient(180deg, rgba(14, 20, 48, 0) 30%, rgba(14, 20, 48, 0.78) 100%);
+  --eg-photo-scrim-strong: linear-gradient(
+    180deg,
+    rgba(14, 20, 48, 0.5) 0%,
+    rgba(14, 20, 48, 0.3) 30%,
+    rgba(14, 20, 48, 0.62) 60%,
+    rgba(14, 20, 48, 0.86) 100%
+  );
+  --eg-map-pin: #4f46e5;
+  --eg-map-pin-selected: #0e1430;
+  --eg-map-me: #1d4ed8;
+  --eg-map-me-halo: rgba(29, 78, 216, 0.18);
+
+  --eg-shell-header-bg: rgba(255, 255, 255, 0.86);
+}
+
+/* Compatibility aliases consumed by Tailwind v4 (@theme in globals.css) and
+   existing public UI. Re-declared per theme element so scoped .light/.dark
+   containers resolve them against their own semantic tokens. */
+:root,
+.light,
+.dark,
+[data-theme="light"],
+[data-theme="dark"] {
   --background: var(--eg-bg-app);
-  --foreground: var(--eg-text-default);
-  --card: var(--eg-bg-surface);
+  --foreground: var(--eg-text-strong);
+  --card: color-mix(in srgb, var(--eg-bg-surface) 88%, transparent);
   --card-foreground: var(--eg-text-default);
   --popover: var(--eg-bg-elevated);
   --popover-foreground: var(--eg-text-default);
   --primary: var(--eg-action-primary);
   --primary-strong: var(--eg-action-primary-hover);
   --primary-foreground: var(--eg-text-inverse);
-  --secondary: var(--eg-color-slate-500);
-  --secondary-foreground: var(--eg-text-inverse);
+  --secondary: var(--eg-bg-surface-subtle);
+  --secondary-foreground: var(--eg-text-default);
   --muted: var(--eg-bg-surface-subtle);
   --muted-foreground: var(--eg-text-muted);
-  --accent: var(--eg-bg-surface-subtle);
-  --accent-foreground: var(--eg-text-strong);
+  --accent: var(--eg-action-primary-soft);
+  --accent-foreground: var(--eg-action-primary-text);
   --destructive: var(--eg-feedback-danger);
   --destructive-foreground: var(--eg-text-inverse);
   --border: var(--eg-border-default);
-  --input: var(--eg-border-default);
+  --input: var(--eg-border-strong);
   --ring: var(--eg-action-focus);
-  --radius: var(--eg-radius-xl);
-  --shadow: var(--eg-shadow-sm);
-}
-
-.dark,
-[data-theme="dark"] {
-  color-scheme: dark;
-  --eg-bg-app: var(--eg-color-black);
-  --eg-bg-surface: #0d1110;
-  --eg-bg-surface-subtle: #141a18;
-  --eg-bg-elevated: #171f1c;
-  --eg-bg-inverse: var(--eg-color-white);
-
-  --eg-text-strong: #f6f7f6;
-  --eg-text-default: #d7ded9;
-  --eg-text-muted: #9aa6a0;
-  --eg-text-subtle: #7f8d86;
-  --eg-text-inverse: #06130e;
-
-  --eg-border-subtle: #1b2420;
-  --eg-border-default: #25302b;
-  --eg-border-strong: #3a4942;
-
-  --eg-action-primary: var(--eg-color-emerald-400);
-  --eg-action-primary-hover: var(--eg-color-emerald-300);
-  --eg-action-primary-active: var(--eg-color-emerald-200);
-  --eg-action-primary-soft: #06251a;
-  --eg-action-secondary: var(--eg-color-teal-500);
-  --eg-action-focus: var(--eg-color-emerald-300);
-
-  --eg-feedback-success: #4ade80;
-  --eg-feedback-success-soft: #072416;
-  --eg-feedback-warning: var(--eg-color-amber-500);
-  --eg-feedback-warning-soft: #271906;
-  --eg-feedback-danger: #f87171;
-  --eg-feedback-danger-soft: #2b0b0b;
-  --eg-feedback-info: #60a5fa;
-  --eg-feedback-info-soft: #061527;
-
-  --eg-shell-header-bg: rgba(13, 17, 16, 0.74);
-  --eg-card-shadow: var(--eg-shadow-xs);
-
-  --background: var(--eg-color-zinc-950);
-  --foreground: var(--eg-color-zinc-100);
-  --card: rgba(24, 24, 27, 0.88);
-  --card-foreground: var(--eg-color-zinc-100);
-  --popover: var(--eg-color-zinc-900);
-  --popover-foreground: var(--eg-color-zinc-100);
-  --primary: var(--eg-color-emerald-500);
-  --primary-strong: var(--eg-color-emerald-600);
-  --primary-foreground: var(--eg-color-emerald-950);
-  --secondary: var(--eg-color-zinc-800);
-  --secondary-foreground: var(--eg-color-zinc-100);
-  --muted: var(--eg-color-zinc-900);
-  --muted-foreground: var(--eg-color-zinc-400);
-  --accent: var(--eg-color-emerald-400);
-  --accent-foreground: var(--eg-color-emerald-950);
-  --destructive: var(--eg-color-red-600);
-  --destructive-foreground: var(--eg-color-white);
-  --border: rgba(63, 63, 70, 0.75);
-  --input: rgba(63, 63, 70, 0.85);
-  --ring: rgba(16, 185, 129, 0.45);
   --radius: var(--eg-radius-xl);
   --shadow: var(--eg-shadow-web);
 }

@@ -50,6 +50,14 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // /comunidades é a rota oficial da Busca e da página da comunidade (Modelo 8).
+  // 301 explícito (o `permanent: true` do Next devolve 308). A query string é preservada.
+  async redirects() {
+    return [
+      { source: "/igrejas", destination: "/comunidades", statusCode: 301 },
+      { source: "/igrejas/:slug", destination: "/comunidades/:slug", statusCode: 301 },
+    ];
+  },
   async headers() {
     return [
       {
