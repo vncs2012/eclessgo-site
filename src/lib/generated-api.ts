@@ -116,7 +116,7 @@ export interface Body_upload_register_church_media_api_v1_auth_register_church_u
   file: string;
 }
 
-export type BusinessAuditAction = "MEMBERSHIP_ROLE_CHANGED" | "CHURCH_PUBLICATION_REVIEWED" | "MINISTRY_TEAM_CREATED" | "MINISTRY_TEAM_UPDATED" | "MINISTRY_TEAM_MEMBER_ADDED" | "MINISTRY_TEAM_MEMBER_UPDATED" | "SERVICE_SCHEDULE_CREATED" | "SERVICE_SCHEDULE_UPDATED" | "SERVICE_SCHEDULE_PUBLISHED" | "SERVICE_SCHEDULE_CANCELLED" | "MEMBERSHIP_STATUS_CHANGED" | "MEMBERSHIP_INVITED" | "MEMBERSHIP_INVITE_RESENT" | "MEMBERSHIP_JOINED" | "MEMBERSHIP_LEFT" | "PERSON_ACCESS_LINKED" | "PERSON_ACCESS_UNLINKED" | "COMMUNITY_EVENT_CREATED" | "COMMUNITY_EVENT_UPDATED" | "COMMUNITY_EVENT_DELETED" | "COMMUNITY_ANNOUNCEMENT_CREATED" | "COMMUNITY_ANNOUNCEMENT_UPDATED" | "COMMUNITY_ANNOUNCEMENT_DELETED" | "COMMUNITY_GROUP_CREATED" | "COMMUNITY_PRAYER_MARKED_ANSWERED" | "COMMUNITY_PRAYER_COMMENT_MODERATED" | "COMMUNITY_POST_REMOVED_BY_MODERATOR" | "COMMUNITY_POST_COMMENT_REMOVED_BY_MODERATOR" | "COMMUNITY_POST_MODERATION_STATUS_CHANGED" | "COMMUNITY_POST_REPORT_RESOLVED" | "COMMUNITY_GROUP_MESSAGE_MODERATED" | "CHURCH_SETTINGS_UPDATED" | "CHURCH_LIVE_STARTED" | "CHURCH_LIVE_RESTARTED" | "CHURCH_LIVE_STOPPED" | "PAYMENT_WEBHOOK_PROCESSED" | "PAYMENT_RECONCILIATED" | "CAMPAIGN_CREATED" | "CAMPAIGN_UPDATED" | "CAMPAIGN_CANCELLED" | "MANUAL_DONATION_CREATED" | "MANUAL_DONATION_CONFIRMED" | "DONATION_CANCELLED" | "DONATION_REFUND_REQUESTED" | "EXPENSE_CREATED" | "EXPENSE_CANCELLED";
+export type BusinessAuditAction = "MEMBERSHIP_ROLE_CHANGED" | "CHURCH_PUBLICATION_REVIEWED" | "MINISTRY_TEAM_CREATED" | "MINISTRY_TEAM_UPDATED" | "MINISTRY_TEAM_MEMBER_ADDED" | "MINISTRY_TEAM_MEMBER_UPDATED" | "SERVICE_SCHEDULE_CREATED" | "SERVICE_SCHEDULE_UPDATED" | "SERVICE_SCHEDULE_PUBLISHED" | "SERVICE_SCHEDULE_CANCELLED" | "MEMBERSHIP_STATUS_CHANGED" | "MEMBERSHIP_INVITED" | "MEMBERSHIP_INVITE_RESENT" | "MEMBERSHIP_JOINED" | "MEMBERSHIP_LEFT" | "PERSON_ACCESS_LINKED" | "PERSON_ACCESS_UNLINKED" | "COMMUNITY_EVENT_CREATED" | "COMMUNITY_EVENT_UPDATED" | "COMMUNITY_EVENT_DELETED" | "COMMUNITY_ANNOUNCEMENT_CREATED" | "COMMUNITY_ANNOUNCEMENT_UPDATED" | "COMMUNITY_ANNOUNCEMENT_DELETED" | "COMMUNITY_GROUP_CREATED" | "COMMUNITY_PRAYER_MARKED_ANSWERED" | "COMMUNITY_PRAYER_COMMENT_MODERATED" | "COMMUNITY_POST_REMOVED_BY_MODERATOR" | "COMMUNITY_POST_COMMENT_REMOVED_BY_MODERATOR" | "COMMUNITY_POST_MODERATION_STATUS_CHANGED" | "COMMUNITY_POST_REPORT_RESOLVED" | "COMMUNITY_GROUP_MESSAGE_MODERATED" | "CHURCH_SETTINGS_UPDATED" | "CHURCH_LIVE_STARTED" | "CHURCH_LIVE_RESTARTED" | "CHURCH_LIVE_STOPPED" | "CHURCH_CORRECTION_SUGGESTION_REVIEWED" | "PAYMENT_WEBHOOK_PROCESSED" | "PAYMENT_RECONCILIATED" | "CAMPAIGN_CREATED" | "CAMPAIGN_UPDATED" | "CAMPAIGN_CANCELLED" | "MANUAL_DONATION_CREATED" | "MANUAL_DONATION_CONFIRMED" | "DONATION_CANCELLED" | "DONATION_REFUND_REQUESTED" | "EXPENSE_CREATED" | "EXPENSE_CANCELLED";
 
 export interface BusinessAuditEventResponse {
   id: string;
@@ -212,6 +212,43 @@ export interface ChurchContactUpdateRequest {
   youtube?: string | null;
 }
 
+export type ChurchCorrectionCategory = "SCHEDULE" | "ADDRESS" | "CONTACT" | "FACILITIES" | "OTHER";
+
+export type ChurchCorrectionStatus = "NEW" | "RESOLVED" | "DISMISSED";
+
+export interface ChurchCorrectionSuggestionAccepted {
+  received?: boolean;
+}
+
+export interface ChurchCorrectionSuggestionRequest {
+  category: ChurchCorrectionCategory;
+  message: string;
+  contact?: string | null;
+  homepage?: string | null;
+}
+
+export interface ChurchCorrectionSuggestionResponse {
+  id: string;
+  category: ChurchCorrectionCategory;
+  message: string;
+  contact?: string | null;
+  has_contact: boolean;
+  status: ChurchCorrectionStatus;
+  created_at: string;
+  resolved_at?: string | null;
+  resolved_by_user_id?: string | null;
+}
+
+export interface ChurchCorrectionSuggestionStatusRequest {
+  status: "RESOLVED" | "DISMISSED";
+}
+
+export interface ChurchDirections {
+  entrance?: string | null;
+  bus?: string | null;
+  parking?: string | null;
+}
+
 export type ChurchFeatureCode = "ACCESSIBLE_ENTRANCE" | "ACCESSIBLE_RESTROOM" | "ELEVATOR" | "LIBRAS" | "KIDS_AREA" | "NURSERY" | "PARKING";
 
 export interface ChurchFeatureVocabularyItem {
@@ -228,6 +265,11 @@ export interface ChurchLocationUpdateRequest {
 export interface ChurchPhotoRequest {
   type: "logo" | "cover" | "gallery";
   url: string;
+}
+
+export interface ChurchPublicTeamMember {
+  name: string;
+  role: string;
 }
 
 export interface ChurchPublicationReviewResponse {
@@ -251,6 +293,8 @@ export interface ChurchPublicationReviewResponse {
   photos?: unknown[];
   features?: string[];
   updated_at?: string | null;
+  directions?: ChurchDirections | null;
+  public_team?: ChurchPublicTeamMember[];
   publication_status: string;
   publication_reviewed_at?: string | null;
   publication_review_reason?: string | null;
@@ -279,6 +323,8 @@ export interface ChurchResponse {
   photos?: unknown[];
   features?: string[];
   updated_at?: string | null;
+  directions?: ChurchDirections | null;
+  public_team?: ChurchPublicTeamMember[];
 }
 
 export type ChurchRole = "MEMBER" | "CHURCH_MODERATOR" | "CHURCH_FINANCE" | "CHURCH_ADMIN";
@@ -288,6 +334,7 @@ export interface ChurchScheduleEntryRequest {
   day: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
   time: string;
   description?: string | null;
+  duration_minutes?: number | null;
 }
 
 export interface CloseCareRequestRequest {
@@ -367,6 +414,16 @@ export interface DataResponse_CampaignResponse_ {
 
 export interface DataResponse_CareRequestResponse_ {
   data: CareRequestResponse;
+  message?: string | null;
+}
+
+export interface DataResponse_ChurchCorrectionSuggestionAccepted_ {
+  data: ChurchCorrectionSuggestionAccepted;
+  message?: string | null;
+}
+
+export interface DataResponse_ChurchCorrectionSuggestionResponse_ {
+  data: ChurchCorrectionSuggestionResponse;
   message?: string | null;
 }
 
@@ -1342,6 +1399,11 @@ export interface PaginatedResponse_CampaignResponse_ {
   meta: PaginationMeta;
 }
 
+export interface PaginatedResponse_ChurchCorrectionSuggestionResponse_ {
+  data: ChurchCorrectionSuggestionResponse[];
+  meta: PaginationMeta;
+}
+
 export interface PaginatedResponse_ChurchPublicationReviewResponse_ {
   data: ChurchPublicationReviewResponse[];
   meta: PaginationMeta;
@@ -1974,6 +2036,7 @@ export interface PublicChurchScheduleEntry {
   title: string;
   day: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
   time: string;
+  duration_minutes?: number | null;
 }
 
 export interface PublicProviderResponse {
@@ -2353,6 +2416,8 @@ export interface UpdateChurchRequest {
   features?: string[] | null;
   thumbnail?: string | null;
   photos?: ChurchPhotoRequest[] | null;
+  directions?: ChurchDirections | null;
+  public_team?: ChurchPublicTeamMember[] | null;
 }
 
 export interface UpdateComplianceStatusRequest {
