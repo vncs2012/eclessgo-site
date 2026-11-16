@@ -1,8 +1,10 @@
 import type { ChurchResponse, PublicChurchResponse } from "@/lib/generated-api";
 import type {
   PublicChurchDetails,
+  PublicChurchDirections,
   PublicChurchListItem,
   PublicChurchScheduleEntry,
+  PublicChurchTeamMember,
 } from "@/types/public";
 
 type RawChurch = Omit<Partial<PublicChurchResponse & ChurchResponse>, "address" | "location"> & {
@@ -94,13 +96,33 @@ export function mapPublicChurchListItem(church: RawChurch): PublicChurchListItem
   };
 }
 
+/** Maior duração aceita na exibição (24 h); a API só grava de 15 a 600 min. */
+export const MAX_DISPLAY_DURATION_MINUTES = 1440;
+
+/** Minutos inteiros de 1 a 1440 (número ou texto numérico); qualquer outra coisa é nula. */
+export function normalizeDurationMinutes(value: unknown): number | null {
+  const parsed = typeof value === "string" && value.trim() ? Number(value) : value;
+  return typeof parsed === "number" &&
+    Number.isInteger(parsed) &&
+    parsed >= 1 &&
+    parsed <= MAX_DISPLAY_DURATION_MINUTES
+    ? parsed
+    : null;
+}
+
 function mapScheduleEntry(entry: unknown): PublicChurchScheduleEntry | null {
   if (!entry || typeof entry !== "object") return null;
   const record = entry as Record<string, unknown>;
   const day = normalizeOptionalText(record.day);
   const time = normalizeOptionalText(record.time);
   if (!day && !time) return null;
-  return { day: day ? day.toUpperCase() : null, time, title: normalizeOptionalText(record.title) };
+  const durationMinutes = normalizeDurationMinutes(record.duration_minutes);
+  return {
+    day: day ? day.toUpperCase() : null,
+    time,
+    title: normalizeOptionalText(record.title),
+    ...(durationMinutes !== null ? { durationMinutes } : {}),
+  };
 }
 
 /**
@@ -333,9 +355,40 @@ export function summarizeSchedule(
   return lines;
 }
 
-/** Link da transmissão e data de atualização só entram quando a API os envia. */
+function mapDirections(value: unknown): PublicChurchDirections | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const record = value as Record<string, unknown>;
+  const directions: PublicChurchDirections = {};
+  for (const key of ["entrance", "bus", "parking"] as const) {
+    const text = normalizeOptionalText(record[key]);
+    if (text) directions[key] = text;
+  }
+  return Object.keys(directions).length > 0 ? directions : null;
+}
+
+function mapPublicTeam(value: unknown): PublicChurchTeamMember[] {
+  if (!Array.isArray(value)) return [];
+  const team: PublicChurchTeamMember[] = [];
+  for (const member of value) {
+    if (!member || typeof member !== "object") continue;
+    const record = member as Record<string, unknown>;
+    const name = normalizeOptionalText(record.name);
+    if (name) team.push({ name, role: normalizeOptionalText(record.role) });
+  }
+  return team;
+}
+
+/**
+ * Link da transmissão, data de atualização, como chegar e equipe só entram quando a API os
+ * envia (a lista de horários do detalhe segue bruta; `duration_minutes` é lido por
+ * `normalizeScheduleRows`).
+ */
 function mapOptionalDetailFields(raw: Record<string, unknown>): Partial<PublicChurchDetails> {
   const extra: Partial<PublicChurchDetails> = {};
+  const directions = mapDirections(raw.directions);
+  if (directions) extra.directions = directions;
+  const publicTeam = mapPublicTeam(raw.public_team);
+  if (publicTeam.length > 0) extra.publicTeam = publicTeam;
   const liveUrl = normalizeOptionalText(raw.live_url);
   if (liveUrl) extra.liveUrl = liveUrl;
   const updatedAt = normalizeOptionalText(raw.updated_at);

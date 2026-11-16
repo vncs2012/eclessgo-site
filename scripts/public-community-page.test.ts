@@ -4,11 +4,12 @@ import { dirname, resolve } from "node:path";
 import { describe, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { mapPublicChurchDetails } from "../src/lib/public-church-utils.ts";
+import { mapPublicChurchDetails, mapPublicChurchListItem, normalizeDurationMinutes } from "../src/lib/public-church-utils.ts";
 import {
   availableSections,
   buildCommunityAddress,
   buildCommunityContact,
+  durationMessage,
   formatUpdatedDate,
   googleMapsUrl,
   groupFeatures,
@@ -256,6 +257,124 @@ describe("mapeamento do detalhe", () => {
   test("updated_at invalido e ignorado", () => {
     const details = mapPublicChurchDetails({ ...base, updated_at: "ontem" } as Parameters<typeof mapPublicChurchDetails>[0]);
     assert.equal("updatedAt" in details, false);
+  });
+});
+
+describe("como chegar e quem e quem no detalhe", () => {
+  const base = { id: "1", slug: "a", name: "A" };
+  const map = (extra: Record<string, unknown>) =>
+    mapPublicChurchDetails({ ...base, ...extra } as Parameters<typeof mapPublicChurchDetails>[0]);
+
+  test("sem directions/public_team as chaves ficam fora do objeto", () => {
+    for (const extra of [{}, { directions: null, public_team: [] }, { directions: {}, public_team: null }]) {
+      const details = map(extra);
+      assert.equal("directions" in details, false);
+      assert.equal("publicTeam" in details, false);
+    }
+  });
+
+  test("directions: so as orientacoes com texto, aparadas", () => {
+    assert.deepEqual(map({ directions: { entrance: " Porta lateral ", bus: "  ", parking: null } }).directions, {
+      entrance: "Porta lateral",
+    });
+    assert.deepEqual(map({ directions: { entrance: "A", bus: "B", parking: "C" } }).directions, {
+      entrance: "A",
+      bus: "B",
+      parking: "C",
+    });
+  });
+
+  test("public_team: nome obrigatorio, funcao opcional, lixo descartado", () => {
+    assert.deepEqual(
+      map({ public_team: [{ name: " Marcos ", role: "Responsável" }, { name: "Ana" }, { name: " " }, null, "x", { role: "sem nome" }] })
+        .publicTeam,
+      [
+        { name: "Marcos", role: "Responsável" },
+        { name: "Ana", role: null },
+      ],
+    );
+  });
+});
+
+describe("duracao dos horarios", () => {
+  test("normalizeDurationMinutes: inteiro de 1 a 1440; o resto e nulo", () => {
+    assert.equal(normalizeDurationMinutes(90), 90);
+    assert.equal(normalizeDurationMinutes("45"), 45);
+    for (const value of [0, -5, 1441, 1.5, "abc", "", null, undefined, NaN, {}]) {
+      assert.equal(normalizeDurationMinutes(value), null, String(value));
+    }
+  });
+
+  test("durationMessage: minutos, horas cheias e horas com minutos", () => {
+    assert.deepEqual(durationMessage(45), { key: "durationMinutes", values: { minutes: 45 } });
+    assert.deepEqual(durationMessage(60), { key: "durationHours", values: { hours: 1 } });
+    assert.deepEqual(durationMessage(90), { key: "durationBoth", values: { hours: 1, minutes: "30" } });
+    assert.deepEqual(durationMessage(125), { key: "durationBoth", values: { hours: 2, minutes: "05" } });
+    assert.deepEqual(durationMessage(120), { key: "durationHours", values: { hours: 2 } });
+    assert.equal(durationMessage(null), null);
+    assert.equal(durationMessage(0), null);
+  });
+
+  test("os textos pt-BR e en formam 'Cerca de 1h30' / 'About 1h 30min'", () => {
+    const load = (locale: string) =>
+      (JSON.parse(readFileSync(resolve(ROOT, `src/messages/${locale}.json`), "utf8")) as {
+        communityPage: { schedule: Record<string, string> };
+      }).communityPage.schedule;
+    const fill = (template: string, values: Record<string, string | number>) =>
+      template.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key]));
+    const pt = load("pt-BR");
+    const en = load("en");
+    assert.equal(fill(pt.durationMinutes, { minutes: 45 }), "Cerca de 45 min");
+    assert.equal(fill(pt.durationHours, { hours: 1 }), "Cerca de 1h");
+    assert.equal(fill(pt.durationBoth, { hours: 1, minutes: "30" }), "Cerca de 1h30");
+    assert.equal(fill(en.durationMinutes, { minutes: 45 }), "About 45 min");
+    assert.equal(fill(en.durationHours, { hours: 1 }), "About 1h");
+    assert.equal(fill(en.durationBoth, { hours: 1, minutes: "30" }), "About 1h 30min");
+  });
+
+  test("detalhe: normalizeScheduleRows le duration_minutes; invalido vira nulo", () => {
+    const rows = normalizeScheduleRows([
+      { title: "A", day: "SUNDAY", time: "09:00", duration_minutes: 90 },
+      { title: "B", day: "MONDAY", time: "09:00", duration_minutes: null },
+      { title: "C", day: "TUESDAY", time: "09:00", duration_minutes: 99999 },
+      { title: "D", day: "WEDNESDAY", time: "09:00" },
+      "texto solto",
+    ]);
+    assert.deepEqual(rows.map((row) => row.durationMinutes), [90, null, null, null, null]);
+  });
+
+  test("horas do mesmo dia e titulo so se juntam com a mesma duracao", () => {
+    const groups = groupScheduleRows(
+      normalizeScheduleRows([
+        { title: "Celebração", day: "SUNDAY", time: "09:00", duration_minutes: 90 },
+        { title: "Celebração", day: "SUNDAY", time: "11:00", duration_minutes: 90 },
+        { title: "Celebração", day: "SUNDAY", time: "18:00" },
+      ]),
+    );
+    assert.deepEqual(
+      groups.map((group) => [group.times, group.durationMinutes]),
+      [
+        [["09:00", "11:00"], 90],
+        [["18:00"], null],
+      ],
+    );
+  });
+
+  test("lista: durationMinutes entra no horario so quando valido", () => {
+    const item = mapPublicChurchListItem({
+      id: "1",
+      slug: "a",
+      name: "A",
+      location: { lat: 1, lng: 1 },
+      schedule: [
+        { day: "SUNDAY", time: "09:00", title: "Culto", duration_minutes: 90 },
+        { day: "MONDAY", time: "20:00", title: "Oração", duration_minutes: null },
+        { day: "TUESDAY", time: "20:00", title: "Grupo", duration_minutes: 0 },
+      ],
+    } as never);
+    assert.equal(item?.schedule?.[0].durationMinutes, 90);
+    assert.equal("durationMinutes" in (item?.schedule?.[1] ?? {}), false);
+    assert.equal("durationMinutes" in (item?.schedule?.[2] ?? {}), false);
   });
 });
 

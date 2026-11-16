@@ -8,6 +8,7 @@ import { useWatch, type Control } from "react-hook-form";
 import { ResultCard, type NumberedChurch } from "@/components/site/church-finder-results";
 import type { FormValues } from "@/components/site/register-church-form-schema";
 import { buildDenomination, previewScheduleEntries } from "@/lib/church-register";
+import { durationMessage } from "@/lib/public-community-page";
 import { summarizeSchedule } from "@/lib/public-church-utils";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +25,7 @@ type RegisterChurchPreviewProps = {
 export function RegisterChurchPreview({ control }: RegisterChurchPreviewProps) {
   const t = useTranslations("register.preview");
   const tFinder = useTranslations("finder");
+  const tSchedule = useTranslations("communityPage.schedule");
   const panelId = useId();
   const [open, setOpen] = useState(false);
   const [updatedAt] = useState(() => new Date().toISOString());
@@ -37,6 +39,14 @@ export function RegisterChurchPreview({ control }: RegisterChurchPreviewProps) {
   const dayLabel = (day: string) => (tFinder.has(`card.days.${day}`) ? tFinder(`card.days.${day}` as "card.days.SUNDAY") : day);
   const joinTimes = (times: string[]) => times.join(tFinder("card.scheduleJoin"));
   const topLines = summarizeSchedule(entries, dayLabel, joinTimes, 7);
+
+  // "Cerca de 1h30" de cada horário, como aparece na lista de Horários da página.
+  const durations = entries.flatMap((entry) => {
+    const duration = durationMessage(entry.durationMinutes);
+    if (!duration) return [];
+    const what = [dayLabel(entry.day), entry.title, entry.time].filter(Boolean).join(" · ");
+    return [{ what, text: tSchedule(duration.key, duration.values as never) }];
+  });
 
   const item: NumberedChurch = {
     number: 1,
@@ -102,6 +112,19 @@ export function RegisterChurchPreview({ control }: RegisterChurchPreviewProps) {
             )}
           </div>
         </div>
+        {durations.length > 0 ? (
+          <>
+            <p className="mt-6 text-xs font-bold uppercase tracking-[0.12em] text-eg-muted">{t("durationTitle")}</p>
+            <ul className="mt-3 grid gap-2 rounded-xl border border-eg-border bg-eg-surface p-4">
+              {durations.map((item, index) => (
+                <li key={`${index}-${item.what}`} className="text-sm">
+                  <span className="font-bold text-eg-strong">{item.what}</span>
+                  <span className="block text-eg-muted">{item.text}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : null}
         <p className="mt-3 flex items-start gap-2 text-xs leading-5 text-eg-muted">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           {t("note")}

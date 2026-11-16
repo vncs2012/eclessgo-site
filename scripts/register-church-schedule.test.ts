@@ -11,6 +11,7 @@ import {
   buildDenomination,
   buildFeaturesPayload,
   buildSchedulePayload,
+  parseScheduleDuration,
   previewScheduleEntries,
   registerFeaturesSchema,
   registerScheduleEntrySchema,
@@ -78,6 +79,51 @@ describe("schema de horarios do formulario", () => {
   test("instalacoes: so codigos do vocabulario", () => {
     assert.equal(registerFeaturesSchema.safeParse(["LIBRAS", "PARKING"]).success, true);
     assert.deepEqual(messages(registerFeaturesSchema.safeParse(["LIBRAS", "PISCINA"])), ["validation.featureUnknown"]);
+  });
+});
+
+describe("duracao opcional do horario", () => {
+  test("parseScheduleDuration: so inteiros de 15 a 600", () => {
+    assert.equal(parseScheduleDuration("90"), 90);
+    assert.equal(parseScheduleDuration(" 15 "), 15);
+    assert.equal(parseScheduleDuration("600"), 600);
+    for (const value of ["", undefined, "14", "601", "0", "09", "1.5", "-30", "1e2", "abc", "+90"]) {
+      assert.equal(parseScheduleDuration(value), null, String(value));
+    }
+  });
+
+  test("formulario: vazio e valido; fora de 15-600 pede a mensagem de duracao", () => {
+    assert.equal(registerScheduleEntrySchema.safeParse({ ...row, duration: "" }).success, true);
+    assert.equal(registerScheduleEntrySchema.safeParse({ ...row, duration: "90" }).success, true);
+    assert.equal(registerScheduleEntrySchema.safeParse(row).success, true);
+    for (const duration of ["14", "601", "abc", "1.5"]) {
+      assert.deepEqual(messages(registerScheduleEntrySchema.safeParse({ ...row, duration })), ["validation.scheduleDuration"], duration);
+    }
+  });
+
+  test("BFF: duration_minutes inteiro de 15 a 600, ou nulo", () => {
+    assert.equal(apiScheduleSchema.safeParse([{ ...row, duration_minutes: 90 }]).success, true);
+    assert.equal(apiScheduleSchema.safeParse([{ ...row, duration_minutes: null }]).success, true);
+    for (const duration_minutes of [14, 601, 1.5, "90"]) {
+      assert.equal(apiScheduleSchema.safeParse([{ ...row, duration_minutes }]).success, false, String(duration_minutes));
+    }
+  });
+
+  test("payload: duration_minutes so quando a duracao e valida; a previa tambem a leva", () => {
+    const payload = buildSchedulePayload([
+      { ...row, duration: " 90 " },
+      { ...row, duration: "" },
+      { ...row, duration: "5" },
+    ]);
+    assert.deepEqual(
+      payload?.map((entry) => entry.duration_minutes),
+      [90, undefined, undefined],
+    );
+    assert.equal(apiScheduleSchema.safeParse(payload).success, true);
+    assert.deepEqual(previewScheduleEntries([{ ...row, duration: "45" }, { ...row, duration: "x" }]), [
+      { day: "SUNDAY", time: "09:00", title: "Celebração", durationMinutes: 45 },
+      { day: "SUNDAY", time: "09:00", title: "Celebração" },
+    ]);
   });
 });
 

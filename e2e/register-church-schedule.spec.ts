@@ -106,6 +106,46 @@ test.describe("horários habituais e instalações no cadastro", () => {
     await expect(page).toHaveURL(/\/cadastro-comunidade\/sucesso/);
   });
 
+  test("duração opcional: valida de 15 a 600, aparece na prévia e vai em duration_minutes", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    let payload: { church?: Record<string, unknown> } | null = null;
+    await mockApis(page, (body) => (payload = body));
+    await fillResponsible(page);
+    await fillCommunity(page);
+
+    const add = page.getByRole("button", { name: "Adicionar horário" });
+    await add.click();
+    const row1 = page.getByRole("group", { name: "Horário 1" });
+    await row1.getByLabel("Horário", { exact: true }).fill("09:00");
+    await row1.getByLabel("Tipo de encontro").fill("Celebração");
+    await add.click();
+    const row2 = page.getByRole("group", { name: "Horário 2" });
+    await row2.getByLabel("Dia").selectOption("WEDNESDAY");
+    await row2.getByLabel("Horário", { exact: true }).fill("19:30");
+    await row2.getByLabel("Tipo de encontro").fill("Oração");
+
+    // O rótulo é "Duração" + "(opcional)" e a duração não é obrigatória.
+    await expect(row1.getByLabel("Duração")).not.toHaveAttribute("aria-required", "true");
+    await row1.getByLabel("Duração").fill("90");
+    const preview = page.getByRole("complementary", { name: "Prévia da comunidade" });
+    await expect(preview.getByText("Cerca de 1h30")).toBeVisible();
+    await expect(preview.getByText("Domingo · Celebração · 09:00")).toBeVisible();
+
+    // Fora de 15-600 não avança e o erro aparece no campo.
+    await row2.getByLabel("Duração").fill("10");
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(row2.getByText("Informe de 15 a 600 minutos, só com números.")).toBeVisible();
+    await expect(page.getByLabel("Rua", { exact: true })).toHaveCount(0);
+    await row2.getByLabel("Duração").fill("");
+
+    await finish(page);
+    await expect.poll(() => payload).not.toBeNull();
+    expect(payload!.church!.schedule).toEqual([
+      { title: "Celebração", day: "SUNDAY", time: "09:00", duration_minutes: 90 },
+      { title: "Oração", day: "WEDNESDAY", time: "19:30" },
+    ]);
+  });
+
   test("sem horários e sem instalações o corpo não leva schedule nem features", async ({ page }) => {
     let payload: { church?: Record<string, unknown> } | null = null;
     await mockApis(page, (body) => (payload = body));

@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { COMMUNITY_FOCUS, CommunitySection } from "@/components/site/community-section";
 import { EXTERNAL_LINK_REL, EXTERNAL_LINK_TARGET } from "@/lib/public-church-profile";
 import {
+  durationMessage,
   groupScheduleRows,
   initials,
   photoGradientIndex,
@@ -109,6 +110,14 @@ export function CommunitySchedule({
           const isWeekday = row.day !== null && (WEEK_ORDER as readonly string[]).includes(row.day);
           const dayLabel = row.day ? (isWeekday ? tDays(row.day as (typeof WEEK_ORDER)[number]) : row.day) : null;
           const heading = [row.title, row.times.join(t("join"))].filter(Boolean).join(" · ");
+          const duration = durationMessage(row.durationMinutes);
+          // "Cerca de 1h30 · espaço infantil": a duração vem antes da descrição, na mesma linha.
+          const detail = [
+            duration ? t(duration.key, duration.values as never) : null,
+            row.description,
+          ]
+            .filter(Boolean)
+            .join(" · ");
 
           return (
             <li
@@ -129,7 +138,7 @@ export function CommunitySchedule({
               )}
               <div>
                 <p className="text-base font-bold text-eg-strong">{heading}</p>
-                {row.description ? <p className="text-sm text-eg-muted">{row.description}</p> : null}
+                {detail ? <p className="text-sm text-eg-muted">{detail}</p> : null}
               </div>
             </li>
           );
@@ -148,10 +157,7 @@ export function CommunitySchedule({
 
 export type CommunityPerson = { name: string; role: string | null };
 
-/**
- * Quem é quem: a API ainda não envia pessoas (Etapa 3). Pronto para receber a lista;
- * sem itens, não renderiza.
- */
+/** Quem é quem (`public_team` da API): iniciais em avatar, nome e função. Sem itens, não renderiza. */
 export function CommunityPeople({ people }: { people: CommunityPerson[] }) {
   const t = useTranslations("communityPage.people");
 
@@ -160,9 +166,9 @@ export function CommunityPeople({ people }: { people: CommunityPerson[] }) {
   return (
     <CommunitySection id="quem-e-quem" title={t("title")}>
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {people.map((person) => (
+        {people.map((person, index) => (
           <li
-            key={person.name}
+            key={`${index}-${person.name}`}
             className="flex items-center gap-3.5 rounded-2xl border border-eg-border bg-eg-surface p-4"
           >
             <span

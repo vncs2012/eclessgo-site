@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 
 import { COMMUNITY_FOCUS } from "@/components/site/community-section";
+import { SuggestCorrection } from "@/components/site/community-suggest";
 import { cn } from "@/lib/utils";
 
 type NavSection = { id: string; label: string };
@@ -13,8 +14,8 @@ type CommunitySectionNavProps = {
   ariaLabel: string;
   /** "Atualizada pela comunidade em dd/mm/aaaa"; nulo quando a API não informa a data. */
   updatedLabel: string | null;
-  /** Link de "Sugerir correção"; o fluxo ainda não existe (Etapa 3), então pode ser nulo. */
-  suggestHref: string | null;
+  /** Slug da comunidade: com ele "Sugerir correção" abre o diálogo; nulo, o botão não aparece. */
+  suggestSlug: string | null;
   suggestLabel: string;
 };
 
@@ -53,13 +54,13 @@ function useActiveSection(ids: string[]) {
 
 export function CommunityUpdateStamp({
   updatedLabel,
-  suggestHref,
+  suggestSlug,
   suggestLabel,
   className,
-}: Pick<CommunitySectionNavProps, "updatedLabel" | "suggestHref" | "suggestLabel"> & {
+}: Pick<CommunitySectionNavProps, "updatedLabel" | "suggestSlug" | "suggestLabel"> & {
   className?: string;
 }) {
-  if (!updatedLabel && !suggestHref) return null;
+  if (!updatedLabel && !suggestSlug) return null;
 
   return (
     <div className={cn("grid grid-cols-[16px_minmax(0,1fr)] items-start gap-x-2 gap-y-1 text-[13px] leading-snug text-eg-muted", className)}>
@@ -69,16 +70,12 @@ export function CommunityUpdateStamp({
           <p>{updatedLabel}</p>
         </>
       ) : null}
-      {suggestHref ? (
-        <a
-          href={suggestHref}
-          className={cn(
-            "col-start-2 min-h-8 justify-self-start rounded-sm underline underline-offset-4 hover:text-eg-strong",
-            COMMUNITY_FOCUS,
-          )}
-        >
-          {suggestLabel}
-        </a>
+      {suggestSlug ? (
+        <SuggestCorrection
+          slug={suggestSlug}
+          label={suggestLabel}
+          className="col-start-2 min-h-8 justify-self-start rounded-sm text-left underline underline-offset-4 hover:text-eg-strong"
+        />
       ) : null}
     </div>
   );
@@ -92,7 +89,7 @@ export function CommunitySectionNav({
   sections,
   ariaLabel,
   updatedLabel,
-  suggestHref,
+  suggestSlug,
   suggestLabel,
 }: CommunitySectionNavProps) {
   const active = useActiveSection(sections.map((section) => section.id));
@@ -121,7 +118,7 @@ export function CommunitySectionNav({
         </ul>
         <CommunityUpdateStamp
           updatedLabel={updatedLabel}
-          suggestHref={suggestHref}
+          suggestSlug={suggestSlug}
           suggestLabel={suggestLabel}
           className="mt-5"
         />
@@ -144,6 +141,16 @@ export function CommunitySectionNav({
               </a>
             </li>
           ))}
+          {suggestSlug ? (
+            <li className="shrink-0">
+              <SuggestCorrection
+                slug={suggestSlug}
+                label={suggestLabel}
+                className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full border border-dashed border-eg-border-strong bg-transparent px-3.5 text-eg-muted transition-colors hover:bg-eg-hover hover:text-eg-strong"
+                labelClassName="text-[13px] font-semibold"
+              />
+            </li>
+          ) : null}
         </ul>
       </nav>
     </>

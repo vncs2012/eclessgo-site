@@ -11,7 +11,13 @@ import {
   REGISTER_INPUT_CLASS,
 } from "@/components/site/register-church-field";
 import type { FormValues } from "@/components/site/register-church-form-schema";
-import { SCHEDULE_DAY_OPTIONS, SCHEDULE_MAX_ITEMS, SCHEDULE_TITLE_MAX } from "@/lib/church-register";
+import {
+  SCHEDULE_DAY_OPTIONS,
+  SCHEDULE_DURATION_MAX,
+  SCHEDULE_DURATION_MIN,
+  SCHEDULE_MAX_ITEMS,
+  SCHEDULE_TITLE_MAX,
+} from "@/lib/church-register";
 
 type ScheduleEditorProps = {
   control: Control<FormValues>;
@@ -55,7 +61,7 @@ export function ScheduleEditor({ control, register, errors }: ScheduleEditorProp
   function handleAdd() {
     if (isFull) return;
     pendingFocus.current = { type: "row", index: fields.length };
-    append({ day: "SUNDAY", time: "", title: "" }, { shouldFocus: false });
+    append({ day: "SUNDAY", time: "", title: "", duration: "" }, { shouldFocus: false });
     setAnnouncement(t("schedule.added", { count: fields.length + 1 }));
   }
 
@@ -127,11 +133,29 @@ export function ScheduleEditor({ control, register, errors }: ScheduleEditorProp
                     className={REGISTER_INPUT_CLASS}
                   />
                 </Field>
+                <Field
+                  label={t("schedule.duration")}
+                  optionalLabel={t("optional")}
+                  hint={t("schedule.durationHint")}
+                  error={fieldError(rowErrors?.duration?.message)}
+                  className="col-span-2 sm:col-start-1"
+                >
+                  <input
+                    {...register(`schedule.${index}.duration`)}
+                    type="number"
+                    inputMode="numeric"
+                    min={SCHEDULE_DURATION_MIN}
+                    max={SCHEDULE_DURATION_MAX}
+                    placeholder={t("schedule.durationPlaceholder")}
+                    aria-invalid={rowErrors?.duration ? true : undefined}
+                    className={REGISTER_INPUT_CLASS}
+                  />
+                </Field>
                 <button
                   type="button"
                   onClick={() => handleRemove(index)}
                   aria-label={t("schedule.remove", { number: index + 1 })}
-                  className={`col-span-2 inline-flex h-11 min-w-11 items-center justify-center gap-1.5 justify-self-end rounded-[9px] px-3 text-eg-muted transition-colors hover:bg-eg-hover hover:text-eg-strong sm:col-span-1 sm:self-start sm:justify-self-auto md:h-10 md:min-w-10 sm:mt-[1.6875rem] ${REGISTER_FOCUS}`}
+                  className={`col-span-2 inline-flex h-11 min-w-11 items-center justify-center gap-1.5 justify-self-end rounded-[9px] px-3 text-eg-muted transition-colors hover:bg-eg-hover hover:text-eg-strong sm:col-span-1 sm:col-start-4 sm:row-start-1 sm:self-start sm:justify-self-auto md:h-10 md:min-w-10 sm:mt-[1.6875rem] ${REGISTER_FOCUS}`}
                 >
                   <Minus className="h-4 w-4" aria-hidden="true" />
                   <span className="text-sm font-semibold sm:sr-only">{t("schedule.removeShort")}</span>

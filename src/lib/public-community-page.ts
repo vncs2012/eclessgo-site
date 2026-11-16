@@ -11,7 +11,7 @@ import {
   orderFeatures,
   type FeatureGroupKey,
 } from "./church-features.ts";
-import { ADDRESS_NOT_INFORMED } from "./public-church-utils.ts";
+import { ADDRESS_NOT_INFORMED, normalizeDurationMinutes } from "./public-church-utils.ts";
 
 export const WEEK_ORDER = [
   "SUNDAY",
@@ -49,6 +49,8 @@ export type ScheduleRow = {
   time: string | null;
   title: string | null;
   description: string | null;
+  /** Duração aproximada em minutos (`duration_minutes`); nula quando não informada. */
+  durationMinutes: number | null;
 };
 
 function weekdayIndex(day: string | null): number {
@@ -64,7 +66,7 @@ export function normalizeScheduleRows(schedule: unknown): ScheduleRow[] {
   schedule.forEach((entry, index) => {
     if (typeof entry === "string") {
       const title = text(entry);
-      if (title) rows.push({ id: `${index}`, day: null, time: null, title, description: null });
+      if (title) rows.push({ id: `${index}`, day: null, time: null, title, description: null, durationMinutes: null });
       return;
     }
     if (!isRecord(entry)) return;
@@ -80,7 +82,14 @@ export function normalizeScheduleRows(schedule: unknown): ScheduleRow[] {
     const description = pick(entry, ["description", "details", "notes"]);
     if (!day && !time && !title) return;
 
-    rows.push({ id: String(entry.id ?? entry.slug ?? index), day, time, title, description });
+    rows.push({
+      id: String(entry.id ?? entry.slug ?? index),
+      day,
+      time,
+      title,
+      description,
+      durationMinutes: normalizeDurationMinutes(entry.duration_minutes),
+    });
   });
 
   return rows
@@ -101,16 +110,18 @@ export type ScheduleGroup = {
   /** Horas do mesmo dia e título, em ordem e sem repetir. */
   times: string[];
   description: string | null;
+  durationMinutes: number | null;
 };
 
 /**
- * Junta as linhas do mesmo dia e título ("Celebração · 09:00" e "Celebração · 18:00" viram
- * uma só, com as duas horas). A descrição é a do primeiro item que tiver uma.
+ * Junta as linhas do mesmo dia, título e duração ("Celebração · 09:00" e "Celebração · 18:00"
+ * viram uma só, com as duas horas). A descrição é a do primeiro item que tiver uma. Durações
+ * diferentes não se juntam: "Cerca de 1h30" só vale para as horas que a comunidade informou.
  */
 export function groupScheduleRows(rows: readonly ScheduleRow[]): ScheduleGroup[] {
   const groups = new Map<string, ScheduleGroup>();
   for (const row of rows) {
-    const key = `${row.day ?? ""}|${(row.title ?? "").toLowerCase()}`;
+    const key = `${row.day ?? ""}|${(row.title ?? "").toLowerCase()}|${row.durationMinutes ?? ""}`;
     const group = groups.get(key);
     if (!group) {
       groups.set(key, {
@@ -119,6 +130,7 @@ export function groupScheduleRows(rows: readonly ScheduleRow[]): ScheduleGroup[]
         title: row.title,
         times: row.time ? [row.time] : [],
         description: row.description,
+        durationMinutes: row.durationMinutes,
       });
       continue;
     }
@@ -126,6 +138,25 @@ export function groupScheduleRows(rows: readonly ScheduleRow[]): ScheduleGroup[]
     group.description ??= row.description;
   }
   return [...groups.values()];
+}
+
+/**
+ * Chave de `communityPage.schedule` e valores para "Cerca de 45 min", "Cerca de 1h" e
+ * "Cerca de 1h30". Nula sem duração válida. Os textos (pt-BR/en) ficam nas mensagens.
+ */
+export type DurationMessage =
+  | { key: "durationMinutes"; values: { minutes: number } }
+  | { key: "durationHours"; values: { hours: number } }
+  | { key: "durationBoth"; values: { hours: number; minutes: string } };
+
+export function durationMessage(value: unknown): DurationMessage | null {
+  const total = normalizeDurationMinutes(value);
+  if (total === null) return null;
+  const hours = Math.floor(total / 60);
+  const minutes = total % 60;
+  if (hours === 0) return { key: "durationMinutes", values: { minutes } };
+  if (minutes === 0) return { key: "durationHours", values: { hours } };
+  return { key: "durationBoth", values: { hours, minutes: String(minutes).padStart(2, "0") } };
 }
 
 /* ---------------------------------------------------------------- Contatos */

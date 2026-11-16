@@ -36,6 +36,21 @@ export interface PublicChurchScheduleEntry {
   /** HH:MM */
   time: string | null;
   title: string | null;
+  /** Duração aproximada em minutos; sem a chave quando a comunidade não informou. */
+  durationMinutes?: number;
+}
+
+/** Como chegar (detalhe da API): cada orientação é opcional. */
+export interface PublicChurchDirections {
+  entrance?: string;
+  bus?: string;
+  parking?: string;
+}
+
+/** "Quem é quem" (`public_team`): nome e função exibidos na página. */
+export interface PublicChurchTeamMember {
+  name: string;
+  role: string | null;
 }
 
 export interface PublicChurchDetails {
@@ -64,6 +79,10 @@ export interface PublicChurchDetails {
   liveUrl?: string | null;
   /** ISO 8601 (UTC) da última atualização feita pela comunidade (`updated_at`). */
   updatedAt?: string | null;
+  /** Entrada, ônibus e estacionamento; ausente quando a API manda `null` ou tudo vazio. */
+  directions?: PublicChurchDirections;
+  /** Pessoas da equipe pública; ausente quando vazio. */
+  publicTeam?: PublicChurchTeamMember[];
 }
 
 export type RegisterChurchRequest = GeneratedRegisterChurchRequest;

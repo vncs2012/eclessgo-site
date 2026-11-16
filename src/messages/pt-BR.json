@@ -389,7 +389,8 @@
       "scheduleTitleMax": "O tipo de encontro pode ter até 120 caracteres.",
       "scheduleDescriptionMax": "A descrição do horário pode ter até 500 caracteres.",
       "scheduleMax": "Use no máximo 30 horários.",
-      "featureUnknown": "Instalação desconhecida."
+      "featureUnknown": "Instalação desconhecida.",
+      "scheduleDuration": "Informe de 15 a 600 minutos, só com números."
     },
     "status": {
       "loadingLegal": "Confirmando a versão atual dos documentos legais...",
@@ -432,7 +433,10 @@
       "rowLabel": "Horário {number}",
       "added": "Horário adicionado. Agora são {count}.",
       "removed": "Horário removido. Restam {count}.",
-      "full": "Limite de {max} horários."
+      "full": "Limite de {max} horários.",
+      "duration": "Duração",
+      "durationHint": "Em minutos. Ex.: 90",
+      "durationPlaceholder": "Ex.: 90"
     },
     "features": {
       "title": "Para a visita",
@@ -447,7 +451,8 @@
       "scheduleTitle": "Horários habituais",
       "scheduleEmpty": "Os horários que você adicionar aparecem aqui.",
       "namePlaceholder": "Nome da comunidade",
-      "note": "A página avisa que os horários foram informados pela comunidade e mostra a data da última atualização."
+      "note": "A página avisa que os horários foram informados pela comunidade e mostra a data da última atualização.",
+      "durationTitle": "Na lista de horários da página"
     }
   },
   "notFound": {
@@ -626,7 +631,10 @@
       "notePlain": "Horários informados pela comunidade{dated, select, yes { em {date}} other {}}. Em feriados e datas especiais eles podem mudar: confirme antes de ir.",
       "noteShortWhatsapp": "Informados pela comunidade{dated, select, yes { em {date}} other {}}. Em feriados podem mudar: <link>confirme pelo WhatsApp</link> antes de ir.",
       "noteShortPlain": "Informados pela comunidade{dated, select, yes { em {date}} other {}}. Em feriados podem mudar: confirme antes de ir.",
-      "join": " e "
+      "join": " e ",
+      "durationMinutes": "Cerca de {minutes} min",
+      "durationHours": "Cerca de {hours}h",
+      "durationBoth": "Cerca de {hours}h{minutes}"
     },
     "directions": {
       "title": "Como chegar",
@@ -675,6 +683,39 @@
     },
     "mobileBar": {
       "label": "Ações rápidas"
+    },
+    "suggest": {
+      "title": "Sugerir correção",
+      "description": "Algo mudou ou está errado? Conte para a comunidade corrigir. A sugestão não aparece no site.",
+      "close": "Fechar",
+      "cancel": "Cancelar",
+      "categoryLegend": "Sobre o quê?",
+      "categories": {
+        "SCHEDULE": "Horários",
+        "ADDRESS": "Endereço",
+        "CONTACT": "Contato",
+        "FACILITIES": "Instalações",
+        "OTHER": "Outro"
+      },
+      "messageLabel": "O que precisa mudar?",
+      "messageHint": "Pelo menos {min} caracteres.",
+      "counter": "{count}/{max}",
+      "contactLabel": "Seu contato",
+      "optional": "opcional",
+      "contactHint": "Só a comunidade vê. Informe se quiser uma resposta.",
+      "submit": "Enviar sugestão",
+      "sending": "Enviando…",
+      "thanksTitle": "Obrigado!",
+      "thanksBody": "Recebemos a sua sugestão e a comunidade vai analisá-la.",
+      "invalid": "Revise os campos e tente de novo.",
+      "rateLimited": "Muitas sugestões; tente mais tarde.",
+      "error": "Não foi possível enviar agora. Tente novamente.",
+      "validation": {
+        "categoryRequired": "Escolha sobre o que é a sugestão.",
+        "messageMin": "Escreva pelo menos {min} caracteres.",
+        "messageMax": "Use no máximo {max} caracteres.",
+        "contactMax": "Use no máximo {contactMax} caracteres no contato."
+      }
     }
   },
   "features": {

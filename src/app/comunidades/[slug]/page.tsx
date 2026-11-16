@@ -18,7 +18,6 @@ import {
   CommunityPeople,
   CommunitySchedule,
   CommunityScheduleNote,
-  type CommunityPerson,
 } from "@/components/site/community-sections";
 import { CommunitySummary } from "@/components/site/community-summary";
 import { PublicAnalyticsBeacon } from "@/components/site/public-analytics-beacon";
@@ -58,12 +57,6 @@ type PageProps = {
 
 /** Quantas "Outras comunidades perto" aparecem (o pin 1 do mapa é esta comunidade). */
 const NEARBY_LIMIT = 3;
-
-/**
- * "Quem é quem": a API ainda não envia pessoas (Etapa 3). Com a lista vazia a seção não
- * aparece; quando o dado existir, basta preencher aqui a partir de `church`.
- */
-const NO_PEOPLE: CommunityPerson[] = [];
 
 export async function generateStaticParams() {
   try {
@@ -285,6 +278,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
       ? { main: scheduleLines[0], rest: scheduleLines.slice(1).join(" · ") || null }
       : null;
 
+  const people = church.publicTeam ?? [];
   const hasChannels = Boolean(contact.whatsapp || contact.phone || contact.email || profile.links.length > 0);
   const hasPix = church.donationsEnabled && Boolean(church.pixKey);
   const sectionIds = availableSections({
@@ -292,16 +286,13 @@ export default async function CommunityDetailPage({ params }: PageProps) {
     horarios: scheduleRows.length > 0,
     "como-chegar": address.hasAddress || mapItem !== null,
     instalacoes: groupFeatures(profile.features).length > 0,
-    "quem-e-quem": NO_PEOPLE.length > 0,
+    "quem-e-quem": people.length > 0,
     contato: hasChannels,
     contribuir: hasPix,
     perto: nearby.length > 0,
   } satisfies Record<SectionId, boolean>);
   const sections = sectionIds.map((id) => ({ id, label: tp(`nav.${id}`) }));
   const updatedLabel = updatedDate ? tp("nav.updated", { date: updatedDate }) : null;
-  // "Sugerir correção" depende do fluxo da Etapa 3 e o site não tem um e-mail de contato:
-  // sem destino válido, o link não aparece.
-  const suggestHref: string | null = null;
 
   return (
     <div
@@ -369,7 +360,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
               sections={sections}
               ariaLabel={tp("nav.label")}
               updatedLabel={updatedLabel}
-              suggestHref={suggestHref}
+              suggestSlug={church.slug}
               suggestLabel={tp("nav.suggest")}
             />
 
@@ -386,9 +377,10 @@ export default async function CommunityDetailPage({ params }: PageProps) {
                 mapItem={mapItem}
                 googleMapsHref={googleMapsHref}
                 wazeHref={wazeHref}
+                access={church.directions}
               />
               <ChurchProfileAttributes features={profile.features} />
-              <CommunityPeople people={NO_PEOPLE} />
+              <CommunityPeople people={people} />
               <ChurchProfileContact
                 churchName={church.name}
                 contact={contact}
@@ -405,7 +397,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
 
               <CommunityUpdateStamp
                 updatedLabel={updatedLabel}
-                suggestHref={suggestHref}
+                suggestSlug={church.slug}
                 suggestLabel={tp("nav.suggest")}
                 className="mt-2 border-t border-eg-border pt-5 lg:hidden"
               />

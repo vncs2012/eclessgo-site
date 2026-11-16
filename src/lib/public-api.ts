@@ -5,6 +5,7 @@ import type { LegalDocumentsResponse } from "@/lib/generated-api";
 import { parseLegalDocuments } from "@/lib/legal";
 import { fetchPublicUpstream, PUBLIC_UPSTREAM_TIMEOUT_MS } from "@/lib/public-bff";
 import type { TraceHeaders } from "@/lib/trace-context";
+import type { ChurchCorrectionPayload } from "@/lib/church-correction";
 import { mapPublicChurchDetails, mapPublicChurchListItem } from "@/lib/public-church-utils";
 import type {
   ApiEnvelope,
@@ -257,6 +258,24 @@ export async function registerChurch(
     body: payload,
     ...options,
     headers: { "X-Client-Source": "web" },
+  });
+}
+
+/**
+ * "Sugerir correção" (`POST /churches/{slug}/corrections`). `forwardedHeaders` leva a origem do
+ * navegador e o IP do cliente (`X-Forwarded-For`): a API limita por cliente e só confia nesse
+ * cabeçalho quando o BFF está em `TRUSTED_PROXY_CIDRS`.
+ */
+export async function submitChurchCorrection(
+  slug: string,
+  payload: ChurchCorrectionPayload,
+  options: Pick<RequestOptions, "requestId" | "traceHeaders" | "headers"> = {},
+) {
+  return fetchApi<ApiEnvelope<{ received?: boolean }>>(`/churches/${encodeURIComponent(slug)}/corrections`, {
+    method: "POST",
+    body: payload,
+    ...options,
+    headers: { "X-Client-Source": "web", ...options.headers },
   });
 }
 

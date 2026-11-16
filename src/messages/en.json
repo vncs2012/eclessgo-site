@@ -389,7 +389,8 @@
       "scheduleTitleMax": "The kind of meeting can have up to 120 characters.",
       "scheduleDescriptionMax": "The time description can have up to 500 characters.",
       "scheduleMax": "Use at most 30 times.",
-      "featureUnknown": "Unknown facility."
+      "featureUnknown": "Unknown facility.",
+      "scheduleDuration": "Enter 15 to 600 minutes, digits only."
     },
     "status": {
       "loadingLegal": "Confirming the current legal document versions...",
@@ -432,7 +433,10 @@
       "rowLabel": "Time {number}",
       "added": "Time added. There are now {count}.",
       "removed": "Time removed. {count} left.",
-      "full": "Limit of {max} times."
+      "full": "Limit of {max} times.",
+      "duration": "Duration",
+      "durationHint": "In minutes. E.g. 90",
+      "durationPlaceholder": "E.g. 90"
     },
     "features": {
       "title": "For your visit",
@@ -447,7 +451,8 @@
       "scheduleTitle": "Usual times",
       "scheduleEmpty": "The times you add appear here.",
       "namePlaceholder": "Community name",
-      "note": "The page states that the times were provided by the community and shows the date of the last update."
+      "note": "The page states that the times were provided by the community and shows the date of the last update.",
+      "durationTitle": "In the page's list of times"
     }
   },
   "notFound": {
@@ -626,7 +631,10 @@
       "notePlain": "Times reported by the community{dated, select, yes { on {date}} other {}}. On holidays and special dates they may change: please confirm before you go.",
       "noteShortWhatsapp": "Reported by the community{dated, select, yes { on {date}} other {}}. They may change on holidays: <link>confirm on WhatsApp</link> before you go.",
       "noteShortPlain": "Reported by the community{dated, select, yes { on {date}} other {}}. They may change on holidays: confirm before you go.",
-      "join": " and "
+      "join": " and ",
+      "durationMinutes": "About {minutes} min",
+      "durationHours": "About {hours}h",
+      "durationBoth": "About {hours}h {minutes}min"
     },
     "directions": {
       "title": "Getting there",
@@ -675,6 +683,39 @@
     },
     "mobileBar": {
       "label": "Quick actions"
+    },
+    "suggest": {
+      "title": "Suggest a correction",
+      "description": "Did something change or look wrong? Tell the community so it can fix it. Your suggestion does not appear on the site.",
+      "close": "Close",
+      "cancel": "Cancel",
+      "categoryLegend": "What is it about?",
+      "categories": {
+        "SCHEDULE": "Times",
+        "ADDRESS": "Address",
+        "CONTACT": "Contact",
+        "FACILITIES": "Facilities",
+        "OTHER": "Other"
+      },
+      "messageLabel": "What needs to change?",
+      "messageHint": "At least {min} characters.",
+      "counter": "{count}/{max}",
+      "contactLabel": "Your contact",
+      "optional": "optional",
+      "contactHint": "Only the community sees it. Add it if you want a reply.",
+      "submit": "Send suggestion",
+      "sending": "Sending…",
+      "thanksTitle": "Thank you!",
+      "thanksBody": "We received your suggestion and the community will review it.",
+      "invalid": "Check the fields and try again.",
+      "rateLimited": "Too many suggestions; please try again later.",
+      "error": "We could not send it right now. Please try again.",
+      "validation": {
+        "categoryRequired": "Choose what the suggestion is about.",
+        "messageMin": "Write at least {min} characters.",
+        "messageMax": "Use at most {max} characters.",
+        "contactMax": "Use at most {contactMax} characters for the contact."
+      }
     }
   },
   "features": {

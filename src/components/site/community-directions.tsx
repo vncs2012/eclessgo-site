@@ -10,7 +10,7 @@ import type { CommunityAddress } from "@/lib/public-community-page";
 import { cn } from "@/lib/utils";
 import type { PublicChurchListItem } from "@/types/public";
 
-/** Orientações de chegada (entrada, ônibus, estacionamento). A API ainda não envia (Etapa 3). */
+/** Orientações de chegada (`directions` da API: entrada, ônibus, estacionamento); cada uma é opcional. */
 export type CommunityAccess = {
   entrance?: string | null;
   bus?: string | null;

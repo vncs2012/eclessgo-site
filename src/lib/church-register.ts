@@ -15,6 +15,9 @@ import { formatTradition, traditionCode } from "./public-church-utils.ts";
 export const SCHEDULE_MAX_ITEMS = 30;
 export const SCHEDULE_TITLE_MAX = 120;
 export const SCHEDULE_DESCRIPTION_MAX = 500;
+/** Duração aproximada de um encontro, em minutos (`duration_minutes` da API: 15 a 600). */
+export const SCHEDULE_DURATION_MIN = 15;
+export const SCHEDULE_DURATION_MAX = 600;
 /** HH:MM de 00:00 a 23:59 (o que `<input type="time">` devolve). */
 export const SCHEDULE_TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 
@@ -68,7 +71,17 @@ export type ScheduleRowValues = {
   time: string;
   title: string;
   description?: string;
+  /** Minutos como o campo numérico devolve (texto); vazio = não informado. */
+  duration?: string;
 };
+
+/** Texto de minutos inteiros de 15 a 600, sem zeros à esquerda nem sinais ("90"); senão null. */
+export function parseScheduleDuration(value: string | undefined): number | null {
+  const text = value?.trim() ?? "";
+  if (!/^[1-9]\d{0,3}$/.test(text)) return null;
+  const minutes = Number(text);
+  return minutes >= SCHEDULE_DURATION_MIN && minutes <= SCHEDULE_DURATION_MAX ? minutes : null;
+}
 
 /* ------------------------------------------------------------------ Esquemas do formulário */
 
@@ -82,6 +95,11 @@ export const registerScheduleEntrySchema = z.object({
     .min(1, "validation.scheduleTitleRequired")
     .max(SCHEDULE_TITLE_MAX, "validation.scheduleTitleMax"),
   description: z.string().trim().max(SCHEDULE_DESCRIPTION_MAX, "validation.scheduleDescriptionMax").optional(),
+  duration: z
+    .string()
+    .trim()
+    .refine((value) => value === "" || parseScheduleDuration(value) !== null, "validation.scheduleDuration")
+    .optional(),
 });
 
 export const registerScheduleSchema = z
@@ -101,6 +119,13 @@ export const apiScheduleEntrySchema = z
     day: z.enum(API_DAYS),
     time: z.string().regex(SCHEDULE_TIME_PATTERN),
     description: z.string().trim().max(SCHEDULE_DESCRIPTION_MAX).nullable().optional(),
+    duration_minutes: z
+      .number()
+      .int()
+      .min(SCHEDULE_DURATION_MIN)
+      .max(SCHEDULE_DURATION_MAX)
+      .nullable()
+      .optional(),
   })
   .strict();
 
@@ -116,15 +141,23 @@ export const apiFeaturesSchema = z
 /** Linhas do formulário -> `church.schedule`. Sem linhas, `undefined`: o campo não é enviado. */
 export function buildSchedulePayload(
   rows: ReadonlyArray<ScheduleRowValues> | undefined,
-): Array<{ title: string; day: ScheduleDay; time: string; description?: string }> | undefined {
+): Array<{
+  title: string;
+  day: ScheduleDay;
+  time: string;
+  description?: string;
+  duration_minutes?: number;
+}> | undefined {
   if (!rows || rows.length === 0) return undefined;
   return rows.map((row) => {
     const description = row.description?.trim();
+    const durationMinutes = parseScheduleDuration(row.duration);
     return {
       title: row.title.trim(),
       day: row.day,
       time: row.time,
       ...(description ? { description } : {}),
+      ...(durationMinutes !== null ? { duration_minutes: durationMinutes } : {}),
     };
   });
 }
@@ -155,12 +188,18 @@ export function buildDenomination(
 /** Linhas completas e válidas, para a prévia (ignora o que ainda está sendo digitado). */
 export function previewScheduleEntries(
   rows: ReadonlyArray<Partial<ScheduleRowValues>> | undefined,
-): Array<{ day: string; time: string; title: string }> {
+): Array<{ day: string; time: string; title: string; durationMinutes?: number }> {
   if (!rows) return [];
-  const out: Array<{ day: string; time: string; title: string }> = [];
+  const out: Array<{ day: string; time: string; title: string; durationMinutes?: number }> = [];
   for (const row of rows) {
     if (!row?.day || !row.time || !SCHEDULE_TIME_PATTERN.test(row.time)) continue;
-    out.push({ day: row.day, time: row.time, title: row.title?.trim() ?? "" });
+    const durationMinutes = parseScheduleDuration(row.duration);
+    out.push({
+      day: row.day,
+      time: row.time,
+      title: row.title?.trim() ?? "",
+      ...(durationMinutes !== null ? { durationMinutes } : {}),
+    });
   }
   return out;
 }
