@@ -196,22 +196,80 @@ export function createProtectionStoreFromEnv(env: Environment): AssistantProtect
     : createMemoryProtectionStore();
 }
 
+const IP_PATTERN = /^[0-9a-f:.]{2,45}$/i;
+
+function ipv4ToNumber(value: string): number | null {
+  const parts = value.split(".");
+  if (parts.length !== 4) return null;
+  let result = 0;
+  for (const part of parts) {
+    if (!/^[0-9]{1,3}$/.test(part) || Number(part) > 255) return null;
+    result = result * 256 + Number(part);
+  }
+  return result;
+}
+
+/** True when `ip` is one of the proxies listed in `ASSISTANT_TRUSTED_PROXY_CIDRS` (IPv4 CIDR or exact address). */
+function isTrustedProxyHop(ip: string, entries: readonly string[]): boolean {
+  return entries.some((entry) => {
+    const [base = "", bits] = entry.split("/");
+    if (bits === undefined) return base.toLowerCase() === ip.toLowerCase();
+    const prefix = Number(bits);
+    const address = ipv4ToNumber(ip);
+    const network = ipv4ToNumber(base);
+    if (address === null || network === null || !Number.isInteger(prefix) || prefix < 0 || prefix > 32) {
+      return false;
+    }
+    const blockSize = 2 ** (32 - prefix);
+    return Math.floor(address / blockSize) === Math.floor(network / blockSize);
+  });
+}
+
 /**
- * Client IP from proxy headers, read only behind a proxy that overwrites them:
- * on Vercel (`VERCEL` is set) the edge replaces `x-real-ip` / `x-forwarded-for`
- * with the real client address. Elsewhere set `ASSISTANT_TRUST_PROXY_HEADERS=true`
- * only when a trusted proxy does the same. Without that trust the headers are
- * client-controlled, so every request shares one bucket instead.
+ * Client IP from proxy headers, read only behind a proxy that sets them.
+ *
+ * - On Vercel (`VERCEL` is set) the edge overwrites `x-real-ip` / `x-vercel-forwarded-for` /
+ *   `x-forwarded-for` with the real client address, so those are used in that order.
+ * - Elsewhere set `ASSISTANT_TRUST_PROXY_HEADERS=true` only when a trusted proxy appends the peer
+ *   address it saw to `X-Forwarded-For`. The client controls everything to the LEFT of what the
+ *   proxy appended, so the first entry is forgeable: the client is the rightmost entry that is not
+ *   a trusted proxy. List extra proxy hops in `ASSISTANT_TRUSTED_PROXY_CIDRS` (comma separated,
+ *   IPv4 CIDR or exact address); without it the rightmost entry is the client. `x-real-ip` is only
+ *   a fallback when there is no `X-Forwarded-For`.
+ * Without trust the headers are client-controlled, so every request shares one bucket instead.
  */
 export function clientIp(request: Request, env: Environment = {}): string {
-  const trusted =
-    Boolean(env.VERCEL?.trim()) || env.ASSISTANT_TRUST_PROXY_HEADERS?.trim().toLowerCase() === "true";
+  const onVercel = Boolean(env.VERCEL?.trim());
+  const trusted = onVercel || env.ASSISTANT_TRUST_PROXY_HEADERS?.trim().toLowerCase() === "true";
   if (!trusted) return "untrusted";
-  for (const header of ["x-real-ip", "x-vercel-forwarded-for", "x-forwarded-for"]) {
-    const value = request.headers.get(header)?.split(",")[0]?.trim();
-    if (value) return value.slice(0, 64);
+
+  const single = (name: string): string | null => {
+    const value = request.headers.get(name)?.split(",")[0]?.trim();
+    return value && IP_PATTERN.test(value) ? value : null;
+  };
+
+  if (onVercel) {
+    const edge = single("x-real-ip") ?? single("x-vercel-forwarded-for");
+    if (edge) return edge;
   }
-  return "unknown";
+
+  const chain = (request.headers.get("x-forwarded-for") ?? "")
+    .split(",")
+    .map((hop) => hop.trim())
+    .filter(Boolean);
+  if (chain.length > 0) {
+    const trustedProxies = (env.ASSISTANT_TRUSTED_PROXY_CIDRS ?? "")
+      .split(",")
+      .map((entry) => entry.trim())
+      .filter(Boolean);
+    for (let index = chain.length - 1; index >= 0; index -= 1) {
+      const hop = chain[index]!;
+      if (index > 0 && isTrustedProxyHop(hop, trustedProxies)) continue;
+      return IP_PATTERN.test(hop) ? hop : "unknown";
+    }
+  }
+
+  return (!onVercel ? single("x-real-ip") : null) ?? "unknown";
 }
 
 function originHost(value: string | null | undefined): string | null {
@@ -251,6 +309,24 @@ export function isSameOriginRequest(request: Request, env: Environment): boolean
   return allowed.has(origin);
 }
 
+/**
+ * `Origin` that may be relayed to the API: only the browser origin that equals the configured site
+ * origin (`NEXT_PUBLIC_SITE_URL`). Anything else (another host, `null`, junk) is not forwarded.
+ */
+export function forwardableOrigin(request: Request, env: Environment): string | null {
+  const raw = request.headers.get("origin");
+  const configured = env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!raw || !configured) return null;
+  try {
+    const origin = new URL(raw);
+    const site = new URL(configured);
+    const httpOnly = (url: URL) => url.protocol === "https:" || url.protocol === "http:";
+    return httpOnly(origin) && httpOnly(site) && origin.origin === site.origin ? origin.origin : null;
+  } catch {
+    return null;
+  }
+}
+
 async function sha256Hex(value: string): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
@@ -258,6 +334,21 @@ async function sha256Hex(value: string): Promise<string> {
 
 function normalizeQuestion(question: string): string {
   return question.normalize("NFKC").toLocaleLowerCase().replace(/\s+/g, " ").trim();
+}
+
+/** Fixed-window counter; returns seconds until reset when over `limit`. */
+async function windowedOverLimit(
+  store: AssistantProtectionStore,
+  now: () => number,
+  keyPrefix: string,
+  scope: string,
+  limit: number,
+  windowMs: number,
+): Promise<number | null> {
+  const window = Math.floor(now() / windowMs);
+  const count = await store.increment(`${keyPrefix}:rl:${scope}:${windowMs}:${window}`, windowMs);
+  if (count <= limit) return null;
+  return Math.max(1, Math.ceil(((window + 1) * windowMs - now()) / 1000));
 }
 
 export function createAssistantProtection(options: {
@@ -273,16 +364,8 @@ export function createAssistantProtection(options: {
       : (options.limits ?? DEFAULT_ASSISTANT_PROTECTION_LIMITS);
   const env = () => (typeof options.env === "function" ? options.env() : (options.env ?? {}));
 
-  /** Fixed-window counter; returns seconds until reset when over `limit`. */
-  async function overLimit(scope: string, limit: number, windowMs: number): Promise<number | null> {
-    const window = Math.floor(now() / windowMs);
-    const count = await options.store.increment(
-      `${KEY_PREFIX}:rl:${scope}:${windowMs}:${window}`,
-      windowMs,
-    );
-    if (count <= limit) return null;
-    return Math.max(1, Math.ceil(((window + 1) * windowMs - now()) / 1000));
-  }
+  const overLimit = (scope: string, limit: number, windowMs: number) =>
+    windowedOverLimit(options.store, now, KEY_PREFIX, scope, limit, windowMs);
 
   async function cacheKey(slug: string, locale: string, question: string) {
     return `${KEY_PREFIX}:cache:${await sha256Hex(`${slug}\n${locale}\n${normalizeQuestion(question)}`)}`;
@@ -339,6 +422,71 @@ export function createAssistantProtection(options: {
         );
       } catch {
         // Cache is best effort.
+      }
+    },
+  };
+}
+
+/** Limits for public form submissions that the BFF relays to the API (community corrections). */
+export interface SubmissionLimits {
+  ipPerHour: number;
+  slugPerDay: number;
+}
+
+export type SubmissionAdmission =
+  | { kind: "allowed" }
+  | { kind: "rate-limited"; retryAfterSeconds: number }
+  | { kind: "unavailable" };
+
+/** Same numbers as the API: 5 per hour per client, 20 per day per community. */
+export const DEFAULT_CORRECTION_LIMITS: SubmissionLimits = Object.freeze({
+  ipPerHour: 5,
+  slugPerDay: 20,
+});
+
+export function readCorrectionLimits(env: Environment): SubmissionLimits {
+  return {
+    ipPerHour: nonNegativeInteger(env.CORRECTION_RATE_LIMIT_IP_PER_HOUR, DEFAULT_CORRECTION_LIMITS.ipPerHour),
+    slugPerDay: nonNegativeInteger(env.CORRECTION_RATE_LIMIT_SLUG_PER_DAY, DEFAULT_CORRECTION_LIMITS.slugPerDay),
+  };
+}
+
+/**
+ * Per-client and per-community submission counters on the same store as the assistant, under their
+ * own key prefix. The per-client counter needs a trustworthy IP: when `clientIp` says "untrusted" or
+ * "unknown" it is skipped (a shared bucket would let one caller lock everyone out) and only the
+ * per-community counter applies. Fails closed when the store is unavailable.
+ */
+export function createSubmissionLimiter(options: {
+  store: AssistantProtectionStore;
+  limits?: SubmissionLimits | (() => SubmissionLimits);
+  env?: Environment | (() => Environment);
+  now?: () => number;
+  keyPrefix?: string;
+}) {
+  const now = options.now ?? Date.now;
+  const keyPrefix = options.keyPrefix ?? "eclessgo:corrections";
+  const limits = () =>
+    typeof options.limits === "function" ? options.limits() : (options.limits ?? DEFAULT_CORRECTION_LIMITS);
+  const env = () => (typeof options.env === "function" ? options.env() : (options.env ?? {}));
+
+  return {
+    async admit(request: Request, slug: string): Promise<SubmissionAdmission> {
+      const current = limits();
+      try {
+        const address = clientIp(request, env());
+        const checks: [string, number, number][] = [];
+        if (address !== "untrusted" && address !== "unknown") {
+          checks.push([`ip:${await sha256Hex(address)}`, current.ipPerHour, HOUR_MS]);
+        }
+        checks.push([`slug:${slug}`, current.slugPerDay, DAY_MS]);
+        for (const [scope, limit, windowMs] of checks) {
+          const retryAfterSeconds = await windowedOverLimit(options.store, now, keyPrefix, scope, limit, windowMs);
+          if (retryAfterSeconds !== null) return { kind: "rate-limited", retryAfterSeconds };
+        }
+        return { kind: "allowed" };
+      } catch {
+        return { kind: "unavailable" };
       }
     },
   };

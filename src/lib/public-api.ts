@@ -234,7 +234,7 @@ export async function getPublicChurchBySlug(
   slug: string,
   options: Pick<RequestOptions, "cache" | "next" | "requestId" | "traceHeaders"> = {},
 ) {
-  const response = await fetchApi<ApiEnvelope<RawPublicChurch>>(`/churches/slug/${slug}`, options);
+  const response = await fetchApi<ApiEnvelope<RawPublicChurch>>(`/churches/slug/${encodeURIComponent(slug)}`, options);
   return mapPublicChurchDetails(response.data) as PublicChurchDetails;
 }
 

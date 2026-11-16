@@ -79,7 +79,9 @@ describe("fiacao da sugestao", () => {
     assert.match(route, /churchCorrectionSchema\.safeParse/);
     assert.match(route, /readJsonBodyWithLimit/);
     assert.match(route, /publicSlugSchema/);
+    assert.match(route, /forwardableOrigin\(request, process\.env\)/);
     assert.match(route, /headers\.Origin = origin/);
+    assert.match(route, /isSameOriginRequest\(request, process\.env\)/);
     assert.match(route, /"X-Forwarded-For"\] = ip/);
     assert.match(route, /ip !== "untrusted"/);
     assert.match(route, /status: 202/);

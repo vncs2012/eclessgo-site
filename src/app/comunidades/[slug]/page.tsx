@@ -25,6 +25,7 @@ import { PublicInformationAssistant } from "@/components/site/public-information
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { PublicUpstreamTimeoutError } from "@/lib/public-bff";
+import { publicSlugSchema } from "@/lib/public-bff-schemas";
 import { PUBLIC_CACHE_TTL_SECONDS } from "@/lib/public-cache";
 import { ApiRequestError, getPublicChurchBySlug, getPublicChurches } from "@/lib/public-api";
 import { buildPublicChurchProfile } from "@/lib/public-church-profile";
@@ -91,6 +92,13 @@ function toMapChurch(church: PublicChurchDetails): PublicChurchListItem | null {
     distanceKm: null,
     thumbnail: null,
   };
+}
+
+/** Slug da URL só chega à API depois de validado; inválido é 404 sem chamar o upstream. */
+function validSlugOrNotFound(slug: string): string {
+  const parsed = publicSlugSchema.safeParse(slug);
+  if (!parsed.success) notFound();
+  return parsed.data;
 }
 
 async function loadChurch(slug: string) {
@@ -193,7 +201,7 @@ async function PublicChurchUnavailable({ slug }: { slug: string }) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const slug = validSlugOrNotFound((await params).slug);
 
   try {
     const church = await getPublicChurchBySlug(slug, {
@@ -231,7 +239,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function CommunityDetailPage({ params }: PageProps) {
-  const { slug } = await params;
+  const slug = validSlugOrNotFound((await params).slug);
   const church = await loadChurch(slug);
   if (!church) return <PublicChurchUnavailable slug={slug} />;
 

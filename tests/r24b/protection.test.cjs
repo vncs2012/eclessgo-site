@@ -50,12 +50,23 @@ test('per-IP limit returns 429 RATE_LIMITED before resolver and resets with the 
   assert.equal((await handle(from('198.51.100.1'), 'test-church')).status, 200, 'new window');
 });
 
-test('x-forwarded-for first hop is the client key when x-real-ip is absent', async () => {
-  const { handle } = harness();
+test('x-forwarded-for: the client is the rightmost hop (what the proxy appended), not the forgeable first entry', async () => {
+  // Vercel overwrites x-forwarded-for; elsewhere a trusted proxy appends the address it saw.
+  const protection = createAssistantProtection({
+    store: createMemoryProtectionStore(),
+    limits: { ...LIMITS },
+    env: { ASSISTANT_TRUST_PROXY_HEADERS: 'true' },
+  });
+  const generic = createPublicInformationAssistantHandler({
+    protection,
+    resolveAdapter: async () => ({ kind: 'ready', adapter: { select: async () => ({ factIds: ['church-name'] }) } }),
+    readPublicChurch: async () => church(),
+  });
   const viaProxy = (hops) => request(undefined, false, { 'x-forwarded-for': hops });
-  assert.equal((await handle(viaProxy('203.0.113.9, 10.0.0.1'), 'test-church')).status, 200);
-  assert.equal((await handle(viaProxy('203.0.113.9, 10.0.0.2'), 'test-church')).status, 200);
-  assert.equal((await handle(viaProxy('203.0.113.9'), 'test-church')).status, 429);
+  assert.equal((await generic(viaProxy('1.1.1.1, 198.51.100.7'), 'test-church')).status, 200);
+  assert.equal((await generic(viaProxy('2.2.2.2, 198.51.100.7'), 'test-church')).status, 200);
+  assert.equal((await generic(viaProxy('3.3.3.3, 198.51.100.7'), 'test-church')).status, 429, 'rotating the left side does not dodge the limit');
+  assert.equal((await generic(viaProxy('1.1.1.1, 198.51.100.8'), 'test-church')).status, 200, 'another real client');
 });
 
 test('per-slug limit applies across IPs', async () => {

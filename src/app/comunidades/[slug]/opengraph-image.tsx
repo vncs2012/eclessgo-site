@@ -1,7 +1,9 @@
+import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 
 import { PUBLIC_CACHE_TTL_SECONDS } from "@/lib/public-cache";
 import { ApiRequestError, getPublicChurchBySlug } from "@/lib/public-api";
+import { publicSlugSchema } from "@/lib/public-bff-schemas";
 
 export const runtime = "nodejs";
 export const alt = "Comunidade no diretório EclessGO";
@@ -29,7 +31,9 @@ export default async function ChurchOpengraphImage({
 }: {
   params: Promise<Params>;
 }) {
-  const { slug } = await params;
+  const parsedSlug = publicSlugSchema.safeParse((await params).slug);
+  if (!parsedSlug.success) notFound();
+  const slug = parsedSlug.data;
   const church = await loadChurchSafe(slug);
   const name = church?.name ?? "Comunidade";
   const locality = church
